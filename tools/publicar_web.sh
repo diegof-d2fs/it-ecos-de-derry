@@ -49,6 +49,8 @@ aws s3api put-public-access-block --bucket "$BUCKET" --public-access-block-confi
     BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
 aws s3api put-bucket-encryption --bucket "$BUCKET" --server-side-encryption-configuration \
     '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+# Etiqueta de custo: o orçamento ecos-de-derry-mensal soma só o que tem projeto=ecos-de-derry.
+aws s3api put-bucket-tagging --bucket "$BUCKET" --tagging 'TagSet=[{Key=projeto,Value=ecos-de-derry}]'
 
 # ---------- 3. CloudFront (OAC + distribuição) ----------
 DIST_ID=""
@@ -81,6 +83,7 @@ JSON
 )
     DIST_ID=$(aws cloudfront create-distribution --distribution-config "$CONFIG" --query Distribution.Id --output text)
     ARN=$(aws cloudfront get-distribution --id "$DIST_ID" --query Distribution.ARN --output text)
+    aws cloudfront tag-resource --resource "$ARN" --tags 'Items=[{Key=projeto,Value=ecos-de-derry}]'
     DOMINIO=$(aws cloudfront get-distribution --id "$DIST_ID" --query Distribution.DomainName --output text)
     # Só esta distribuição lê o bucket.
     aws s3api put-bucket-policy --bucket "$BUCKET" --policy "{

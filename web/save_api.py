@@ -26,7 +26,7 @@ _FEEDBACK_EMAIL = os.environ.get("FEEDBACK_EMAIL", "")
 _ADMIN_EMAIL = os.environ.get("DEMO_ADMIN_EMAIL", "")
 _USER_POOL_ID = os.environ.get("USER_POOL_ID", "")
 _RANKING = "ranking/mundial.json"
-_NICK = re.compile(r"[A-Za-z0-9_]{3,24}\Z")
+_NICK = re.compile(r"(?=.*[A-Za-z0-9])[A-Za-z0-9._-]{3,20}\Z")
 _ETAG = re.compile(r'"[A-Za-z0-9-]{1,100}"\Z')
 _PAISES = set("""
 AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW
@@ -81,6 +81,7 @@ def _atualizar_ranking(sub, nick, pais=None, pontos=None):
         entradas = dados.get("entries", []) if isinstance(dados, dict) else []
         anteriores = {e.get("difficulty"): e for e in entradas if e.get("sub") == sub}
         pais_atual = pais or next((e.get("country") for e in anteriores.values()), None)
+        antes = sorted((e.get("difficulty"), e.get("score"), e.get("country"), e.get("nick")) for e in anteriores.values())
         entradas = [e for e in entradas if e.get("sub") != sub]
         if pais_atual in _PAISES:
             for dificuldade in ("facil", "normal", "dificil"):
@@ -88,6 +89,9 @@ def _atualizar_ranking(sub, nick, pais=None, pontos=None):
                 if valor > 0:
                     entradas.append({"sub": sub, "nick": nick, "country": pais_atual,
                                      "difficulty": dificuldade, "score": valor})
+        depois = sorted((e["difficulty"], e["score"], e["country"], e["nick"]) for e in entradas if e.get("sub") == sub)
+        if depois == antes:
+            return   # nada novo: evita disputar o arquivo único do ranking a cada salvamento
         entradas.sort(key=lambda e: (e["difficulty"], -e["score"], e["nick"].casefold()))
         entradas = [e for d in ("facil", "normal", "dificil")
                     for e in [x for x in entradas if x["difficulty"] == d][:100]]
@@ -192,7 +196,7 @@ def handler(event, context):
         if not (_ADMIN_EMAIL and _USER_POOL_ID):
             return _resposta(403, {"allowed": False})
         try:
-            usuario = boto3.client("cognito-idp").admin_get_user(UserPoolId=_USER_POOL_ID, Username=sub)
+            usuario = boto3.client("cognito-idp").admin_get_user(UserPoolId=_USER_POOL_ID, Username=nick or sub)
             atributos = {a["Name"]: a["Value"] for a in usuario.get("UserAttributes", [])}
             permitido = (atributos.get("sub") == sub and atributos.get("email", "").casefold() == _ADMIN_EMAIL.casefold()
                          and atributos.get("email_verified") == "true" and usuario.get("Enabled") is True)

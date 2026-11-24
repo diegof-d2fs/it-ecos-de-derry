@@ -12,7 +12,8 @@ if not arte.startswith(b"\xff\xd8\xff"):
 
 pedido = {
     "UserPoolId": outputs["UserPoolId"],
-    "ManagedLoginBrandingId": outputs["BrandingId"],
+    # O !Ref do CloudFormation devolve "pool|id"; a API quer só o id.
+    "ManagedLoginBrandingId": outputs["BrandingId"].split("|")[-1],
     "Settings": {
         "categories": {"global": {"colorSchemeMode": "DARK"}},
         "components": {

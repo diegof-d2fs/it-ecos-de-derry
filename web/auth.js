@@ -110,7 +110,7 @@
   async function autenticar(tela) {
     const {challenge, state} = await desafio();
     const path = tela === 'entrar' ? '/oauth2/authorize' : tela === 'criar' ? '/signup' : '/forgotPassword';
-    const query = new URLSearchParams({client_id: config.clientId, response_type: 'code',
+    const query = new URLSearchParams({lang: 'pt-BR', client_id: config.clientId, response_type: 'code',
       scope: 'openid email', redirect_uri: config.redirectUri, code_challenge_method: 'S256',
       code_challenge: challenge, state});
     location.assign(`${config.cognitoDomain}${path}?${query}`);

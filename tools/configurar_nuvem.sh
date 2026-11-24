@@ -21,7 +21,7 @@ CHAVE="interno/save-api-$(sha256sum web/save_api.py | cut -c1-16).zip"
 python -c 'import zipfile; z=zipfile.ZipFile("web/lambda.local.zip","w",zipfile.ZIP_DEFLATED); z.write("web/save_api.py","save_api.py"); z.close()'
 aws s3 cp web/lambda.local.zip "s3://$BUCKET/$CHAVE" --content-type application/zip --region "$REGIAO" > /dev/null
 aws cloudformation deploy --region "$REGIAO" --stack-name ecos-de-derry-backend \
-    --template-file web/infra.yaml --capabilities CAPABILITY_IAM \
+    --template-file web/infra.yaml --capabilities CAPABILITY_IAM --tags projeto=ecos-de-derry \
     --parameter-overrides "SiteOrigin=$SITE" "CallbackUrl=$SITE/" "CodeBucket=$BUCKET" \
     "CodeKey=$CHAVE" "SaveBucketName=$SAVE_BUCKET" "CognitoPrefix=$PREFIXO" "AdminEmail=$ADMIN_EMAIL"
 aws cloudformation describe-stacks --region "$REGIAO" --stack-name ecos-de-derry-backend \

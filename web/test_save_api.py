@@ -96,6 +96,21 @@ class TesteApi(unittest.TestCase):
         top = resposta(evento("GET", "/profile", sub))[1]["top5"]
         self.assertEqual("dificil", top[0]["difficulty"])
 
+    def test_ranking_so_regrava_quando_o_recorde_muda(self):
+        sub = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+        resposta(evento("PUT", "/profile", sub, "Diego", {"country": "BR"}))
+        linha = lambda p: f"{p};2026-11-24 12:00;normal;100;7;1;123;0"
+        versao = resposta(evento("PUT", "/saves", sub, "Diego", {"files": {"recordes.txt": linha(5000)}, "version": None}))[1]["version"]
+        etag_ranking = api._S3.objetos[api._RANKING][1]
+        # Mesmo recorde, outro arquivo mudou (salvamento comum): o arquivo do ranking não é tocado.
+        versao = resposta(evento("PUT", "/saves", sub, "Diego",
+                                 {"files": {"recordes.txt": linha(5000), "bloco_01.txt": "x"}, "version": versao}))[1]["version"]
+        self.assertEqual(etag_ranking, api._S3.objetos[api._RANKING][1])
+        # Recorde novo: regrava.
+        resposta(evento("PUT", "/saves", sub, "Diego", {"files": {"recordes.txt": linha(7000)}, "version": versao}))
+        self.assertNotEqual(etag_ranking, api._S3.objetos[api._RANKING][1])
+        self.assertEqual(7000, resposta(evento("GET", "/ranking", sub))[1]["ranking"]["normal"][0]["score"])
+
 
 if __name__ == "__main__":
     unittest.main()

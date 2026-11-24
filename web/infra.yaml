@@ -78,20 +78,39 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: email-unico
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: cognito-idp:ListUsers
+                Resource: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*'
   NickValidator:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: python3.13
       Handler: index.handler
       Role: !GetAtt NickValidatorRole.Arn
-      Timeout: 5
+      Timeout: 10
       Code:
         ZipFile: |
           import re
+          import boto3
+          cognito = boto3.client('cognito-idp')
           def handler(event, context):
               nick = event.get('userName', '')
-              if not re.fullmatch(r'[A-Za-z0-9_]{3,24}', nick):
-                  raise ValueError('Apelido: 3 a 24 letras, numeros ou sublinhado.')
+              if not re.fullmatch(r'(?=.*[A-Za-z0-9])[A-Za-z0-9._-]{3,20}', nick):
+                  raise ValueError('Apelido: de 3 a 20 caracteres, s\u00f3 letras sem acento, n\u00fameros, ponto, tra\u00e7o ou sublinhado.')
+              email = (event.get('request', {}).get('userAttributes', {}).get('email') or '').strip()
+              if not re.fullmatch(r'[^@\s"]+@[^@\s"]+', email):
+                  raise ValueError('E-mail inv\u00e1lido.')
+              for valor in {email, email.lower()}:
+                  achados = cognito.list_users(UserPoolId=event['userPoolId'], Filter=f'email = "{valor}"', Limit=10)
+                  for u in achados.get('Users', []):
+                      attrs = {a['Name']: a['Value'] for a in u.get('Attributes', [])}
+                      if u.get('UserStatus') == 'CONFIRMED' and attrs.get('email_verified') == 'true':
+                          raise ValueError('Este e-mail j\u00e1 tem uma conta. Use Entrar ou Esqueci minha senha.')
               return event
   NickValidatorPermission:
     Type: AWS::Lambda::Permission
@@ -225,8 +244,8 @@ Resources:
       StageName: '$default'
       AutoDeploy: true
       DefaultRouteSettings:
-        ThrottlingBurstLimit: 20
-        ThrottlingRateLimit: 10
+        ThrottlingBurstLimit: 60
+        ThrottlingRateLimit: 20
   InvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -234,6 +253,112 @@ Resources:
       FunctionName: !Ref ApiFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*'
+  NickValidatorLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${NickValidator}'
+      RetentionInDays: 30
+  ApiFunctionLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ApiFunction}'
+      RetentionInDays: 30
+  Alertas:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ecos-de-derry-alertas
+      DisplayName: Ecos de Derry
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref AdminEmail
+  # Capacidade: a conta tem 10 execucoes simultaneas de Lambda; isto cobre 15 a 20 jogadores.
+  AlarmeCapacidade:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: ecos-de-derry-capacidade
+      AlarmDescription: >-
+        IT Ecos de Derry: a API chegou a 6 de 10 execucoes simultaneas (mais de 15 a 20 jogadores ao mesmo tempo).
+        Hora de planejar o aumento: pedir no Service Quotas a cota Lambda Concurrent executions (1000) e
+        subir o limite de pedidos da API em web/infra.yaml.
+      Namespace: AWS/Lambda
+      MetricName: ConcurrentExecutions
+      Dimensions: [{Name: FunctionName, Value: !Ref ApiFunction}]
+      Statistic: Maximum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 6
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref Alertas]
+  AlarmeRecusas:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: ecos-de-derry-recusas
+      AlarmDescription: >-
+        IT Ecos de Derry: a Lambda recusou pedidos por falta de capacidade. Jogadores podem ter caido no modo sem conta.
+        Hora de pedir o aumento da cota Lambda Concurrent executions no Service Quotas.
+      Namespace: AWS/Lambda
+      MetricName: Throttles
+      Dimensions: [{Name: FunctionName, Value: !Ref ApiFunction}]
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref Alertas]
+  AlarmeLimiteApi:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: ecos-de-derry-limite-api
+      AlarmDescription: >-
+        IT Ecos de Derry: muitos pedidos recusados pela API (erros 4xx, inclui o limite de 20 por segundo).
+        Se houver muita gente jogando, e hora de subir ThrottlingRateLimit em web/infra.yaml.
+      Namespace: AWS/ApiGateway
+      MetricName: 4xx
+      Dimensions: [{Name: ApiId, Value: !Ref HttpApi}, {Name: Stage, Value: $default}]
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 50
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref Alertas]
+  AlarmeEmailsCadastro:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: ecos-de-derry-emails-cadastro
+      AlarmDescription: >-
+        IT Ecos de Derry: 35 cadastros em 24 horas. O Cognito envia no maximo 50 e-mails por dia;
+        hora de pedir a saida do sandbox do SES e ligar o SES como remetente do Cognito.
+      Namespace: AWS/Cognito
+      MetricName: SignUpSuccesses
+      Dimensions: [{Name: UserPool, Value: !Ref UserPool}, {Name: UserPoolClient, Value: !Ref UserPoolClient}]
+      Statistic: Sum
+      Period: 86400
+      EvaluationPeriods: 1
+      Threshold: 35
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref Alertas]
+  # Orcamento so deste projeto: filtra pela etiqueta projeto=ecos-de-derry (ativada no Billing).
+  Orcamento:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: ecos-de-derry-mensal
+        BudgetType: COST
+        TimeUnit: MONTHLY
+        BudgetLimit: {Amount: 12.5, Unit: USD}
+        CostFilters:
+          TagKeyValue: ['user:projeto$ecos-de-derry']
+      NotificationsWithSubscribers:
+        - Notification: {NotificationType: ACTUAL, ComparisonOperator: GREATER_THAN, Threshold: 80, ThresholdType: PERCENTAGE}
+          Subscribers: [{SubscriptionType: EMAIL, Address: !Ref AdminEmail}]
+        - Notification: {NotificationType: ACTUAL, ComparisonOperator: GREATER_THAN, Threshold: 100, ThresholdType: PERCENTAGE}
+          Subscribers: [{SubscriptionType: EMAIL, Address: !Ref AdminEmail}]
+        - Notification: {NotificationType: FORECASTED, ComparisonOperator: GREATER_THAN, Threshold: 100, ThresholdType: PERCENTAGE}
+          Subscribers: [{SubscriptionType: EMAIL, Address: !Ref AdminEmail}]
 Outputs:
   ApiUrl: {Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'}
   CognitoDomain: {Value: !Sub 'https://${CognitoPrefix}.auth.${AWS::Region}.amazoncognito.com'}
