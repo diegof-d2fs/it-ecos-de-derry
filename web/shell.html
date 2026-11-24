@@ -9,7 +9,7 @@
 <style>
   html, body { margin: 0; height: 100%; background: #04050a; overflow: hidden; }
   #tela { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: contain; background: #000;
-          image-rendering: auto; outline: none; }
+          image-rendering: pixelated; outline: none; }
   #capa { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
           background: radial-gradient(ellipse at 70% 40%, #1a2233 0%, #04050a 70%); color: #efe6d6;
           font-family: Georgia, 'Times New Roman', serif; text-align: center; cursor: pointer; user-select: none; }
@@ -24,10 +24,136 @@
   @keyframes pulso { 50% { opacity: .45; } }
   #rodape { position: fixed; bottom: 14px; width: 100%; text-align: center; font: 12px system-ui, sans-serif; color: #6d685f; }
   #rodape a { color: #9b9384; }
+  [hidden] { display: none !important; }
+  #acesso, #ranking, #feedback, #lore-fallback, #demos, #conflito, #conta { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center;
+    justify-content: center; overflow: auto; padding: 24px; box-sizing: border-box;
+    background: linear-gradient(90deg, #04050aee, #04050ab8), url('menu.jpg') center / cover no-repeat;
+    color: #efe6d6; font-family: Georgia, 'Times New Roman', serif; }
+  .painel-web { width: min(480px, 100%); max-height: 95vh; overflow: auto; padding: 28px;
+    border: 1px solid #8c6b3d; background: #080a12ed; box-shadow: 0 20px 80px #000; text-align: center; }
+  .painel-web h2 { color: #d4ad70; letter-spacing: 2px; margin: 0 0 14px; }
+  .painel-web p { line-height: 1.45; color: #d6c8af; }
+  .painel-web button, .painel-web select { box-sizing: border-box; width: 100%; margin: 6px 0; padding: 11px;
+    color: #f5e5c4; background: #181c29; border: 1px solid #a58248; font: 16px Georgia, serif; cursor: pointer; }
+  .painel-web button:hover, .painel-web button:focus { background: #5b1920; outline: 2px solid #e7bc75; }
+  .painel-web small { color: #c7b799; display: block; margin: 8px 0 18px; line-height: 1.4; }
+  #save-status { position: fixed; z-index: 3; right: 10px; top: 10px; padding: 5px 9px;
+    font: 12px system-ui, sans-serif; color: #e6d1a3; background: #080a12cc; pointer-events: none; }
+  #conta-botao { position: fixed; z-index: 3; right: 10px; top: 36px; padding: 5px 10px;
+    border: 1px solid #a58248; color: #f5e5c4; background: #080a12cc; font: 12px system-ui, sans-serif; cursor: pointer; }
+  #conta-botao:hover, #conta-botao:focus { background: #5b1920; }
+  #admin-demos { position: fixed; z-index: 3; left: 10px; top: 10px; padding: 7px 10px;
+    border: 1px solid #a58248; color: #f5e5c4; background: #080a12cc; cursor: pointer; }
+  .linha-ranking { display: flex; justify-content: space-between; gap: 15px; padding: 5px 2px;
+    border-bottom: 1px solid #554b40; text-align: left; }
+  .ranking-abas { display: flex; gap: 6px; margin-bottom: 12px; }
+  .ranking-abas button { font-size: 14px; }
+  .ranking-abas button[aria-selected="true"] { background: #7c1824; }
+  #feedback .painel-web { width: min(560px, 100%); text-align: left; }
+  #feedback label { display: block; margin: 14px 0 5px; color: #d4ad70; }
+  #feedback input, #feedback textarea, #feedback select { box-sizing: border-box; width: 100%; padding: 10px;
+    color: #f5e5c4; background: #111521; border: 1px solid #826849; font: 16px Georgia, serif; }
+  #feedback textarea { min-height: 130px; resize: vertical; }
+  #feedback .acoes { display: flex; gap: 10px; margin-top: 15px; }
+  #lore-fallback .painel-web { width: min(1100px, 100%); height: min(720px, 90vh); display: flex; flex-direction: column; }
+  #lore-fallback iframe { flex: 1; width: 100%; border: 1px solid #826849; background: #080a10; }
+  .ranking-lista { max-height: 32vh; overflow-y: auto; }
 </style>
 </head>
 <body>
 <canvas id="tela" tabindex="-1"></canvas>
+<div id="save-status"></div>
+<button id="admin-demos" hidden>Demonstrações</button>
+<button id="conta-botao" hidden>Conta</button>
+<div id="acesso" hidden>
+  <section class="painel-web" aria-label="Acesso ao jogo">
+    <h2>IT · ECOS DE DERRY</h2>
+    <p id="acesso-estado">Preparando o jogo...</p>
+    <div id="acesso-botoes">
+      <button data-entrar="entrar">Entrar na minha conta</button>
+      <button data-entrar="criar">Criar conta</button>
+      <button data-entrar="recuperar">Esqueci minha senha</button>
+      <button id="sem-conta">Jogar sem conta</button>
+      <small>Sem conta, o progresso será perdido ao fechar ou recarregar o navegador.</small>
+    </div>
+    <div id="pais-area" hidden>
+      <label for="pais-select">País exibido no ranking</label>
+      <select id="pais-select"></select>
+      <button id="pais-confirmar">Confirmar país</button>
+      <small>O ranking mostra apenas seu apelido, a bandeira e os pontos. Seu e-mail não aparece.</small>
+    </div>
+  </section>
+</div>
+<div id="ranking" hidden>
+  <section class="painel-web" aria-label="Recordes">
+    <h2>RECORDES MUNDIAIS</h2>
+    <div class="ranking-abas" role="tablist" aria-label="Dificuldade">
+      <button data-dificuldade="facil" role="tab" aria-selected="false">Fácil</button>
+      <button data-dificuldade="normal" role="tab" aria-selected="true">Normal</button>
+      <button data-dificuldade="dificil" role="tab" aria-selected="false">Difícil</button>
+    </div>
+    <div class="ranking-lista" data-lista></div>
+    <h2 style="margin-top:20px">MEU TOP 5</h2>
+    <div data-pessoal></div>
+    <button id="ranking-fechar">Voltar ao jogo</button>
+  </section>
+</div>
+<div id="feedback" hidden>
+  <form class="painel-web" id="feedback-form">
+    <h2>ENVIAR FEEDBACK</h2>
+    <p>Conte o que aconteceu ou o que você gostaria de ver no jogo.</p>
+    <label for="feedback-tipo">Tipo de mensagem</label>
+    <select id="feedback-tipo" required><option value="bug">Bug</option><option value="elogio">Elogio</option>
+      <option value="melhoria">Melhoria</option><option value="critica">Crítica</option><option value="outro">Outro</option></select>
+    <label for="feedback-titulo">Assunto</label>
+    <input id="feedback-titulo" maxlength="100" required>
+    <label for="feedback-mensagem">Mensagem</label>
+    <textarea id="feedback-mensagem" maxlength="5000" required></textarea>
+    <label for="feedback-email">Seu e-mail para resposta (opcional)</label>
+    <input id="feedback-email" type="email" maxlength="254" autocomplete="email">
+    <input id="feedback-apelido" name="apelido" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+    <p id="feedback-estado" role="status"></p>
+    <div class="acoes"><button type="submit">Enviar</button><button type="button" id="feedback-fechar">Voltar</button></div>
+  </form>
+</div>
+<div id="lore-fallback" hidden>
+  <section class="painel-web"><h2>O ARQUIVO DE DERRY</h2>
+    <p>O navegador não abriu uma nova aba. Você pode ler a wiki aqui ou abri-la pelo link.</p>
+    <a id="lore-link" target="_blank" rel="noopener">Abrir wiki em nova aba</a>
+    <iframe id="lore-frame" title="Wiki de IT: Ecos de Derry"></iframe>
+    <button id="lore-fechar">Voltar ao jogo</button>
+  </section>
+</div>
+<div id="demos" hidden>
+  <section class="painel-web"><h2>DEMONSTRAÇÕES</h2>
+    <p>Rotas rápidas desta conta para apresentar o jogo. Você joga manualmente em todas elas.</p>
+    <button data-demo="galeria">Galeria pluvial com Mike</button>
+    <button data-demo="mike">Mike em combate</button>
+    <button data-demo="stan">Stan e as armadilhas</button>
+    <button data-demo="pennywise2">Pennywise II, Rua Neibolt</button>
+    <button data-demo="pennywise3">Pennywise III, Siderúrgica</button>
+    <button data-demo="covil">Pennywise IV, Palhaço-aranha</button>
+    <button data-demo="epilogo">Epílogo</button>
+    <button id="demos-fechar">Voltar</button>
+  </section>
+</div>
+<div id="conflito" hidden>
+  <section class="painel-web"><h2>CARTÃO ALTERADO</h2>
+    <p>Seu cartão foi salvo em outro dispositivo enquanto esta aba estava aberta. Esta sessão foi pausada para evitar perder dados.</p>
+    <button id="conflito-recarregar">Usar cartão mais recente da AWS</button>
+    <button id="conflito-sobrescrever">Salvar esta sessão por cima</button>
+    <small id="conflito-estado">Escolha qual versão deseja manter.</small>
+  </section>
+</div>
+<div id="conta" hidden>
+  <section class="painel-web" aria-label="Conta"><h2>SUA CONTA</h2>
+    <p id="conta-quem"></p>
+    <small id="conta-estado" role="status"></small>
+    <button id="conta-sair">Sair da conta</button>
+    <button id="conta-forcar" hidden>Sair mesmo sem salvar</button>
+    <button id="conta-voltar">Voltar ao jogo</button>
+  </section>
+</div>
 <div id="capa">
   <h1><span>IT</span> ECOS DE DERRY</h1>
   <p>um roguelike nos esgotos de Derry · por Diego Silva</p>
@@ -37,6 +163,7 @@
   <div id="rodape">Teclado (WASD, J, K, L, Espaço) ou controle · F11 tela cheia ·
     <a href="https://github.com/diegof-d2fs/it-ecos-de-derry" target="_blank" rel="noopener">código no GitHub</a></div>
 </div>
+<script src="auth.js"></script>
 <script>
   const capa = document.getElementById('capa');
   const barra = document.querySelector('#barra div');
@@ -75,11 +202,10 @@
   var Module = {
     canvas: document.getElementById('tela'),
     preRun: [() => {
-      // Saves no IndexedDB do navegador (perfil, recordes, cartão de memória).
+      // MEMFS: convidado perde o progresso; conta baixa e envia o cartão via API.
       FS.mkdir('/saves');
-      FS.mount(IDBFS, {}, '/saves');
-      addRunDependency('saves');
-      FS.syncfs(true, () => removeRunDependency('saves'));
+      addRunDependency('acesso');
+      window.ecosAcesso.preparar(FS).then(() => removeRunDependency('acesso'));
     }],
     setStatus: (t) => {
       const m = t && t.match(/\((\d+(\.\d+)?)\/(\d+)\)/);
@@ -89,7 +215,6 @@
     },
     printErr: (t) => console.warn(t),
   };
-  window.addEventListener('beforeunload', () => { try { FS.syncfs(false, () => {}); } catch (e) {} });
 </script>
 {{{ SCRIPT }}}
 </body>

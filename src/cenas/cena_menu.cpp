@@ -11,6 +11,9 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #include "cenas/cena.h"
 #include "cenas/ui.h"
@@ -24,6 +27,9 @@ namespace {
 
 enum class AcaoMenu : std::uint8_t {
     Continuar, NovoJogo, Carregar, Assistir, ComoJogar, Itens, Pontuacao, Controles, Opcoes, Recordes, Creditos, Sair
+#ifdef __EMSCRIPTEN__
+    , LerLore, Feedback
+#endif
 };
 
 struct ItemPrincipal {
@@ -43,6 +49,10 @@ std::vector<ItemPrincipal> itensPrincipais(const Jogo& jogo) {
     v.push_back({L"Controles", AcaoMenu::Controles});
     v.push_back({L"Opções", AcaoMenu::Opcoes});
     v.push_back({L"Recordes", AcaoMenu::Recordes});
+#ifdef __EMSCRIPTEN__
+    v.push_back({L"Ler lore", AcaoMenu::LerLore});
+    v.push_back({L"Feedback", AcaoMenu::Feedback});
+#endif
     v.push_back({L"Créditos", AcaoMenu::Creditos});
 #ifndef __EMSCRIPTEN__   // no navegador não se fecha a aba: sair é voltar a este menu (Diego, 24/11)
     v.push_back({L"Sair", AcaoMenu::Sair});
@@ -274,7 +284,18 @@ void executar(Jogo& jogo, AcaoMenu a) {
         case AcaoMenu::Recordes:
             m.recordes = carregarRecordes(std::filesystem::path(jogo.pastaSaves) / L"recordes.txt");
             irPara(jogo, TelaMenu::Recordes);
+#ifdef __EMSCRIPTEN__
+            EM_ASM({ if (window.ecosAcesso) window.ecosAcesso.abrirRanking(); });
+#endif
             break;
+#ifdef __EMSCRIPTEN__
+        case AcaoMenu::LerLore:
+            EM_ASM({ if (window.ecosAcesso) window.ecosAcesso.abrirLore(); });
+            break;
+        case AcaoMenu::Feedback:
+            EM_ASM({ if (window.ecosAcesso) window.ecosAcesso.abrirFeedback(); });
+            break;
+#endif
         case AcaoMenu::Creditos: irPara(jogo, TelaMenu::Creditos); break;
         case AcaoMenu::Sair: jogo.rodando = false; break;
     }

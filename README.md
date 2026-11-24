@@ -7,6 +7,8 @@ e derrote a forma verdadeira da Coisa no Covil.
 
 Trabalho T3 de **Algoritmos e Programação II (UNIVALI)**, por **Diego Silva**.
 
+**[Leia a história completa na wiki ilustrada](https://diegof-d2fs.github.io/it-ecos-de-derry/)**
+
 ![Menu inicial](docs/imagens/menu.png)
 
 | | |
@@ -68,7 +70,7 @@ Trabalho T3 de **Algoritmos e Programação II (UNIVALI)**, por **Diego Silva**.
   dados, caminhos por BFS.
 - **Piloto automático**: o computador joga o jogo inteiro, do prólogo ao Covil, usando só os mesmos comandos de quem
   joga (não lê nada que o jogador não veja).
-- **304 testes automáticos** das regras, sem abrir janela, incluindo o piloto limpando todas as salas reais.
+- **306 testes automáticos** das regras, sem abrir janela, incluindo o piloto limpando todas as salas reais.
 - Cerca de 21 mil linhas de código do jogo e 8 mil de testes.
 
 ## Como compilar e rodar
@@ -172,8 +174,10 @@ assets/jogo*     sprites e ilustrações exportados (1× e 4×) com o manifesto
 assets/musics    músicas e efeitos
 tests/           os testes das regras
 tools/           scripts Python do pipeline de arte (geração, exportação, conferência)
-docs/            PRD, SDD, HANDOFF (estado do projeto) e as imagens deste README
-instructions/    prompts de todos os assets e os documentos de planejamento
+web/             versão para navegador: página, conta e cartão na AWS (opcional), API e infraestrutura
+wiki/            a wiki ilustrada da história, publicada no GitHub Pages
+docs/            PRD, SDD, HANDOFF (diário do projeto) e as imagens deste README
+instructions/    prompts de todos os assets
 ```
 
 ## Arte, som e pipeline de assets
@@ -189,7 +193,7 @@ Músicas e efeitos sonoros vêm de bancos de áudio livres.
 
 | Documento | Conteúdo |
 |---|---|
-| [`docs/HANDOFF.md`](docs/HANDOFF.md) | estado atual do projeto, decisões e verificações (leia primeiro) |
+| [`docs/HANDOFF.md`](docs/HANDOFF.md) | histórico de decisões e verificações; contém estados antigos |
 | [`docs/PRD-v2-IT-Ecos-de-Derry.md`](docs/PRD-v2-IT-Ecos-de-Derry.md) | o produto: regras, conteúdo e critérios |
 | [`docs/SDD-v1-IT-Ecos-de-Derry.md`](docs/SDD-v1-IT-Ecos-de-Derry.md) | o projeto técnico |
 | [`docs/APRENDIZADOS.md`](docs/APRENDIZADOS.md) | o que deu certo e errado ao longo do desenvolvimento |

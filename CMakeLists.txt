@@ -49,12 +49,15 @@ target_include_directories(regras PUBLIC "${CMAKE_SOURCE_DIR}/src")
 # Assets: assets/jogo_web (tools/export_web.py, 2×), dados, fontes livres e os efeitos; as músicas (MP3) tocam
 # em streaming da pasta assets/musics publicada ao lado.
 if(EMSCRIPTEN)
+    configure_file("${CMAKE_SOURCE_DIR}/web/auth.js" "${CMAKE_BINARY_DIR}/auth.js" COPYONLY)
+    configure_file("${CMAKE_SOURCE_DIR}/assets/jogo_web/cena_menu_inicial.png" "${CMAKE_BINARY_DIR}/menu.jpg" COPYONLY)
     set(WEB_SRC "${CMAKE_SOURCE_DIR}/src/main_web.cpp" "${CMAKE_SOURCE_DIR}/src/plataforma/audio_web.cpp")
     foreach(pasta render cenas)
         file(GLOB_RECURSE arquivos CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/${pasta}/*.cpp")
         list(APPEND WEB_SRC ${arquivos})
     endforeach()
     add_executable(ecos_web ${WEB_SRC})
+    set_property(TARGET ecos_web APPEND PROPERTY LINK_DEPENDS "${CMAKE_SOURCE_DIR}/web/shell.html")
     set_target_properties(ecos_web PROPERTIES OUTPUT_NAME "index" SUFFIX ".html")
     target_include_directories(ecos_web PRIVATE "${CMAKE_SOURCE_DIR}/third_party/stb")
     target_link_libraries(ecos_web PRIVATE regras)
@@ -69,6 +72,10 @@ if(EMSCRIPTEN)
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/third_party/fontes@/fontes"
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets/musics@/assets/musics"
         "SHELL:--exclude-file *.mp3")
+    add_custom_target(copiar_web ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/web/auth.js" "${CMAKE_BINARY_DIR}/auth.js"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/assets/jogo_web/cena_menu_inicial.png" "${CMAKE_BINARY_DIR}/menu.jpg")
+    add_dependencies(copiar_web ecos_web)
     return()
 endif()
 

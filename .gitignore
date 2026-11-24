@@ -74,3 +74,10 @@ Desktop.ini
 
 # --- Publicação na AWS (ids locais) ---
 web/deploy.local.json
+web/config.local.json
+web/branding.local.json
+web/lambda.local.zip
+web/outputs.local.json
+HANDOFF_CLAUDE.local.md
+PROMPT_CLAUDE.local.txt
+historico.local/

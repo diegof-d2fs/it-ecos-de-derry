@@ -1,0 +1,345 @@
+{
+  "capa": "assets/cena_menu_inicial.jpg",
+  "capitulos": [
+    {
+      "id": "abertura",
+      "titulo": "Prólogo: A voz no bueiro",
+      "cenas": [
+        {
+          "imagem": "assets/cena_abertura_1.jpg",
+          "texto": "Derry, Maine. Uma cidade pequena, de ruas sempre molhadas, onde as pessoas aprenderam a não olhar para dentro dos bueiros."
+        },
+        {
+          "imagem": "assets/cena_abertura_2.jpg",
+          "texto": "No outono passado, Bill Denbrough fez um barquinho de papel para o irmão caçula, Georgie. O barquinho desceu a enxurrada, e Georgie correu atrás dele."
+        },
+        {
+          "imagem": "assets/cena_abertura_3.jpg",
+          "texto": "Encontraram só o barquinho, encharcado, na boca de um bueiro. Georgie nunca voltou para casa. Bill guardou a culpa onde ninguém podia ver."
+        },
+        {
+          "imagem": "assets/cartao_clube.jpg",
+          "texto": "Mas Bill não estava sozinho. Sete crianças que Derry chamava de Perdedores construíram um clube secreto debaixo da terra, no Barrens. Ali, ninguém era fraco demais."
+        },
+        {
+          "imagem": "assets/tela_perdedores.jpg",
+          "texto": "Ben, Stan, Eddie, Beverly, Mike, Richie e Bill. No riacho, ao pôr do sol, fizeram um pacto de sangue: se a Coisa voltasse, eles voltariam juntos."
+        },
+        {
+          "imagem": "assets/cena_abertura_6.jpg",
+          "texto": "Hoje, quando a noite caiu, cada um ouviu uma voz chamando seu nome, e um por um os amigos correram para a escuridão. Bill também ouviu. Era a voz de Georgie."
+        },
+        {
+          "imagem": "assets/cena_abertura_7.jpg",
+          "texto": "Depois de buscar pistas na Rua Witcham, Bill voltou ao Clube. Georgie não estava lá embaixo. Seus amigos, sim. Abriu o alçapão e desceu."
+        }
+      ]
+    },
+    {
+      "id": "bioma_2",
+      "titulo": "Capítulo 2: O Barrens",
+      "cenas": [
+        {
+          "imagem": "assets/referencia_visual.jpg",
+          "texto": "Quando a Múmia caiu, as faixas velhas se abriram, e de dentro delas saiu um palhaço. Ele esperava por Bill desde o começo."
+        },
+        {
+          "imagem": "assets/cena_b2_2.jpg",
+          "texto": "A Coisa riu, se desfez em névoa e balões e recuou para a escuridão. Não estava derrotada. Estava só começando."
+        },
+        {
+          "imagem": "assets/cena_b2_3.jpg",
+          "texto": "Ben estava livre. Antes de subir, pôs o mapa das galerias na mão de Bill: “Os túneis seguem até o Barrens. Eu desenhei cada um… menos os que se mexem.”"
+        },
+        {
+          "imagem": "assets/cena_b2_4.jpg",
+          "texto": "A galeria terminava num cano aberto para a mata do Barrens. Lá fora, a noite estava quieta demais. Nem os grilos cantavam."
+        },
+        {
+          "imagem": "assets/cena_b2_5.jpg",
+          "texto": "Na margem do riacho, Bill achou o caderno de pássaros de Stan, aberto e encharcado. Pegadas pequenas iam direto para dentro da água."
+        },
+        {
+          "imagem": "assets/cena_b2_6.jpg",
+          "texto": "Stan sempre teve medo do que não tem ordem, do que não se explica. E a água parada da velha caixa d'água não tinha fundo."
+        }
+      ]
+    },
+    {
+      "id": "bioma_3",
+      "titulo": "Capítulo 3: A casa da Rua Neibolt",
+      "cenas": [
+        {
+          "imagem": "assets/cena_b3_1.jpg",
+          "texto": "Stan girou o volante da comporta com as mãos tremendo. A água baixou, e o Afogado ficou preso na lama, encolhendo até sumir."
+        },
+        {
+          "imagem": "assets/cena_b3_2.jpg",
+          "texto": "“Eu anotei tudo”, disse Stan, arrancando uma página do caderno. “Os canos do Barrens levam até a Rua Neibolt. Todo caminho ruim de Derry leva pra lá.”"
+        },
+        {
+          "imagem": "assets/cena_b3_3.jpg",
+          "texto": "A casa da Rua Neibolt estava abandonada desde antes de Bill nascer. Mesmo assim, havia uma luz acesa numa janela do andar de cima."
+        },
+        {
+          "imagem": "assets/cena_b3_4.jpg",
+          "texto": "No corredor de tábuas podres, Bill achou o inalador de Eddie. Eddie nunca, nunca saía de casa sem ele."
+        },
+        {
+          "imagem": "assets/cena_b3_5.jpg",
+          "texto": "Do porão subia um cheiro de coisa doente. E uma voz rouca repetia, sem parar, que Eddie estava doente. Muito, muito doente."
+        }
+      ]
+    },
+    {
+      "id": "bioma_4",
+      "titulo": "Capítulo 4: Os porões inundados",
+      "cenas": [
+        {
+          "imagem": "assets/cena_b4_1.jpg",
+          "texto": "Eddie enfaixou o braço de Bill com as mãos firmes. “Viu? Eu não tô doente. Nunca estive.” Pela primeira vez, ele mesmo acreditou nisso."
+        },
+        {
+          "imagem": "assets/cena_b4_2.jpg",
+          "texto": "A Coisa recuou outra vez. Mas, a cada volta, estava maior, mais rápida e mais faminta. Ela estava aprendendo com Bill."
+        },
+        {
+          "imagem": "assets/cena_b4_3.jpg",
+          "texto": "Atrás da fornalha do porão, o chão tinha cedido. Lá embaixo, os porões inundados de Derry se ligavam uns aos outros como veias."
+        },
+        {
+          "imagem": "assets/cena_b4_4.jpg",
+          "texto": "Boiando na água cor de ferrugem, Bill achou o estilingue de Beverly. Ao lado dele, uma pequena esfera de prata."
+        },
+        {
+          "imagem": "assets/cena_b4_5.jpg",
+          "texto": "No fim do porão havia um banheiro velho. Do ralo da pia, vozes sussurravam o nome dela. Beverly sabia que algumas casas nunca são seguras."
+        }
+      ]
+    },
+    {
+      "id": "bioma_5",
+      "titulo": "Capítulo 5: A Siderúrgica Kitchener",
+      "cenas": [
+        {
+          "imagem": "assets/cena_b5_1.jpg",
+          "texto": "Beverly mirou e não errou. A passarela desabou sobre o ralo, e a voz que vinha lá de baixo engasgou e se calou."
+        },
+        {
+          "imagem": "assets/cena_b5_2.jpg",
+          "texto": "“Prata”, disse ela, pondo a esfera na mão de Bill. “Se ele voltar, mira no meio.” Depois subiu sozinha, sem olhar para trás."
+        },
+        {
+          "imagem": "assets/cena_b5_3.jpg",
+          "texto": "Os canos dos porões terminavam nas ruínas da Siderúrgica Kitchener, onde um incêndio, muitos anos atrás, engoliu uma festa inteira de Páscoa."
+        },
+        {
+          "imagem": "assets/cena_b5_4.jpg",
+          "texto": "No chão de cinzas estava o caderno de Mike, cheio de recortes de jornal. Mike guardava a história de Derry. Agora era a história que guardava ele."
+        },
+        {
+          "imagem": "assets/cena_b5_5.jpg",
+          "texto": "Lá no alto, entre as chaminés, algo enorme se ajeitou no ninho. Tinha asas de fuligem e olhos de carvão aceso."
+        }
+      ]
+    },
+    {
+      "id": "bioma_6",
+      "titulo": "Capítulo 6: A Cisterna das vozes",
+      "cenas": [
+        {
+          "imagem": "assets/cena_b6_1.jpg",
+          "texto": "Mike puxou a alavanca do gerador, e as lâmpadas da siderúrgica acenderam uma depois da outra. Na luz, o Pássaro das Cinzas virou poeira."
+        },
+        {
+          "imagem": "assets/cena_b6_2.jpg",
+          "texto": "“Eu li sobre isso”, disse Mike, abrindo um mapa antigo. “Toda a água de Derry desce para a velha cisterna. É lá que a Coisa guarda as vozes.”"
+        },
+        {
+          "imagem": "assets/cena_b6_3.jpg",
+          "texto": "Pela primeira vez, a Coisa não fugiu calada. Do alto da escada, ela sussurrou: “Só falta um, Billy. Depois é a sua vez.”"
+        },
+        {
+          "imagem": "assets/cena_b6_4.jpg",
+          "texto": "A cisterna era uma catedral de canos e água parada. Cada gota que caía ecoava como uma risada."
+        },
+        {
+          "imagem": "assets/cena_b6_5.jpg",
+          "texto": "Os óculos de Richie estavam no chão, com uma lente rachada. Ao lado, pegadas fundas de garras. E, ao longe, um uivo que imitava a risada dele."
+        }
+      ]
+    },
+    {
+      "id": "bioma_7",
+      "titulo": "Capítulo 7: O Covil",
+      "cenas": [
+        {
+          "imagem": "assets/cena_b7_1.jpg",
+          "texto": "“Ei, Coisa! Isso aqui é só papelão!” Richie gritou com toda a voz que tinha, e as paredes falsas se desmancharam como cenário de teatro."
+        },
+        {
+          "imagem": "assets/cena_b7_2.jpg",
+          "texto": "Richie colou os óculos com fita e sorriu. “Seis de seis, Grande Bill. Agora vai lá e termina isso. Eu cuido da plateia.”"
+        },
+        {
+          "imagem": "assets/cena_b7_3.jpg",
+          "texto": "Lá em cima, os seis amigos estavam juntos de novo, de mãos dadas em volta do bueiro. Lá embaixo, restavam só Bill e a Coisa."
+        },
+        {
+          "imagem": "assets/cena_b7_4.jpg",
+          "texto": "A última escada descia mais fundo do que qualquer mapa. No fim dela, uma luz morta, laranja e fria, pulsava como um coração."
+        },
+        {
+          "imagem": "assets/cena_b7_5.jpg",
+          "texto": "O covil: uma montanha de brinquedos perdidos, de todas as crianças que Derry esqueceu. E, lá no topo, uma pequena capa de chuva amarela."
+        },
+        {
+          "imagem": "assets/cena_b7_6.jpg",
+          "texto": "A cicatriz do pacto ardeu na palma da mão. Bill fechou o punho. Ele não estava sozinho. Nunca esteve."
+        }
+      ]
+    },
+    {
+      "id": "final",
+      "titulo": "Epílogo: Ninguém ficou para trás",
+      "cenas": [
+        {
+          "imagem": "assets/cena_final_1.jpg",
+          "texto": "“Billy, me ajuda a pegar o barquinho.” Era a voz dele. O rosto dele. A capa amarela dele."
+        },
+        {
+          "imagem": "assets/cena_final_2.jpg",
+          "texto": "“Você não é ele”, disse Bill, sem gaguejar. “Você nunca foi ele.” E a ilusão se partiu como vidro."
+        },
+        {
+          "imagem": "assets/cena_final_3.jpg",
+          "texto": "Quando a luz morta tentou apagar tudo, seis círculos de luz se acenderam em volta dele. Os amigos estavam lá em cima, mas o pacto os trouxe até ali."
+        },
+        {
+          "imagem": "assets/cena_final_4.jpg",
+          "texto": "A Coisa se quebrou em sombra e névoa, e os balões murcharam em silêncio. “Vocês vão esquecer”, ela sussurrou. “Hoje, não”, respondeu Bill."
+        },
+        {
+          "imagem": "assets/cena_final_5.jpg",
+          "texto": "Bill subiu a escada mais longa da vida dele. Lá no alto, seis mãos se estenderam para puxá-lo de volta para a luz."
+        },
+        {
+          "imagem": "assets/cena_final_6.jpg",
+          "texto": "Era manhã em Derry. Sujos, cansados, rindo e chorando ao mesmo tempo, os sete se abraçaram. “Eu contei todos”, disse Mike. “Estamos todos aqui.”"
+        },
+        {
+          "imagem": "assets/cena_final_7.jpg",
+          "texto": "Beverly soltou o último balão vermelho. Ele subiu, subiu, virou um pontinho no céu e sumiu."
+        },
+        {
+          "imagem": "assets/cena_final_8.jpg",
+          "texto": "Na sarjeta, Bill pôs um barquinho de papel na água limpa e deixou que ele fosse. Desta vez não correu atrás. Desta vez, era uma despedida."
+        },
+        {
+          "imagem": "assets/cena_final_9.jpg",
+          "texto": "O ciclo se quebrou. Ninguém mais acordaria no Clube ao entardecer, e Bill não precisaria lembrar de tudo sozinho."
+        },
+        {
+          "imagem": "assets/cena_final_10.jpg",
+          "texto": "Derry ainda guarda segredos. Mas, nesta noite, ninguém ficou para trás."
+        }
+      ]
+    }
+  ],
+  "locais": [
+    {
+      "nome": "Clube dos Perdedores",
+      "descricao": "O refúgio onde a noite recomeça e o Mural guarda as Lembranças.",
+      "imagem": "assets/cartao_clube.jpg"
+    },
+    {
+      "nome": "Galeria pluvial",
+      "descricao": "Grades, água escura e as faixas da Múmia. Ben espera aqui.",
+      "imagem": "assets/cartao_galeria.jpg"
+    },
+    {
+      "nome": "Barrens",
+      "descricao": "Riacho, lama e a caixa d'água que aprisiona Stan.",
+      "imagem": "assets/cartao_barrens.jpg"
+    },
+    {
+      "nome": "Rua Neibolt",
+      "descricao": "Uma casa abandonada, o inalador de Eddie e a voz do Leproso.",
+      "imagem": "assets/cartao_neibolt.jpg"
+    },
+    {
+      "nome": "Porões inundados",
+      "descricao": "Canos, passarelas e o ralo que chama Beverly.",
+      "imagem": "assets/cartao_poroes.jpg"
+    },
+    {
+      "nome": "Siderúrgica Kitchener",
+      "descricao": "Cinzas, esteiras e o ninho do Pássaro que guarda Mike.",
+      "imagem": "assets/cartao_siderurgica.jpg"
+    },
+    {
+      "nome": "Cisterna das vozes",
+      "descricao": "Paredes falsas, ecos e o uivo que imita Richie.",
+      "imagem": "assets/cartao_cisterna.jpg"
+    },
+    {
+      "nome": "O Covil",
+      "descricao": "Brinquedos perdidos, a capa amarela e a última forma da Coisa.",
+      "imagem": "assets/cartao_covil.jpg"
+    }
+  ],
+  "personagens": [
+    {
+      "nome": "Bill Denbrough",
+      "descricao": "O único que se lembra do ciclo. Desce com uma lanterna e um taco para trazer os amigos de volta.",
+      "imagem": "assets/retrato_bill.png"
+    },
+    {
+      "nome": "Ben Hanscom",
+      "descricao": "Leitor e construtor, conhece as galerias e deixa para Bill seus mapas e sua resistência.",
+      "imagem": "assets/retrato_ben.png"
+    },
+    {
+      "nome": "Stan Uris",
+      "descricao": "Observador de pássaros, procura ordem até na água parada do Barrens.",
+      "imagem": "assets/retrato_stan.png"
+    },
+    {
+      "nome": "Eddie Kaspbrak",
+      "descricao": "Carrega o inalador, cuida dos ferimentos de Bill e encontra coragem na casa da Rua Neibolt.",
+      "imagem": "assets/retrato_eddie.png"
+    },
+    {
+      "nome": "Beverly Marsh",
+      "descricao": "Atira com o estilingue e sabe reconhecer as vozes que a Coisa usa para enganar.",
+      "imagem": "assets/retrato_beverly.png"
+    },
+    {
+      "nome": "Mike Hanlon",
+      "descricao": "Guarda a história de Derry, orienta Bill e acende a luz da siderúrgica.",
+      "imagem": "assets/retrato_mike.png"
+    },
+    {
+      "nome": "Richie Tozier",
+      "descricao": "Usa a voz e o humor para enfrentar o medo. Seu grito desfaz as paredes falsas.",
+      "imagem": "assets/retrato_richie.png"
+    },
+    {
+      "nome": "Georgie",
+      "descricao": "O irmão desaparecido de Bill. No covil, a Coisa usa seu rosto e sua voz como armadilha.",
+      "imagem": "assets/retrato_georgie.png"
+    },
+    {
+      "nome": "Pennywise",
+      "descricao": "A Coisa que se alimenta do medo e assume a forma dos pesadelos de cada amigo.",
+      "imagem": "assets/retrato_pennywise.png"
+    },
+    {
+      "nome": "Elias",
+      "descricao": "O zelador dos esgotos. Conhece as grades e vende suprimentos para atravessar a noite.",
+      "imagem": "assets/retrato_elias.png"
+    }
+  ],
+  "grupo": "assets/tela_perdedores.jpg",
+  "final": "assets/cena_final_10.jpg"
+}

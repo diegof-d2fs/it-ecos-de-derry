@@ -4,7 +4,7 @@
 //   * vídeo: o canvas de software é copiado para o <canvas id="tela"> do HTML a cada quadro;
 //   * teclado: KeyboardEvent.code → Comando (a mesma tabela do Windows); controle: Gamepad API ("standard");
 //   * áudio: plataforma/audio_web.cpp; texto e PNG: render/texto_web.cpp e render/imagem_web.cpp;
-//   * saves: /saves no IndexedDB (IDBFS), sincronizado a cada poucos segundos;
+//   * saves: /saves em memória; contas sincronizam com a API da AWS;
 //   * opções pela URL, como na linha de comando: ?sala=b7_covil&forte=1&piloto=1&cena=final&bioma=3…
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -53,16 +53,14 @@ EM_JS(void, js_tela_cheia, (), {
     else document.documentElement.requestFullscreen().catch(() => {});
 });
 EM_JS(char*, js_parametros, (), {
-    const s = window.location.search || '';
+    const s = window.ecosAcesso ? window.ecosAcesso.parametrosDemo() : '';
     const n = lengthBytesUTF8(s) + 1;
     const p = _malloc(n);
     stringToUTF8(s, p, n);
     return p;
 });
 EM_JS(void, js_sincronizar_saves, (), {
-    if (window.ecosSincronizando) return;
-    window.ecosSincronizando = true;
-    FS.syncfs(false, () => { window.ecosSincronizando = false; });
+    if (window.ecosAcesso) window.ecosAcesso.sincronizar();
 });
 EM_JS(void, js_carregou, (), { if (window.ecosCarregou) window.ecosCarregou(); });
 // A capa ("clique para jogar") está fechada? Enquanto ela aparece, o jogo não ouve teclado nem controle.
@@ -272,7 +270,7 @@ void quadro() {
     }
     js_apresentar(web->rgba.data(), web->canvas.w, web->canvas.h);
     atualizarAudio(static_cast<float>(decorrido), focada);
-    if (agora - web->ultimaSincronia > 3.0) {   // perfil, recordes, saves: para o IndexedDB
+    if (agora - web->ultimaSincronia > 3.0) {   // perfil, recordes, cartão: para a conta AWS
         web->ultimaSincronia = agora;
         js_sincronizar_saves();
     }

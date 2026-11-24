@@ -1,0 +1,243 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Conta, cartao privado, ranking e feedback de IT Ecos de Derry
+Parameters:
+  SiteOrigin:
+    Type: String
+    Description: Origem HTTPS do jogo, sem barra final
+  CallbackUrl:
+    Type: String
+    Description: URL completa de retorno do Cognito
+  CodeBucket:
+    Type: String
+  CodeKey:
+    Type: String
+  SaveBucketName:
+    Type: String
+  CognitoPrefix:
+    Type: String
+  AdminEmail:
+    Type: String
+    Description: E-mail do administrador (rotas de demonstracao e destino do feedback). Vem do .env local, nunca do repositorio.
+Resources:
+  SaveBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SaveBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+      LifecycleConfiguration:
+        Rules:
+          - Id: LimitesDeFeedback
+            Prefix: feedback/limites/
+            Status: Enabled
+            ExpirationInDays: 2
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ecos-de-derry
+      UserPoolTier: ESSENTIALS
+      LambdaConfig:
+        PreSignUp: !GetAtt NickValidator.Arn
+      UsernameConfiguration: {CaseSensitive: false}
+      AliasAttributes: [email]
+      AutoVerifiedAttributes: [email]
+      Schema:
+        - Name: email
+          Required: true
+          Mutable: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 10
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      AdminCreateUserConfig: {AllowAdminCreateUserOnly: false}
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+        EmailSubject: 'IT: Ecos de Derry - confirme seu e-mail'
+        EmailMessage: 'Seu codigo de confirmacao para IT: Ecos de Derry e {####}.'
+  NickValidatorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: {Service: lambda.amazonaws.com}
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  NickValidator:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.handler
+      Role: !GetAtt NickValidatorRole.Arn
+      Timeout: 5
+      Code:
+        ZipFile: |
+          import re
+          def handler(event, context):
+              nick = event.get('userName', '')
+              if not re.fullmatch(r'[A-Za-z0-9_]{3,24}', nick):
+                  raise ValueError('Apelido: 3 a 24 letras, numeros ou sublinhado.')
+              return event
+  NickValidatorPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref NickValidator
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt UserPool.Arn
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientName: jogo-web
+      GenerateSecret: false
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows: [code]
+      AllowedOAuthScopes: [openid, email]
+      CallbackURLs: [!Ref CallbackUrl]
+      LogoutURLs: [!Ref CallbackUrl]
+      SupportedIdentityProviders: [COGNITO]
+      PreventUserExistenceErrors: ENABLED
+      EnableTokenRevocation: true
+      RefreshTokenValidity: 30
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId: !Ref UserPool
+      Domain: !Ref CognitoPrefix
+      ManagedLoginVersion: 2
+  Branding:
+    Type: AWS::Cognito::ManagedLoginBranding
+    DependsOn: UserPoolDomain
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientId: !Ref UserPoolClient
+      UseCognitoProvidedValues: true
+  ApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: {Service: lambda.amazonaws.com}
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: dados-privados
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject]
+                Resource: !Sub '${SaveBucket.Arn}/*'
+              - Effect: Allow
+                Action: ses:SendEmail
+                Resource: !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${AdminEmail}'
+              - Effect: Allow
+                Action: cognito-idp:AdminGetUser
+                Resource: !GetAtt UserPool.Arn
+  ApiFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: save_api.handler
+      Role: !GetAtt ApiRole.Arn
+      Timeout: 15
+      MemorySize: 128
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Ref CodeKey
+      Environment:
+        Variables:
+          SAVE_BUCKET: !Ref SaveBucket
+          USER_POOL_ID: !Ref UserPool
+          DEMO_ADMIN_EMAIL: !Ref AdminEmail
+          FEEDBACK_EMAIL: !Ref AdminEmail
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: ecos-de-derry-api
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins: [!Ref SiteOrigin]
+        AllowMethods: [GET, PUT, POST, OPTIONS]
+        AllowHeaders: [Authorization, Content-Type]
+        MaxAge: 600
+  ApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ApiFunction.Arn
+      PayloadFormatVersion: '2.0'
+  JwtAuthorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      ApiId: !Ref HttpApi
+      AuthorizerType: JWT
+      Name: conta-cognito
+      IdentitySource: ['$request.header.Authorization']
+      JwtConfiguration:
+        Audience: [!Ref UserPoolClient]
+        Issuer: !Sub 'https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}'
+  GetSaves:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'GET /saves', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  PutSaves:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'PUT /saves', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  GetProfile:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'GET /profile', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  PutProfile:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'PUT /profile', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  GetRanking:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'GET /ranking', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  PostFeedback:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'POST /feedback', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  GetAdmin:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: 'GET /admin', AuthorizationType: JWT, AuthorizerId: !Ref JwtAuthorizer, Target: !Sub 'integrations/${ApiIntegration}'}
+  DefaultStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: '$default'
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 20
+        ThrottlingRateLimit: 10
+  InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ApiFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*'
+Outputs:
+  ApiUrl: {Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'}
+  CognitoDomain: {Value: !Sub 'https://${CognitoPrefix}.auth.${AWS::Region}.amazoncognito.com'}
+  ClientId: {Value: !Ref UserPoolClient}
+  UserPoolId: {Value: !Ref UserPool}
+  SaveBucket: {Value: !Ref SaveBucket}
+  BrandingId: {Value: !Ref Branding}

@@ -1,7 +1,7 @@
 # IT: Ecos de Derry — PRD v2
 
 **Documento de requisitos de produto** · versão 2.0 · 10/11/2026
-Substitui o PRD v1.0 (27/10/2026, `instructions/PRD-IT-Ecos-de-Derry.docx`). O v1 continua como histórico; em caso de conflito vale este documento.
+Substitui o PRD v1.0 (27/10/2026, `instructions/PRD-IT-Ecos-de-Derry.docx`). O v1 saiu do repositório em 24/11 e continua no histórico do Git; em caso de conflito vale este documento.
 Documento técnico correspondente: `docs/SDD-v1-IT-Ecos-de-Derry.md`.
 
 ---
