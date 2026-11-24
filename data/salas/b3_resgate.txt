@@ -1,0 +1,25 @@
+# Etapa 11.2: a porta do Medo do Eddie. Atrás dela, o quarto dele; a saída está numa porta
+# acorrentada que só o Eddie destranca por dentro (PRD §4.4): no resgate ela abre e deixa passar.
+id=b3_resgate
+nome=Rua Neibolt: A porta do Medo
+bioma=3
+tipo=resgate
+entrada=fixa
+npc=1 eddie
+enfeite=0 19 7
+ao_resgatar_enfeite=19 7 1 passa
+mapa:
+##########################
+##########################
+#............#.....#.....#
+#............#.....#.....#
+#............#.....#.....#
+#............#..1..#.....#
+#............#.....#.....#
+O.E..........T...........L
+#............#.....#.....#
+#............#.....#.....#
+#............#.....#.....#
+#............#.....#.....#
+#............#.....#.....#
+##########################

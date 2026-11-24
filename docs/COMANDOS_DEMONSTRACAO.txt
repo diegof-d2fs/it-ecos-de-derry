@@ -1,0 +1,166 @@
+IT: ECOS DE DERRY - COMANDOS PARA A APRESENTACAO (20 minutos)
+==============================================================
+
+Pasta: D:\algoritmos_prog_2\ECOS_APRESENTACAO
+Atalho mais facil: dois cliques no .bat. Cada .bat abre o jogo direto naquele ponto.
+Pelo terminal (cmd):   cd /d D:\algoritmos_prog_2\ECOS_APRESENTACAO   e depois   ecos_de_derry.exe <opcoes>
+Pelo PowerShell: cada secao abaixo tem dois exemplos prontos (ja entram na pasta; e so copiar e colar).
+    No PowerShell o jogo precisa do .\ na frente:  .\ecos_de_derry.exe <opcoes>
+
+Durante qualquer partida:
+    F10  liga/desliga o COMPUTADOR jogando sozinho (piloto automatico, o item de 3,0 pontos)
+    F11  tela cheia / janela         F1  medidor (com o piloto: o objetivo e o caminho dele)
+    Esc  pausa                       Cenas: Enter avanca; SEGURAR Esc pula a cena inteira
+
+Controle (8BitDo / Xbox): A = dash / confirmar · B = clarao / voltar · X = atacar · Y = especial ·
+RB = interagir · LB = kit · Select = inventario · Start = pausa. Teclado: J atacar · K especial ·
+L clarao · Espaco dash · Q kit · E interagir · I inventario · C ficha.
+
+
+ROTEIRO SUGERIDO (20 min)
+-------------------------
+ 1 min   01  menu, dificuldade, Clube dos Perdedores (alcapao)
+ 3 min   B1  comeco de verdade: a Galeria com o Mike ao lado (arma e poder do amigo)
+ 3 min   E1/E3  amigos com arma e poder (so com 2+ inimigos, nunca vencem sozinhos); o Stan e o passarinho
+ 3 min   D3, D5  o Pennywise muda a cada bioma (apodrecido na Neibolt, carbonizado na Siderurgica)
+ 4 min   C7  o chefe final: o PALHACO-ARANHA (gira 360 graus, teia, salto, patas, Luzes Mortas)
+ 3 min   E7 ou 02  o computador jogando sozinho (F10 a qualquer momento)
+ 2 min   E6  itens, inventario (I) e ficha (C); F3 o epilogo
+Depois a turma tem uma semana para jogar completo (01).
+
+
+A. O JOGO COMO ELE E
+--------------------
+ 01  ecos_de_derry.exe
+         Menu > Novo jogo > dificuldade > prologo / Clube. No Clube, a noite comeca no ALCAPAO.
+ 02  ecos_de_derry.exe --jogar --piloto
+         O computador joga a tentativa inteira (do bioma 1 ao Covil).
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --jogar --piloto --dificuldade normal
+
+
+B. IR PARA QUALQUER BIOMA (tentativa de verdade a partir dele)
+--------------------------------------------------------------
+Abre com a cena do capitulo (segure Esc para pular) e entra no bioma com Bill no nivel de quem
+chegou ali e com o amigo que o acompanharia. Daqui segue normal: salas, loja, eco, resgate, chefe,
+proximo bioma... ate o Covil.
+ B1  --bioma-inicial 1   Galeria pluvial          (amigo: Mike)
+ B2  --bioma-inicial 2   Os Barrens               (amigo: Ben)
+ B3  --bioma-inicial 3   Casa da Rua Neibolt      (amigo: Stan)
+ B4  --bioma-inicial 4   Poroes inundados         (amigo: Eddie)
+ B5  --bioma-inicial 5   Siderurgica Kitchener    (amigo: Beverly)
+ B6  --bioma-inicial 6   Cisterna das vozes       (amigo: Mike)
+ B7  --bioma-inicial 7   O Covil                  (amigo: Richie)
+Acrescente --dificuldade facil|normal|dificil e/ou --piloto.
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --bioma-inicial 3
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --bioma-inicial 7 --dificuldade normal
+
+
+C. QUALQUER CHEFE, COMPLETO (o medo e, a 50%, o Pennywise que sai de dentro dele)
+---------------------------------------------------------------------------------
+ C1  --sala b1_chefe --forte   A Mumia            -> Pennywise I
+ C2  --sala b2_chefe --forte   O Afogado          -> Pennywise I+
+ C3  --sala b3_chefe --forte   O Leproso          -> Pennywise II (apodrecido, verde-musgo)
+ C4  --sala b4_chefe --forte   O Ralo de Sangue   -> Pennywise II+ (encharcado de sangue)
+ C5  --sala b5_chefe --forte   O Passaro das Cinzas -> Pennywise III (carbonizado, cabelo em chamas)
+ C6  --sala b6_chefe --forte   O Lobisomem        -> Pennywise III+
+ C7  --sala b7_covil --forte   PENNYWISE IV, O PALHACO-ARANHA (chefe final, 3 fases):
+         fase 1 o palhaco-aranha (investida das patas + patada, TEIA que prende, SALTO de aranha,
+         baloes, gargalhada); fase 2 Georgie (a sala escurece, pulsos no escuro); fase 3 as
+         LUZES MORTAS (so atinge o Pennywise logo depois de cada ataque dele).
+         O corpo de aranha gira 360 graus e o tronco do palhaco vira junto.
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b7_covil --forte
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b5_chefe --forte
+
+
+D. DIRETO NO PENNYWISE DE CADA ESTAGIO (fase 2, metade da vida)
+---------------------------------------------------------------
+ D1 b1_chefe · D2 b2_chefe · D3 b3_chefe · D4 b4_chefe · D5 b5_chefe · D6 b6_chefe
+     ecos_de_derry.exe --sala bN_chefe --forte --pennywise
+     Mostra como cada Pennywise e diferente: tamanho, roupa, aura e golpes.
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b3_chefe --forte --pennywise
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b5_chefe --forte --pennywise
+
+
+E. DESTAQUES
+------------
+ E1  --sala b3_c02 --forte --amigo mike       Mike: cutelo do acougue + pistola de abate (atordoa)
+ E2  --sala b5_c01 --forte --amigo beverly    Beverly: estilingue de prata + labareda
+         Regras dos amigos: so ajudam com 2 ou mais inimigos na tela, 1 ataque a cada 3 s alternando
+         arma e poder, com a forca do Bill no inicio do jogo, e NUNCA derrubam o ultimo inimigo
+         (o Bill termina). No chefe, quando ele vira Pennywise, o amigo fica com medo (menos no Covil).
+         Troque o amigo com --amigo ben | stan | eddie | richie.
+ E3  --sala b1_c03 --amigo stan               Stan, "Olho atento": um gaio-azul pousa em cada armadilha
+                                              na luz e o Stan avisa "Bill, cuidado ali!"
+ E4  --sala b5_c01 --forte --dificuldade dificil --piloto   sala frenetica no Dificil, computador jogando
+ E5  --sala b5_festa --forte                  Festa dos baloes (sala bonus)
+ E6  --sala b2_c01 --forte --itens --pontos 6 itens no corpo do Bill, inventario (I) e ficha (C)
+ E7  --sala b7_covil --forte --piloto         o computador enfrenta o palhaco-aranha sozinho
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b3_c02 --forte --amigo mike
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b7_covil --forte --piloto
+
+
+F. HISTORIA (cut scenes; ao terminar, volta ao menu)
+----------------------------------------------------
+ F1  --cena abertura      Prologo: a voz no bueiro
+ F2  --cena bioma_7       Capitulo 7: O Covil
+ F3  --cena final         Epilogo: ninguem ficou para tras
+ Outras: --cena bioma_2 ... bioma_6
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --cena abertura
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --cena final
+
+
+O QUE CADA OPCAO FAZ
+--------------------
+    --bioma-inicial N  comeca a tentativa no bioma N (1 a 7), com Bill no nivel de quem chegou ali
+    --sala ID          abre uma sala avulsa (ids = nomes dos arquivos em data\salas, sem .txt)
+    --forte            Bill chega como chegaria naquele ponto da tentativa (nivel, atributos, vida, kit)
+    --pennywise        na arena de chefe, comeca direto na fase 2 (o Pennywise)
+    --amigo NOME       o amigo ao lado do Bill: mike, ben, stan, eddie, beverly, richie
+    --piloto           o computador comeca jogando (F10 devolve o controle)
+    --dificuldade D    facil | normal | dificil (padrao normal)
+    --itens            comeca com escudo, 2 melhorias, kit, Ficha de coragem, Tonico e Oculos
+    --pontos N         comeca com N pontos de atributo (C abre a ficha)
+    --eco "Nome"       comeca com um Eco ativo (ex.: --eco Estilingue)
+    --seed N           repete exatamente a mesma partida
+    --simular N        SEM JANELA: o computador joga N tentativas inteiras e grava
+                       saves\simulacao_resumo.txt (ex.: --simular 20 --dificuldade normal)
+    --cena ID          abre uma cena da historia
+
+    Copie e cole no PowerShell:
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --sala b2_c01 --forte --itens --pontos 6 --eco "Estilingue"
+    cd D:\algoritmos_prog_2\ECOS_APRESENTACAO; .\ecos_de_derry.exe --simular 10 --dificuldade normal
+
+
+O QUE MUDOU EM 24/11
+--------------------
+ - Cada amigo tem uma ARMA e um PODER ligados a sua historia (Mike, Ben, Stan, Eddie, Beverly, Richie).
+ - Pennywise II (apodrecido) e III (carbonizado) redesenhados; o IV virou o PALHACO-ARANHA gigante,
+   que gira 360 graus, com teia, salto, patas e as Luzes Mortas.
+ - Movimento do Bill e dos chefes mais fluido, inclusive na diagonal; golpe do taco gira para o angulo exato.
+ - Menus repaginados (inventario, itens, Mural de talentos); o Stan aponta armadilhas com um passarinho.
+ - Musicas e sons de ambiente trocam aos poucos (crossfade), sem cortes.
+ - TODOS os chefes viram em 360 graus (8 direcoes): andando, preparando e atacando, para onde vao.
+ - Os inimigos nao somem mais ao sair da luz: escurecem junto com o chao.
+ - Cenas da historia mais nitidas (pixel art sem borrao).
+ - Menu inicial repaginado (ilustracao nova), Como jogar ilustrado, Pontuacao e Creditos refeitos.
+
+
+BIBLIOTECAS USADAS (C++17, Windows)
+-----------------------------------
+Nenhuma engine. Win32 (janela, teclado, laco), GDI/GDI+ (entrega os pixels, le PNG), WinMM (audio:
+mixer, efeitos e crossfade das musicas sao nossos), XInput (Xbox), SDL2 so para o joystick (8BitDo),
+dwmapi (sincronia). Render por software, colisao, visao, IA, piloto automatico, gerador de salas,
+combate, efeitos, audio mixado, menus e 300+ testes automaticos: tudo feito no proprio codigo.

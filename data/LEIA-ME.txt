@@ -1,0 +1,2 @@
+Dados do jogo lidos em tempo de execução (salas, diálogos, tilesets, balanceamento).
+Formatos descritos em docs/SDD-v1-IT-Ecos-de-Derry.md §8 e §13.

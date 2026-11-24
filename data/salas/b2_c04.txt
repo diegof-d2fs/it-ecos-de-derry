@@ -1,0 +1,27 @@
+# Etapa 10.1: o lamaçal — um anel de lama (Bill −40%) em volta de uma ilha firme; a terra boa
+# fica nas bordas. Atravessar a lama é escolha cara.
+id=b2_c04
+nome=O Barrens: O lamaçal
+bioma=2
+tipo=combate
+ondas=3
+orcamento=9
+enfeite=2 27 7
+enfeite=11 4 14
+mapa:
+################################
+################################
+#..s...........................#
+#.........mmmmmmmmmmm.....s....#
+#.......mmmmmmmmmmmmmmm........#
+#......mmmmm.......mmmmm.......#
+#......mmmm...,,,...mmmm.......#
+O.E....mmmm..,,,,,..mmmm.......L
+#......mmmm...,,,...mmmm.......#
+#......mmmmm.......mmmmm.......#
+#.......mmmmmmmmmmmmmmm........#
+#.........mmmmmmmmmmm..........#
+#..s...........................#
+#.............s.........s......#
+#..............................#
+###############S################

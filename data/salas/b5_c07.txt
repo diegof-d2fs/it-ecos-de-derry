@@ -1,0 +1,26 @@
+# Etapa 13.1: o pátio das engrenagens — esteiras em volta de um bloco central (um circuito) e grelhas.
+id=b5_c07
+nome=Siderúrgica: O pátio das engrenagens
+bioma=5
+tipo=combate
+ondas=3
+orcamento=12
+opcional=3 7
+enfeite=15 4 2
+enfeite=15 21 2
+enfeite=12 12 11
+mapa:
+##########################
+##########################
+#........................#
+#..s..................s..#
+#........................#
+#.......>>>>>>>>>v.......#
+#.......A..####..v.......#
+O.Ef....A..####..v....f..L
+#.......A..####..v.......#
+#.......A<<<<<<<<<.......#
+#........................#
+#..s..................s..#
+#........................#
+############S#############

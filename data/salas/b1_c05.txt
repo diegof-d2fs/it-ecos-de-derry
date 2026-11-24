@@ -1,0 +1,25 @@
+# Etapa 11.1: piso cedendo (X) entre as caixas.
+# Etapa 8.5: corredores de caixas (quebram no golpe; a Sombra as esmaga) e lama no meio, que
+# deixa Bill lento: lutar no barro é escolha ruim. Segredo no canto de cima, à esquerda.
+id=b1_c05
+nome=Galeria: Depósito de caixas
+bioma=1
+tipo=combate
+ondas=3
+orcamento=9
+opcional=18 7
+mapa:
+##########################
+##########################
+#.l.B.#..........s.......#
+#.....#..c..c........c...#
+###r###..c..c...##...c...#
+#...............##.....s.#
+#........mmm.........s...#
+O.E......mmm.....XX......L
+#...........c..c.........#
+#....##.....c..c....##...#
+#....##.............##...#
+#..s.......s.........s...#
+#........................#
+#############S############

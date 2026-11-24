@@ -1,0 +1,25 @@
+# Etapa 8.3: a arena do medo do Ben (PRD §10.1). A 1ª (e única) onda é o chefe: a Múmia surge
+# no '@'. Fase 1: faixa que prende, leque de 3 bandagens, ratos da galeria. A ≤ 50% da vida o
+# medo se rasga e o Pennywise I sai (fase 2: rápido, linha curta e aproximação). Os pilares
+# cortam as linhas; as portas só abrem com a "Manifestação dispersa". Os 's' ficam para os ratos.
+id=b1_chefe
+nome=Galeria: A arena do medo
+bioma=1
+tipo=chefe
+ondas=1
+musica=tensao
+mapa:
+##########################
+##########################
+#........................#
+#..s..................s..#
+#............@...........#
+#.......##......##.......#
+#........................#
+O.E......................L
+#........................#
+#.......##......##.......#
+#.....~~~........~~~.....#
+#..s..~~~........~~~..s..#
+#........................#
+############S#############

@@ -1,0 +1,22 @@
+# Etapa 14.1: o reservatório — quatro tanques de água funda (só os voadores passam por cima).
+id=b6_c03
+nome=Cisterna: O reservatório
+bioma=6
+tipo=combate
+ondas=3
+orcamento=16
+mapa:
+##########################
+##########################
+#..s..................s..#
+#........................#
+#....wwwwww....wwwwww....#
+#....wwwwww....wwwwww....#
+#........................#
+O.E......................L
+#........................#
+#....wwwwww....wwwwww....#
+#....wwwwww....wwwwww....#
+#........................#
+#..s.......J..........s..#
+############S#############

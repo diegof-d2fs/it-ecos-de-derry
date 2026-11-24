@@ -1,0 +1,23 @@
+# Etapa 8.5: o canal fundo corta a sala de parede a parede; só se cruza pelas duas pontes
+# (gargalos onde o combate aperta). Os balões voam por cima da água. Segredo no canto de baixo.
+id=b1_c04
+nome=Galeria: O canal transbordado
+bioma=1
+tipo=combate
+ondas=3
+orcamento=8
+mapa:
+##########################
+##########################
+#..s.........s.........s.#
+#........................#
+#....##............##....#
+#wwwwwww==wwwwwwww==wwwww#
+#~~~~~~~..~~~~~~~~..~~~~~#
+O.E......................L
+#........................#
+#.....c..........c.......#
+###r###..................#
+#.B.l.#.....,,,,.........#
+#.....#..s.........s.....#
+##########S###############

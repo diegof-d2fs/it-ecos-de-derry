@@ -1,0 +1,45 @@
+# Etapa 10.1: a porta do Medo do Stan. Atrás dela, o canal fundo da represa; no resgate o Stan
+# fecha a comporta e a água vira lama caminhável (PRD §4.4) — o caminho até a saída.
+id=b2_resgate
+nome=O Barrens: A porta do Medo
+bioma=2
+tipo=resgate
+entrada=fixa
+npc=1 stan
+enfeite=0 19 2
+ao_resgatar_enfeite=19 2 1
+ao_resgatar=19 3 m
+ao_resgatar=20 3 m
+ao_resgatar=19 4 m
+ao_resgatar=20 4 m
+ao_resgatar=19 5 m
+ao_resgatar=20 5 m
+ao_resgatar=19 6 m
+ao_resgatar=20 6 m
+ao_resgatar=19 7 m
+ao_resgatar=20 7 m
+ao_resgatar=19 8 m
+ao_resgatar=20 8 m
+ao_resgatar=19 9 m
+ao_resgatar=20 9 m
+ao_resgatar=19 10 m
+ao_resgatar=20 10 m
+ao_resgatar=19 11 m
+ao_resgatar=20 11 m
+ao_resgatar=19 12 m
+ao_resgatar=20 12 m
+mapa:
+##########################
+##########################
+#............#......#....#
+#............#.....ww....#
+#............#.....ww....#
+#............#..1,,ww,...#
+#............#.....ww....#
+O.E..........T.....ww....L
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+##########################

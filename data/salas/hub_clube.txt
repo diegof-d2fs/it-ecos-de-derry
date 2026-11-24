@@ -1,0 +1,44 @@
+# Etapa 7.2: o Clube dos Perdedores (hub, PRD §13). Sem inimigos, sem cronômetro, iluminado.
+#   M = Mural dos Perdedores (talentos)   Q = quadro de recordes   H = alçapão (começa a tentativa)
+#   1..9 = amigos (npc=<dígito> <nome>; sprite <nome>_idle)
+#   enfeite=<quadro> <col> <lin>: objeto decorativo da folha objetos_clube (ocupa a célula)
+# O nome começa com "hub_" para ficar DEPOIS das salas dos biomas na ordem alfabética
+# (os índices de --sala N continuam os mesmos).
+id=hub_clube
+nome=Clube dos Perdedores
+bioma=0
+tipo=clube
+ambiente=clube
+npc=1 ben
+npc=2 mike
+npc=3 richie
+npc=4 eddie
+npc=5 stan
+npc=6 beverly
+# mesa com o mapa (Ben), lampiões, livros (Mike), walkie-talkie, pergaminho, rede, cadeira…
+enfeite=3 3 4
+enfeite=7 1 2
+enfeite=7 22 2
+enfeite=10 22 5
+enfeite=9 16 2
+enfeite=11 6 2
+enfeite=15 13 2
+enfeite=2 21 10
+enfeite=12 2 10
+enfeite=8 6 11
+enfeite=13 22 11
+enfeite=14 1 11
+mapa:
+########################
+########################
+#..M.....Q.............#
+#......................#
+#.1..........,,,.....2.#
+#...........,,,,,......#
+#....3......,,H,,...4..#
+#...........,,,,,......#
+#............,,,.......#
+#..5...............6...#
+#.........E............#
+#......................#
+########################

@@ -1,0 +1,28 @@
+# Etapa 11.1: piso cedendo (X) no meio da encruzilhada; o de baixo é opcional (dificuldade).
+# Etapa 6.3: combate em corredores de paredes curtas, com lama (3 ondas).
+id=b1_c03
+nome=Galeria: Encruzilhada lamacenta
+bioma=1
+tipo=combate
+ondas=3
+orcamento=7
+# Etapa 8.4: nicho secreto (SDD §24.5). A parede rachada (r) cai com o Especial ou o Clarão;
+# dentro, um baú e a Lembrancinha do bioma (l). Só a 1ª sala com 'r' do bioma guarda o segredo,
+# e só se a chance da dificuldade sorteou; nas outras, o 'r' vira parede comum.
+opcional=17 11
+opcional=18 11
+mapa:
+##########################
+##########################
+#..................#.B.l.#
+#..s.....#....s..#.#.....#
+#........#.......#.###r###
+#........#...,,..#.......#
+#..........XX..,,........#
+O.E......................L
+#........................#
+#....#........#......#...#
+#....#..mm....#......#...#
+#..s.....mm......XX..s...#
+#........................#
+##########S###############

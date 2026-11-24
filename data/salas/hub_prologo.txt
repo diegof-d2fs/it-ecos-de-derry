@@ -1,0 +1,30 @@
+# Etapa 7.4: o prólogo (PRD §4.3), só na primeira vez. Uma tempestade termina; Bill está na
+# Rua Witcham, junto ao bueiro onde o Georgie perdeu o barquinho. Ensina a andar (D01), a
+# conversar (D02) e o escuro. O Mike espera com o "!"; depois da conversa ele acompanha Bill e
+# a rua abre: a saída leva à galeria (começa a tentativa).
+# "hub_" no nome: fica depois das salas dos biomas (os índices de --sala N não mudam).
+id=hub_prologo
+nome=Rua Witcham
+bioma=0
+tipo=prologo
+ambiente=rua_derry
+musica=tensao
+npc=1 mike
+# o bueiro (objetos_comuns 14), caixotes e um vaso de varanda
+enfeite=14 9 9
+enfeite=4 1 2
+enfeite=4 24 10
+enfeite=15 24 2
+mapa:
+##########################
+##########################
+#........................#
+#..~~.......,,,..........#
+#..~~......,,,,,.....1...#
+#...........,,,..........#
+#.E......................L
+#........................#
+#.....~~~................#
+#.....~~~.......,,,......#
+#........................#
+##########################

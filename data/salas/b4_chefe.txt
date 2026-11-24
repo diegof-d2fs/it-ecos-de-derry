@@ -1,0 +1,27 @@
+# Etapa 12.3: o poço do Ralo de Sangue (PRD §10.1). O '@' é o ralo, no centro: o medo é FIXO ali.
+# Cabelos em cruz e em xis (o lugar seguro muda), o ralo transborda em quadrantes opostos alternados
+# (poças de sangue por 5 s; os eixos da cruz ficam secos), golfadas e os Cabelos que sobem pelos ralos
+# 's'. A água rasa '~' não vira poça (refúgio lento). A ≤ 50% o Pennywise II+ sai do ralo e persegue.
+id=b4_chefe
+nome=Porões: O Ralo de Sangue
+bioma=4
+tipo=chefe
+ondas=1
+musica=tensao
+mapa:
+############################
+############################
+#..........................#
+#..s....................s..#
+#....~~..............~~....#
+#....~~..............~~....#
+#..........................#
+O.E........................L
+#............@.............#
+#..........................#
+#....~~..............~~....#
+#....~~..............~~....#
+#..s....................s..#
+#..........................#
+#..........................#
+#############S##############

@@ -1,0 +1,22 @@
+# Etapa 14.1: o poço — um buraco fundo no meio da sala; a luta é na borda.
+id=b6_c06
+nome=Cisterna: O poço sem fundo
+bioma=6
+tipo=combate
+ondas=3
+orcamento=16
+mapa:
+##########################
+##########################
+#..s..................s..#
+#........................#
+#.........oooooo.........#
+#........oooooooo........#
+#........oooooooo........#
+O.E......oooooooo........L
+#........oooooooo........#
+#.........oooooo.........#
+#........................#
+#J......................J#
+#..s..................s..#
+############S#############

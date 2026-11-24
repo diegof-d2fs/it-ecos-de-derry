@@ -1,0 +1,21 @@
+# Sons do jogo (SDD §24.8). Formato: id;arquivo (relativo a assets/);volume 0..1
+# Arquivos providenciados pelo Diego em assets/musics. Um id sem linha fica mudo, sem erro.
+# Efeitos: WAV PCM 16 bits, 44,1 kHz (mixer próprio, 8 vozes).
+golpe;musics/sword-swing.wav;0.7
+acerto_inimigo;musics/enemy-hit.wav;0.8
+morte_inimigo;musics/enemy-death.wav;0.8
+bill_ferido;musics/player-hurt.wav;0.9
+bill_caiu;musics/dead.wav;1.0
+kit;musics/potion-drink.wav;0.8
+moeda;musics/loot-gold.wav;0.7
+bau;musics/chest-open.wav;0.8
+nivel;musics/level-up.wav;0.9
+armadilha;musics/trap-spikes.wav;0.8
+troca_sala;musics/stairs-descend.wav;0.5
+vinheta_derrota;musics/death-sting.wav;1.0
+# Ambiente em loop, baixinho, por baixo da música dentro das salas.
+ambiente_masmorra;musics/dungeon-drone.wav;0.25
+# Músicas: MP3 em streaming (MCI). A de tensão entra em crossfade com a de jogo.
+musica_menu;musics/menu.mp3;0.6
+musica_jogo;musics/roda-em_repeticao_durante_o_jogo.mp3;0.45
+musica_tensao;musics/toca_quando_pennywise_ou_outra_coisas assustadora _esta prestes_ acontecer_em_cenarios_especificos.mp3;0.55

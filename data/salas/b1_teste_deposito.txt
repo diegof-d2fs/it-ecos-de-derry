@@ -1,0 +1,23 @@
+# Sala de teste da Etapa 6.2: depósito da galeria com baú (B), caixas quebráveis (c) e uma
+# chave enferrujada (k). Os objetos ocupam a célula; as caixas abrem caminho quando quebram.
+id=b1_teste_deposito
+nome=Depósito da galeria (teste)
+bioma=1
+tipo=combate
+ondas=2
+orcamento=6
+mapa:
+##########################
+##########################
+#........................#
+#..s...c.c.......B....s..#
+#......c.................#
+#..........,,,...........#
+#....###...,k,....###....#
+O....###..........###....L
+#............E...........#
+#..c.....................#
+#..cc.......~~~~.....c...#
+#..s........~~~~.......s.#
+#........................#
+######S###################

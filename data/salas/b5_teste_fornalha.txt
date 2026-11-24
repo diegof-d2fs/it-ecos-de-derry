@@ -1,0 +1,23 @@
+# Sala de teste da Etapa 6b: siderúrgica com Espectros de fuligem (rastro de brasas que queima
+# itens no chão) e caixas. O bioma 5 completo entra na Etapa 13.
+id=b5_teste_fornalha
+nome=Siderúrgica: a fornalha (teste)
+bioma=5
+tipo=combate
+ondas=2
+orcamento=9
+mapa:
+##########################
+##########################
+#........................#
+#..s.......,,,,......s...#
+#.........,,,,,,.........#
+#....##..........##......#
+#....##..........##......#
+O.E......................L
+#........................#
+#.....c.....~~~~.....c...#
+#.....c.....~~~~.........#
+#..s.................s...#
+#........................#
+############S#############

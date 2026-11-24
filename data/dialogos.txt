@@ -1,0 +1,419 @@
+# Diálogos de IT: Ecos de Derry (SDD §13.2; PRD §4.6, §15.3 e §15.4).
+#
+#   @id                         começa um bloco
+#   quem=ben                    amigo que oferece esta fala no Clube (o "!" sobre a cabeça)
+#   quando=hub; mortes>=3       condições (todas valem): sempre, hub, nao_visto, mortes>=N, mortes<=N,
+#                               tentativas>=N, tentativas<=N, vitorias>=N, resgates>=N, chefes>=N,
+#                               morreu_para=<sprite do inimigo: balao, rato, sombra, espectro_fuligem>
+#   Falante|expressão: texto    uma fala (retrato_<falante>; a expressão é para os retratos P1)
+#   escolha=Texto|id_destino    2 ou 3 escolhas ao fim (só no Clube)
+#   efeito=flag:Nome            efeito de missão (Etapa 8)
+#
+# No Clube, cada amigo oferece a PRIMEIRA fala deste arquivo cujas condições valem e que ainda
+# não foi vista, no máximo uma por visita. Por isso as falas de situação especial vêm antes.
+# Botões: {MOVER} {ATACAR} {ESPECIAL} {CLARAO} {DASH} {INTERAGIR} {KIT} {INVENTARIO} {FICHA}
+# {PAUSA} {CONFIRMAR} {MAPA} viram o nome da tecla ou do botão do dispositivo em uso.
+
+# =====================================================================
+# Tutorial (D01–D20): Mike pelo walkie-talkie ou Bill pensando.
+# =====================================================================
+
+@dica_D01
+Mike|walkie: Bill, tá me ouvindo? Use {MOVER} para andar. Eu fico no rádio.
+
+@dica_D02
+Bill|pensando: Se eu chegar perto de alguém, aperto {INTERAGIR} para conversar.
+Bill|pensando: Quem tem um "!" em cima da cabeça tem algo novo para me contar.
+
+@dica_D03
+Mike|walkie: Lá embaixo é escuro. A lanterna só mostra o que está perto, e as paredes cortam a luz.
+Mike|walkie: O que você já viu fica marcado, mais apagado. O que está no escuro, você não vê, e ele também não te vê tão fácil.
+
+@dica_D04
+Mike|walkie: Tem alguma coisa aí! {ATACAR} golpeia com o taco; apertar no ritmo faz um combo.
+Mike|walkie: {ESPECIAL} é o golpe forte: mais lento, mas derruba.
+
+@dica_D05
+Mike|walkie: Viu o chão ficar vermelho? É o aviso: o golpe vai cair ali.
+Mike|walkie: Saia da marca ou use {DASH}. Durante o dash, nada te acerta.
+
+@dica_D06
+Mike|walkie: A lanterna tem cargas de clarão: {CLARAO} solta um flash que fere e atordoa quem está perto.
+Mike|walkie: Pilhas recarregam. Guarde para quando estiver cercado.
+
+@dica_D07
+Bill|pensando: Peguei alguma coisa. Com {INVENTARIO} eu vejo e uso o que estou carregando.
+
+@dica_D08
+Mike|walkie: Bill, você tá ferido! {KIT} usa um kit de cura na hora.
+Mike|walkie: Se a vida estiver cheia, o kit não é gasto. Não precisa ter medo de apertar.
+
+@dica_D09
+Bill|pensando: A sala ficou quieta. As portas abriram.
+Bill|pensando: Cada porta mostra o que tem do outro lado: moedas, um kit, uma chave… Eu escolho o caminho.
+Mike|walkie: As placas nas portas NÃO são itens para pegar: mostram o prêmio da PRÓXIMA sala. Saia por uma porta e vença a sala para ganhar.
+
+@dica_D10
+Mike|walkie: Esse brilho é um Eco: a lembrança de um amigo. Escolha um dos três; ele vale até o fim da noite.
+
+@dica_D11
+Mike|walkie: Você ficou mais forte! Cada nível dá pontos de atributo.
+Mike|walkie: {FICHA} abre a ficha: Força bate mais, Foco acerta mais, Agilidade esquiva e corre, Coragem aguenta mais.
+
+@dica_D12
+Bill|pensando: O chão aqui é diferente. Espinhos, jatos, piso cedendo… Melhor desviar, ou atrair alguma coisa para cima disso.
+
+@dica_D13
+Bill|pensando: Trancado. Uma chave enferrujada abre baús velhos; a Chave do Medo abre a porta onde um amigo está preso.
+
+@dica_D14
+Mike|walkie: O Elias tem uma loja aí embaixo. As moedas de prata que você pega servem para comprar com ele.
+
+@dica_D15
+Mike|walkie: Esse lugar é seguro. Respira. Ao entrar, você recupera um pouco de vida.
+
+@dica_D16
+Mike|walkie: Bill… isso é o medo de um de nós, tomando forma. Ele tem fases e muda quando se machuca.
+Mike|walkie: Todo ataque dele é avisado no chão. Olhe a barra de vida no alto e não pare de se mexer.
+
+@dica_D17
+Bill|pensando: Um dos meus amigos está do outro lado dessa porta. Eu vim até aqui por isso.
+Bill|pensando: Com a Chave do Medo, {INTERAGIR} abre a porta.
+
+@dica_D18
+Bill|pensando: A cicatriz na mão arde… O pacto de sangue me levantou de novo.
+Bill|pensando: Ainda dá para seguir, mas cada vida gasta custa pontos. Tenho que tomar mais cuidado.
+
+@dica_D19
+Bill|pensando: Eu já vivi essa tarde. Eles ainda estão aqui… e vão sumir de novo.
+Bill|pensando: O que eu trouxe de lá virou Lembrança. No Mural dos Perdedores eu troco Lembranças por força para a próxima noite.
+Bill|pensando: Quando estiver pronto, desço pelo alçapão.
+
+@dica_D20
+Mike|walkie: {MAPA} abre o mapa: as salas que você já visitou e as portas que viu. O diário guarda o que você descobriu.
+
+# =====================================================================
+# Clube dos Perdedores: Mike (10 falas)
+# =====================================================================
+
+@mike_clube_ciclo
+quem=mike
+quando=hub; mortes>=1
+Mike|preocupado: Bill? Você tá pálido. A gente acabou de chegar, ainda nem escureceu.
+Bill|serio: E-eu… tive um sonho ruim, Mike. Só isso.
+Mike|serio: Sonho ruim é o que essa cidade mais tem.
+
+@mike_clube_boas_vindas
+quem=mike
+quando=hub
+Mike|calmo: Todo mundo chegou. O Ben trouxe os mapas, a Bev trouxe o estilingue e o Richie trouxe… o Richie.
+Mike|calmo: Se alguma coisa acontecer hoje, o alçapão leva direto à galeria pluvial.
+escolha=O que tem lá embaixo?|mike_clube_galeria
+escolha=Pra que serve aquele mural?|mike_clube_mural
+
+@mike_clube_galeria
+Mike|serio: Água, alvenaria velha e grades que ninguém abre há anos. O Elias, o zelador, conhece cada uma.
+Mike|serio: Dizem que quem desce sozinho escuta alguém chamando pelo nome.
+
+@mike_clube_mural
+Mike|sorrindo: O Mural dos Perdedores. A gente prende ali tudo o que aprendeu junto.
+Mike|sorrindo: Às vezes eu olho para ele e parece que tem coisa escrita que eu não lembro de ter escrito.
+
+@mike_clube_morreu_rato
+quem=mike
+quando=hub; morreu_para=rato
+Mike|preocupado: Você tá com cheiro de esgoto. E de rato. Muito rato.
+Bill|serio: Eles roubam, Mike. Pegam as coisas e somem no escuro. Tem que pegar antes que fujam.
+
+@mike_clube_morreu_sombra
+quem=mike
+quando=hub; morreu_para=sombra
+Mike|preocupado: Tá tremendo, Bill. Parece que viu uma sombra levantar do chão.
+Bill|serio: Ela avisa antes de bater. O chão escurece. Se eu sair da marca a tempo…
+
+@mike_clube_walkie
+quem=mike
+quando=hub; tentativas>=1
+Mike|calmo: Toma. O outro walkie-talkie fica comigo. Se precisar de alguma coisa lá embaixo, é só chamar.
+Bill|sorrindo: C-câmbio, Mike.
+
+@mike_clube_tres_mortes
+quem=mike
+quando=hub; mortes>=3
+Mike|serio: Eu conto todo mundo antes de dormir. Hoje, toda vez que eu conto, sobra um nome na boca.
+Bill|serio: Conta de novo amanhã, Mike. V-vai fechar.
+
+@mike_clube_chefe
+quem=mike
+quando=hub; chefes>=1
+Mike|serio: Você voltou diferente. Como quem já desceu mais fundo do que a galeria.
+Mike|serio: Meu avô dizia que Derry esquece de propósito. Não esquece você, tá?
+
+@mike_clube_historia
+quem=mike
+quando=hub; tentativas>=2
+Mike|calmo: Eu li nos arquivos da biblioteca. A cada vinte e sete anos, as crianças de Derry começam a sumir.
+Mike|calmo: E toda vez a cidade inteira finge que não viu.
+
+@mike_clube_dez
+quem=mike
+quando=hub; tentativas>=10
+Mike|sorrindo: Sabe o que eu reparei? Você anda pelo Clube como quem já sabe onde cada tábua range.
+Bill|sorrindo: T-talvez eu saiba.
+
+@mike_clube_vitoria
+quem=mike
+quando=hub; vitorias>=1
+Mike|sorrindo: Eu contei todos. Estamos todos aqui.
+Mike|sorrindo: Não sei por quê, mas hoje isso parece muito importante de dizer.
+
+# =====================================================================
+# Ben (6)
+# =====================================================================
+
+@ben_clube_mapas
+quem=ben
+quando=hub
+Ben|timido: Bill, olha. Eu desenhei os túneis embaixo do Clube. Tem uma galeria que liga com tudo.
+Ben|timido: Não sei de onde eu tirei metade dessas linhas. Simplesmente… sabia.
+
+@ben_clube_morreu_balao
+quem=ben
+quando=hub; morreu_para=balao
+Ben|assustado: Sonhei com um balão vermelho flutuando contra o vento. Ele estourava e eu acordava sem ar.
+Bill|serio: Não deixa ele chegar perto, Ben. Nem em sonho.
+
+@ben_clube_ponte
+quem=ben
+quando=hub; tentativas>=2
+Ben|pensativo: Se a galeria alagar, procura uma ponte levadiça. Tem uma alavanca do outro lado.
+Ben|pensativo: Pelo menos é o que o meu mapa diz. E o meu mapa nunca erra.
+
+@ben_clube_poema
+quem=ben
+quando=hub; tentativas>=4
+Ben|timido: Eu escrevi um poema. É curto. Não conta pra ninguém, tá?
+Bill|sorrindo: Prometo.
+
+@ben_clube_mortes
+quem=ben
+quando=hub; mortes>=5
+Ben|preocupado: Você tá com cara de quem já se perdeu muitas vezes lá embaixo.
+Ben|preocupado: Leva o mapa na cabeça: sempre que der, siga para o sul. A água desce para lá.
+
+@ben_clube_resgate
+quem=ben
+quando=hub; resgates>=1
+Ben|pensativo: Por que eu sinto que te devo uma, Bill? Você não fez nada… fez?
+
+# =====================================================================
+# Beverly (6)
+# =====================================================================
+
+@beverly_clube_estilingue
+quem=beverly
+quando=hub
+Beverly|confiante: Minha mira tá ótima hoje. Treinei nas latas atrás da farmácia.
+Beverly|confiante: Se alguma coisa sair do bueiro, eu acerto no meio.
+
+@beverly_clube_voz
+quem=beverly
+quando=hub; tentativas>=1
+Beverly|seria: Ouvi uma voz no ralo do banheiro. Ela sabia o meu nome.
+Bill|serio: Ele usa a voz que a gente quer ouvir, Bev. Não é de verdade.
+
+@beverly_clube_morreu_espectro
+quem=beverly
+quando=hub; morreu_para=espectro_fuligem
+Beverly|seria: Você tá sujo de fuligem até o pescoço. De onde saiu tanta cinza?
+Bill|serio: De uma coisa que voa e queima tudo o que deixo no chão.
+
+@beverly_clube_coragem
+quem=beverly
+quando=hub; mortes>=2
+Beverly|confiante: Medo não some, Bill. A gente só aprende a andar com ele do lado.
+escolha=Você tem medo de alguma coisa?|beverly_clube_medo
+escolha=Valeu, Bev.|beverly_clube_valeu
+
+@beverly_clube_medo
+Beverly|seria: De ralo. De sangue. De ficar sozinha naquele apartamento.
+Beverly|confiante: Por isso eu venho pra cá.
+
+@beverly_clube_valeu
+Beverly|sorrindo: Volta inteiro, tá? A gente precisa de você.
+
+@beverly_clube_vitoria
+quem=beverly
+quando=hub; vitorias>=1
+Beverly|sorrindo: Guardei uma moeda de prata. Não sei por quê. Parece que já salvou a gente uma vez.
+
+@beverly_clube_dez
+quem=beverly
+quando=hub; tentativas>=8
+Beverly|seria: Às vezes você olha pra gente como se estivesse se despedindo. Para com isso.
+
+# =====================================================================
+# Eddie (6)
+# =====================================================================
+
+@eddie_clube_germes
+quem=eddie
+quando=hub
+Eddie|nervoso: Você sabe quantos germes tem num esgoto? Eu sei. Eu li. Não desce lá.
+Bill|sorrindo: Eu vou ter cuidado, Eddie.
+
+@eddie_clube_kit
+quem=eddie
+quando=hub; tentativas>=1
+Eddie|nervoso: Leva um curativo. Leva dois. Na verdade, leva a caixa.
+Eddie|nervoso: E usa ANTES de estar quase desmaiando, tá ouvindo?
+
+@eddie_clube_morreu_rato
+quem=eddie
+quando=hub; morreu_para=rato
+Eddie|assustado: Rato?! Você foi mordido por RATO? Tem raiva, leptospirose, peste…
+Bill|serio: Eddie. Eu tô bem.
+
+@eddie_clube_mae
+quem=eddie
+quando=hub; tentativas>=3
+Eddie|serio: Minha mãe diz que eu sou frágil. Que eu tenho asma.
+Eddie|confiante: Minha mãe não sabe de nada.
+
+@eddie_clube_mortes
+quem=eddie
+quando=hub; mortes>=4
+Eddie|preocupado: Você tá machucado de um jeito que não aparece, Bill. Eu reparo nessas coisas.
+
+@eddie_clube_resgate
+quem=eddie
+quando=hub; resgates>=1
+Eddie|nervoso: Sonhei que alguém me tirava de um lugar escuro. Acordei e o inalador tava cheio. Estranho, né?
+
+# =====================================================================
+# Richie (6)
+# =====================================================================
+
+@richie_clube_piada
+quem=richie
+quando=hub
+Richie|rindo: Bill, se você encontrar um palhaço lá embaixo, conta uma piada pra ele. Comigo funciona.
+Bill|sorrindo: Com você nada funciona, Richie.
+
+@richie_clube_oculos
+quem=richie
+quando=hub; tentativas>=1
+Richie|rindo: Eu ia junto, mas meus óculos embaçam no escuro. Leva os reservas, se achar.
+Richie|serio: Sério. Com eles você enxerga o que tá escondido.
+
+@richie_clube_cinco
+quem=richie
+quando=hub; mortes>=5
+Richie|serio: Bill, você tá com cara de quem já ouviu essa piada mil vezes.
+Bill|serio: T-talvez eu tenha ouvido.
+
+@richie_clube_vozes
+quem=richie
+quando=hub; tentativas>=3
+Richie|rindo: Quer ouvir minha voz de lobisomem? AUUUU! Não? Ninguém nunca quer.
+escolha=Faz de novo.|richie_clube_de_novo
+escolha=Por favor, não.|richie_clube_nao
+
+@richie_clube_de_novo
+Richie|rindo: AUUUUUUU! Viu? Talento. Um dia isso vai salvar a vida de alguém.
+
+@richie_clube_nao
+Richie|rindo: Crítico de arte. Típico.
+
+@richie_clube_chefe
+quem=richie
+quando=hub; chefes>=1
+Richie|serio: Ei. Seja lá o que você enfrentou… você ganhou. Dá pra ver.
+
+@richie_clube_vitoria
+quem=richie
+quando=hub; vitorias>=1
+Richie|rindo: Sete Perdedores, nenhuma perda. Isso dá uma manchete, hein?
+
+# =====================================================================
+# Stan (6)
+# =====================================================================
+
+@stan_clube_ordem
+quem=stan
+quando=hub
+Stan|calmo: Tudo tem uma ordem, Bill. Até lá embaixo. A água corre para um lado, os túneis se repetem.
+Stan|calmo: Se você prestar atenção, dá para prever.
+
+@stan_clube_passaros
+quem=stan
+quando=hub; tentativas>=1
+Stan|pensativo: Anotei os pássaros que vi hoje. Nenhum voltou para o ninho antes de escurecer.
+
+@stan_clube_morreu_sombra
+quem=stan
+quando=hub; morreu_para=sombra
+Stan|serio: As sombras se mexem antes de atacar. Sempre. É um padrão.
+Bill|serio: Eu vi. O chão avisa.
+
+@stan_clube_ja_vivi
+quem=stan
+quando=hub; tentativas>=3
+Stan|confuso: Eu sinto que a gente já teve essa conversa. Palavra por palavra.
+Bill|serio: E-eu também, Stan.
+
+@stan_clube_armadilhas
+quem=stan
+quando=hub; mortes>=3
+Stan|calmo: Olha o chão antes de pisar. Rachadura, espinho, piso mole. Quem tem pressa cai.
+
+@stan_clube_vitoria
+quem=stan
+quando=hub; vitorias>=1
+Stan|confuso: Por que eu sinto que a gente já fez isso antes? E que dessa vez deu certo?
+
+# =====================================================================
+# Prólogo (PRD §4.3) e resgates (PRD §4.4). "resgate_<amigo>" abre ao falar com o amigo preso;
+# depois da conversa ele passa a acompanhar Bill (o companheiro anterior volta ao Clube).
+# =====================================================================
+
+@prologo_mike
+Mike|preocupado: Bill! Os outros… eles saíram correndo, cada um pra um lado. Disseram que ouviram alguém chamando.
+Bill|serio: E-eu também ouvi. Era o Georgie. Não era ele.
+Mike|serio: O Elias, o zelador, conhece as grades de manutenção. Eu vou com você até achar o Ben.
+Bill|serio: Eu vou trazer todo mundo de volta.
+efeito=flag:DialogoMike
+
+@resgate_ben
+Ben|assustado: Bill? Eu desenhei essas galerias. Essa parede não estava no mapa.
+Ben|timido: Deixa eu ir com você. A descida fica do outro lado.
+Mike|walkie: Achou o Ben? Então eu volto e mantenho a saída livre. Cuidem um do outro.
+
+@resgate_stan
+Stan|calmo: Tudo aqui tem uma ordem. Até a água. Se eu fechar a comporta…
+Stan|calmo: Vai na frente. Eu sei o caminho, eu anotei tudo.
+
+@resgate_eddie
+Eddie|nervoso: Ele fica dizendo que eu tô doente. Eu não tô doente!
+Eddie|serio: Você tá machucado. Para. Deixa eu ajudar antes de ir.
+
+@resgate_beverly
+Beverly|seria: Ele usa a voz que a gente quer ouvir.
+Beverly|confiante: Segura essa. Prata. Se ele voltar, mira no meio.
+
+@resgate_mike
+Mike|serio: O fogo… foi aqui que tudo queimou, Bill. Eu li sobre isso.
+Mike|serio: Tem um gerador. Se a luz voltar, ele não se esconde.
+
+@resgate_richie
+Richie|rindo: Bill! Finalmente! Tava ensaiando minha voz de lobisomem.
+Richie|rindo: Ei, Coisa! Isso aqui é só papelão!
+
+# =====================================================================
+# Elias, o zelador (Etapa 8.2). A fala da loja muda pela morte anterior (jogo/loja).
+# =====================================================================
+
+@elias_manivela
+Elias|serio: Minha manivela! Achei que a galeria tinha engolido de vez.
+Elias|serio: Pronto, a grade do depósito tá aberta. O que tiver lá dentro é seu, garoto.
+Bill|sorrindo: O-obrigado, Elias.

@@ -1,0 +1,25 @@
+# Etapa 6.3: combate com poço fundo no meio e caixas.
+id=b1_c02
+nome=Galeria: O poço dos canos
+bioma=1
+tipo=combate
+ondas=3
+orcamento=8
+# Etapa 8.4: nicho secreto (SDD §24.5). A parede rachada (r) cai com o Especial ou o Clarão;
+# dentro, um baú e a Lembrancinha do bioma (l). Só a 1ª sala com 'r' do bioma guarda o segredo,
+# e só se a chance da dificuldade sorteou; nas outras, o 'r' vira parede comum.
+mapa:
+##########################
+##########################
+#..................#.B.l.#
+#.s....c.......s.c.#.....#
+#......c..wwww.....###r###
+#.........wwww......##...#
+#...................##...#
+O.E......................L
+#........~~~~~...........#
+#........~~~~~.....c.....#
+#........................#
+#.s...................s..#
+#........................#
+#########S################

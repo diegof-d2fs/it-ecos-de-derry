@@ -1,0 +1,25 @@
+# Etapa 6.3: combate com dois pares de pilares e água rasa.
+id=b1_c01
+nome=Galeria: Pilares gêmeos
+bioma=1
+tipo=combate
+ondas=3
+orcamento=8
+# Etapa 8.4: nicho secreto (SDD §24.5). A parede rachada (r) cai com o Especial ou o Clarão;
+# dentro, um baú e a Lembrancinha do bioma (l). Só a 1ª sala com 'r' do bioma guarda o segredo,
+# e só se a chance da dificuldade sorteou; nas outras, o 'r' vira parede comum.
+mapa:
+##########################
+##########################
+#..................#.B.l.#
+#..s......~~~~..s..#.....#
+#.........~~~~.....###r###
+#....##..........##......#
+#....##..........##......#
+O..E.....................L
+#........................#
+#.........,,,,...........#
+#.........,,,,...........#
+#..s.................s...#
+#........................#
+############S#############

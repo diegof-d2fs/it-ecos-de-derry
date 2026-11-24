@@ -1,0 +1,30 @@
+# Etapa 13.3: o salão do Pássaro das Cinzas (PRD §10.1). O '@' é onde ele pousa; ele VOA (imune a
+# terreno): o mergulho cruza o salão por cima das grelhas, e a chuva de brasas acende fogo no piso
+# por 4 s — o chão seguro encolhe e muda de lugar. As quatro grelhas 'f' ferem Bill, não o Pássaro.
+# A ≤ 50% o Pennywise III sai das cinzas: linha de 3, rasante → cruz de fogo, gargalhada.
+id=b5_chefe
+nome=Siderúrgica: O Pássaro das Cinzas
+bioma=5
+tipo=chefe
+ondas=1
+musica=tensao
+enfeite=1 4 2
+enfeite=1 23 2
+enfeite=15 13 2
+mapa:
+############################
+############################
+#..........................#
+#..s....................s..#
+#..........................#
+#.....f..............f.....#
+#..........................#
+O.E........................L
+#............@.............#
+#..........................#
+#.....f..............f.....#
+#..........................#
+#..s....................s..#
+#..........................#
+#..........................#
+#############S##############

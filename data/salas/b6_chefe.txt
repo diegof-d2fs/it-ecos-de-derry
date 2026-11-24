@@ -1,0 +1,25 @@
+# Etapa 14.3: o tanque central da Cisterna, covil do Lobisomem (PRD §10.1). O '@' é onde ele surge.
+# Combo de três garras, salto na posição registrada de Bill, uivo que chama ratos. A ≤ 50% o
+# Pennywise III+ sai de dentro dele: linha de 3, salto, gargalhada. Colunas para quebrar a linha.
+id=b6_chefe
+nome=Cisterna: O Lobisomem
+bioma=6
+tipo=chefe
+ondas=1
+musica=tensao
+mapa:
+############################
+############################
+#..........................#
+#..s....................s..#
+#..........................#
+#.....##............##.....#
+#.....##............##.....#
+O.E........................L
+#............@.............#
+#..........................#
+#.....##............##.....#
+#.....##............##.....#
+#..s....................s..#
+#..........................#
+#############S##############

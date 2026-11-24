@@ -1,0 +1,25 @@
+# Etapa 12.1: a porta do Medo da Beverly. Atrás dela, o canal alagado; no resgate ela derruba a
+# passarela com o estilingue (PRD §4.4) e a passarela caída vira a ponte até a saída.
+id=b4_resgate
+nome=Porões: A porta do Medo
+bioma=4
+tipo=resgate
+entrada=fixa
+npc=1 beverly
+ao_resgatar=19 7 =
+ao_resgatar=20 7 =
+mapa:
+##########################
+##########################
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#..1..ww....#
+#............#.....ww....#
+O.E..........T.....ww....L
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+##########################

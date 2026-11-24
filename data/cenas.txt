@@ -1,0 +1,73 @@
+# Cenas da história (cut scenes): pedido do Diego em 23/11/2026. Lido por jogo/historia.
+#   [id] Título            abertura (Novo jogo), bioma_2..bioma_7 (ao chegar ao bioma, depois do chefe), final
+#   imagem;segundos;movimento;texto
+# imagem = nome no manifesto (assets/jogo_hd); "-" = tela preta só com o texto.
+# movimento = zoom_entra, zoom_sai, esquerda, direita, cima, baixo (a câmera passeia devagar pela ilustração).
+# Os segundos nunca ficam abaixo do tempo de digitar e ler o texto (o teste t_historia confere).
+# Nenhuma imagem se repete entre as cenas (também testado).
+
+[abertura] Prólogo: A voz no bueiro
+cena_abertura_1;12;zoom_entra;Derry, Maine. Uma cidade pequena, de ruas sempre molhadas, onde as pessoas aprenderam a não olhar para dentro dos bueiros.
+cena_abertura_2;13;direita;No outono passado, Bill Denbrough fez um barquinho de papel para o irmão caçula, Georgie. O barquinho desceu a enxurrada, e Georgie correu atrás dele.
+cena_abertura_3;13;zoom_entra;Encontraram só o barquinho, encharcado, na boca de um bueiro. Georgie nunca voltou para casa. Bill guardou a culpa onde ninguém podia ver.
+cartao_clube;13;esquerda;Mas Bill não estava sozinho. Sete crianças que Derry chamava de Perdedores construíram um clube secreto debaixo da terra, no Barrens. Ali, ninguém era fraco demais.
+tela_perdedores;13;zoom_sai;Ben, Stan, Eddie, Beverly, Mike, Richie e Bill. No riacho, ao pôr do sol, fizeram um pacto de sangue: se a Coisa voltasse, eles voltariam juntos.
+cena_abertura_6;13;zoom_entra;Hoje, quando a noite caiu, cada um ouviu uma voz chamando seu nome, e um por um os amigos correram para a escuridão. Bill também ouviu. Era a voz de Georgie.
+cena_abertura_7;14;baixo;Depois de buscar pistas na Rua Witcham, Bill voltou ao Clube. Georgie não estava lá embaixo. Seus amigos, sim. Abriu o alçapão e desceu.
+
+[bioma_2] Capítulo 2: O Barrens
+referencia_visual;12;zoom_entra;Quando a Múmia caiu, as faixas velhas se abriram, e de dentro delas saiu um palhaço. Ele esperava por Bill desde o começo.
+cena_b2_2;12;esquerda;A Coisa riu, se desfez em névoa e balões e recuou para a escuridão. Não estava derrotada. Estava só começando.
+cena_b2_3;13;cima;Ben estava livre. Antes de subir, pôs o mapa das galerias na mão de Bill: “Os túneis seguem até o Barrens. Eu desenhei cada um… menos os que se mexem.”
+cena_b2_4;12;zoom_sai;A galeria terminava num cano aberto para a mata do Barrens. Lá fora, a noite estava quieta demais. Nem os grilos cantavam.
+cena_b2_5;12;baixo;Na margem do riacho, Bill achou o caderno de pássaros de Stan, aberto e encharcado. Pegadas pequenas iam direto para dentro da água.
+cena_b2_6;13;zoom_entra;Stan sempre teve medo do que não tem ordem, do que não se explica. E a água parada da velha caixa d'água não tinha fundo.
+
+[bioma_3] Capítulo 3: A casa da Rua Neibolt
+cena_b3_1;12;direita;Stan girou o volante da comporta com as mãos tremendo. A água baixou, e o Afogado ficou preso na lama, encolhendo até sumir.
+cena_b3_2;13;zoom_entra;“Eu anotei tudo”, disse Stan, arrancando uma página do caderno. “Os canos do Barrens levam até a Rua Neibolt. Todo caminho ruim de Derry leva pra lá.”
+cena_b3_3;13;zoom_entra;A casa da Rua Neibolt estava abandonada desde antes de Bill nascer. Mesmo assim, havia uma luz acesa numa janela do andar de cima.
+cena_b3_4;12;esquerda;No corredor de tábuas podres, Bill achou o inalador de Eddie. Eddie nunca, nunca saía de casa sem ele.
+cena_b3_5;13;zoom_entra;Do porão subia um cheiro de coisa doente. E uma voz rouca repetia, sem parar, que Eddie estava doente. Muito, muito doente.
+
+[bioma_4] Capítulo 4: Os porões inundados
+cena_b4_1;13;zoom_entra;Eddie enfaixou o braço de Bill com as mãos firmes. “Viu? Eu não tô doente. Nunca estive.” Pela primeira vez, ele mesmo acreditou nisso.
+cena_b4_2;12;direita;A Coisa recuou outra vez. Mas, a cada volta, estava maior, mais rápida e mais faminta. Ela estava aprendendo com Bill.
+cena_b4_3;12;baixo;Atrás da fornalha do porão, o chão tinha cedido. Lá embaixo, os porões inundados de Derry se ligavam uns aos outros como veias.
+cena_b4_4;12;zoom_entra;Boiando na água cor de ferrugem, Bill achou o estilingue de Beverly. Ao lado dele, uma pequena esfera de prata.
+cena_b4_5;13;zoom_entra;No fim do porão havia um banheiro velho. Do ralo da pia, vozes sussurravam o nome dela. Beverly sabia que algumas casas nunca são seguras.
+
+[bioma_5] Capítulo 5: A Siderúrgica Kitchener
+cena_b5_1;12;esquerda;Beverly mirou e não errou. A passarela desabou sobre o ralo, e a voz que vinha lá de baixo engasgou e se calou.
+cena_b5_2;13;zoom_entra;“Prata”, disse ela, pondo a esfera na mão de Bill. “Se ele voltar, mira no meio.” Depois subiu sozinha, sem olhar para trás.
+cena_b5_3;13;direita;Os canos dos porões terminavam nas ruínas da Siderúrgica Kitchener, onde um incêndio, muitos anos atrás, engoliu uma festa inteira de Páscoa.
+cena_b5_4;13;zoom_entra;No chão de cinzas estava o caderno de Mike, cheio de recortes de jornal. Mike guardava a história de Derry. Agora era a história que guardava ele.
+cena_b5_5;13;cima;Lá no alto, entre as chaminés, algo enorme se ajeitou no ninho. Tinha asas de fuligem e olhos de carvão aceso.
+
+[bioma_6] Capítulo 6: A Cisterna das vozes
+cena_b6_1;13;direita;Mike puxou a alavanca do gerador, e as lâmpadas da siderúrgica acenderam uma depois da outra. Na luz, o Pássaro das Cinzas virou poeira.
+cena_b6_2;13;zoom_entra;“Eu li sobre isso”, disse Mike, abrindo um mapa antigo. “Toda a água de Derry desce para a velha cisterna. É lá que a Coisa guarda as vozes.”
+cena_b6_3;12;zoom_entra;Pela primeira vez, a Coisa não fugiu calada. Do alto da escada, ela sussurrou: “Só falta um, Billy. Depois é a sua vez.”
+cena_b6_4;13;zoom_sai;A cisterna era uma catedral de canos e água parada. Cada gota que caía ecoava como uma risada.
+cena_b6_5;13;esquerda;Os óculos de Richie estavam no chão, com uma lente rachada. Ao lado, pegadas fundas de garras. E, ao longe, um uivo que imitava a risada dele.
+
+[bioma_7] Capítulo 7: O Covil
+cena_b7_1;12;zoom_entra;“Ei, Coisa! Isso aqui é só papelão!” Richie gritou com toda a voz que tinha, e as paredes falsas se desmancharam como cenário de teatro.
+cena_b7_2;12;direita;Richie colou os óculos com fita e sorriu. “Seis de seis, Grande Bill. Agora vai lá e termina isso. Eu cuido da plateia.”
+cena_b7_3;13;zoom_sai;Lá em cima, os seis amigos estavam juntos de novo, de mãos dadas em volta do bueiro. Lá embaixo, restavam só Bill e a Coisa.
+cena_b7_4;12;baixo;A última escada descia mais fundo do que qualquer mapa. No fim dela, uma luz morta, laranja e fria, pulsava como um coração.
+cena_b7_5;13;cima;O covil: uma montanha de brinquedos perdidos, de todas as crianças que Derry esqueceu. E, lá no topo, uma pequena capa de chuva amarela.
+cena_b7_6;11;zoom_entra;A cicatriz do pacto ardeu na palma da mão. Bill fechou o punho. Ele não estava sozinho. Nunca esteve.
+
+[final] Epílogo: Ninguém ficou para trás
+cena_final_1;11;zoom_entra;“Billy, me ajuda a pegar o barquinho.” Era a voz dele. O rosto dele. A capa amarela dele.
+cena_final_2;11;zoom_entra;“Você não é ele”, disse Bill, sem gaguejar. “Você nunca foi ele.” E a ilusão se partiu como vidro.
+cena_final_3;11;zoom_sai;Quando a luz morta tentou apagar tudo, seis círculos de luz se acenderam em volta dele. Os amigos estavam lá em cima, mas o pacto os trouxe até ali.
+cena_final_4;12;cima;A Coisa se quebrou em sombra e névoa, e os balões murcharam em silêncio. “Vocês vão esquecer”, ela sussurrou. “Hoje, não”, respondeu Bill.
+cena_final_5;11;cima;Bill subiu a escada mais longa da vida dele. Lá no alto, seis mãos se estenderam para puxá-lo de volta para a luz.
+cena_final_6;12;zoom_sai;Era manhã em Derry. Sujos, cansados, rindo e chorando ao mesmo tempo, os sete se abraçaram. “Eu contei todos”, disse Mike. “Estamos todos aqui.”
+cena_final_7;10;cima;Beverly soltou o último balão vermelho. Ele subiu, subiu, virou um pontinho no céu e sumiu.
+cena_final_8;12;direita;Na sarjeta, Bill pôs um barquinho de papel na água limpa e deixou que ele fosse. Desta vez não correu atrás. Desta vez, era uma despedida.
+cena_final_9;11;zoom_entra;O ciclo se quebrou. Ninguém mais acordaria no Clube ao entardecer, e Bill não precisaria lembrar de tudo sozinho.
+cena_final_10;12;zoom_sai;Derry ainda guarda segredos. Mas, nesta noite, ninguém ficou para trás.
+-;5;zoom_entra;FIM

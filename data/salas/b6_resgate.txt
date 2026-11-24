@@ -1,0 +1,34 @@
+# Etapa 14.1: a sala das vozes — o Richie está preso atrás da porta do Medo. Entre ele e a saída há
+# paredes ILUSÓRIAS (coluna 20): no resgate ele grita "Isso aqui é só papelão!" e elas somem (F19).
+id=b6_resgate
+nome=Cisterna: A sala das vozes
+bioma=6
+tipo=resgate
+entrada=fixa
+npc=1 richie
+ao_resgatar=20 2 .
+ao_resgatar=20 3 .
+ao_resgatar=20 4 .
+ao_resgatar=20 5 .
+ao_resgatar=20 6 .
+ao_resgatar=20 7 .
+ao_resgatar=20 8 .
+ao_resgatar=20 9 .
+ao_resgatar=20 10 .
+ao_resgatar=20 11 .
+ao_resgatar=20 12 .
+mapa:
+##########################
+##########################
+#............#......i....#
+#............#......i....#
+#............#......i....#
+#............#..1...i....#
+#............#......i....#
+O.E..........T......i....L
+#............#......i....#
+#............#......i....#
+#............#......i....#
+#............#......i....#
+#............#......i....#
+##########################

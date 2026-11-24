@@ -1,0 +1,27 @@
+# Etapa 13.1: a sala do gerador — o Mike está preso atrás da porta do Medo. Ele LIGA o gerador
+# (13.4: as luzes revelam a sala inteira); por ora, o enfeite troca de desligado (2) para ligado (3).
+id=b5_resgate
+nome=Siderúrgica: A porta do Medo
+bioma=5
+tipo=resgate
+entrada=fixa
+npc=1 mike
+enfeite=2 18 2
+enfeite=9 21 2
+ao_resgatar_enfeite=18 2 3
+ao_resgatar_enfeite=21 2 10
+mapa:
+##########################
+##########################
+#............#...........#
+#............#...........#
+#............#...........#
+#............#..1........#
+#............#...........#
+O.E..........T...........L
+#............#...........#
+#............#...........#
+#............#...........#
+#............#...........#
+#............#...........#
+##########################

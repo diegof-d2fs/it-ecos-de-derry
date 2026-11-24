@@ -1,0 +1,26 @@
+# Etapa 10.3: a arena do Afogado da Caixa d'Água (PRD §10.1). Ele surge no '@'; mergulha e emerge
+# onde Bill estava (círculo de 1,0 s), solta ondas em anel (colado nele ou longe é seguro) e chama
+# sanguessugas. A ≤ 50% o medo se rasga e o Pennywise I+ sai (linha de 3, ondas, aproximação).
+id=b2_chefe
+nome=O Barrens: A caixa d'água
+bioma=2
+tipo=chefe
+ondas=1
+musica=tensao
+mapa:
+############################
+############################
+#..........................#
+#..s....~~~.......~~~...s..#
+#......~~w~~.....~~w~~.....#
+#.......~~~...@...~~~......#
+#..........................#
+O.E........................L
+#..........................#
+#.......~~~.......~~~......#
+#......~~w~~.....~~w~~.....#
+#..s....~~~.......~~~...s..#
+#..........................#
+#..........................#
+#..........................#
+#############S##############

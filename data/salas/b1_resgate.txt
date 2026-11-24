@@ -1,0 +1,28 @@
+# Etapa 6.3: sala de resgate. A porta do Medo (T) só abre com a Chave do Medo; as saídas ficam além dela.
+# Etapa 7.4: o Ben (1) espera atrás da porta; falar com ele conta o resgate e ele vira o
+# companheiro. A cena completa (ponte, Eco lendário) entra na Etapa 8.
+id=b1_resgate
+nome=Galeria: A porta do Medo
+bioma=1
+tipo=resgate
+# Mão única (porta do Medo, depois o canal): Bill sempre entra pelo E, à esquerda.
+entrada=fixa
+npc=1 ben
+# Resgatado, o Ben baixa a ponte sobre o canal (alteração de mapa por NPC, F19; PRD §14.3).
+ao_resgatar=19 7 =
+ao_resgatar=20 7 =
+mapa:
+##########################
+##########################
+#............#.....ww....#
+#............#.....ww....#
+#............#....,ww....#
+#............#..1,,ww,...#
+#............#.....ww....#
+O.E..........T.....ww....L
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+#............#.....ww....#
+##########################

@@ -1,0 +1,69 @@
+# ==============================================================
+# IT: Ecos de Derry: o que NÃO vai para o repositório
+# ==============================================================
+
+# --- Segredos (chaves de API, credenciais da AWS) --------------
+.env
+.env.*
+*.pem
+*.key
+credentials*
+aws-exports*
+
+# --- Build (CMake / MinGW / Emscripten) ------------------------
+build/
+build-*/
+cmake-build-*/
+out/
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+!third_party/**/*.dll
+*.wasm
+compile_commands.json
+CMakeUserPresets.json
+
+# --- Saves, perfis e telemetria locais -------------------------
+saves/
+saves_*/
+perfil.txt
+recordes.txt
+telemetria.csv
+bloco_*.txt
+simulacao*.csv
+simulacao_resumo.txt
+sim_*/
+
+# --- Capturas, logs e conferências -----------------------------
+*.bmp
+*.bmp.txt
+*.log
+captura*/
+conferencia*/
+
+# --- Material de produção de arte ------------------------------
+# Os masters em alta resolução (assets/*.png, *.jpg) ficam só na máquina de quem gera a arte; o jogo usa as
+# versões exportadas (assets/jogo e assets/jogo_hd), que vão para o repositório.
+assets/*.png
+assets/*.jpg
+assets/_*/
+tools/__pycache__/
+tools/batch_state.json
+*.pyc
+
+# --- Documentos de terceiros -----------------------------------
+# O enunciado do trabalho é material do professor.
+instructions/T3 - Roguelike*.pdf
+
+# --- Sistema / editores ----------------------------------------
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store

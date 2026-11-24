@@ -1,0 +1,26 @@
+# Etapa 10.1: a represa — um lago fundo no meio; a luta gira em volta dele e quem voa atravessa.
+id=b2_c02
+nome=O Barrens: A represa
+bioma=2
+tipo=combate
+ondas=3
+orcamento=9
+enfeite=6 14 3
+enfeite=14 27 6
+mapa:
+##############################
+##############################
+#............................#
+#..s.........,,,,.......s....#
+#.........wwwwwwwwww.........#
+#.......wwwwwwwwwwwwww.......#
+#......wwwwwwwwwwwwwwww......#
+O.E....wwwwwwwwwwwwwwww......L
+#......~wwwwwwwwwwwwww~......#
+#.......~~wwwwwwwwww~~.......#
+#.........~~~~~~~~~~.........#
+#..s......................s..#
+#............................#
+#.......,,,,.......,,,,......#
+#..............s.............#
+##############S###############

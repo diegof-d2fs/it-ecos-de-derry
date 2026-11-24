@@ -1,0 +1,23 @@
+# Etapa 8.4: a Festa dos Balões (fase bônus, SDD §24.5 / M13). Porta rara no lugar do especial
+# da etapa 2. Por 30 s, balões sobem dos 's' (embaixo): estourar os coloridos dá moedas e XP;
+# os vermelhos são armadilhas. Ninguém morre aqui (a vida para em 1). As portas abrem no fim.
+id=b1_festa
+nome=Galeria: A festa dos balões
+bioma=1
+tipo=bonus
+musica=tensao
+mapa:
+##########################
+##########################
+#........................#
+#........................#
+#.....,,,,,......,,,,,...#
+#.....,,,,,......,,,,,...#
+#........................#
+O.E......................L
+#........................#
+#........................#
+#........................#
+#.s...s...s...s...s...s..#
+#........................#
+#############S############

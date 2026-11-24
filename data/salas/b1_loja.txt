@@ -1,0 +1,28 @@
+# Etapa 8.2: a Loja do Elias (PRD §11.3). O Elias (1) vende 3 a 5 ofertas sorteadas ao entrar.
+# A grade (g) fecha o depósito do zelador; quem traz a MANIVELA (cai com a Chave do Medo no
+# bioma 1) entrega ao Elias e a grade vira chão: o baú do depósito fica ao alcance (F19).
+id=b1_loja
+nome=Galeria: A loja do Elias
+bioma=1
+tipo=loja
+npc=1 elias
+# balcão e caixotes (objetos_comuns 11 e 4), o "SAÍDA" velho na parede (13)
+enfeite=11 7 4
+enfeite=11 9 4
+enfeite=4 1 2
+enfeite=4 2 2
+mapa:
+##########################
+##########################
+#..................#....B#
+#..................#.....#
+#.......1..........#.....#
+#..................#gg####
+#........................#
+O.E......................L
+#........................#
+#........,,,,,,..........#
+#........,,,,,,..........#
+#........................#
+#........................#
+############S#############

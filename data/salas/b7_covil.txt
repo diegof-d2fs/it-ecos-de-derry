@@ -1,0 +1,31 @@
+# Etapa 15: o Covil (PRD §4.5). O Pennywise IV surge no '@' e a entrada se fecha durante a luta.
+# Fase 1 (100–60%) o Palhaço: aproximação → linha, linha de 3, cruz de raio 2 onde Bill estava, balões.
+# Fase 2 (60–25%) Georgie: a sala escurece; a ilusão chama Bill, puxa de leve e fere ao toque; o Pennywise
+# ataca do escuro com pulsos. Fase 3 (25–0%) as Luzes Mortas: um círculo de luz por amigo resgatado gira em
+# volta do centro (órbita de 140 px); fora deles, a escuridão fere; ele só pode ser atingido depois de atacar.
+# As colunas ficam FORA da órbita das luzes (nenhum círculo passa por dentro de parede).
+id=b7_covil
+nome=O Covil
+bioma=7
+tipo=chefe
+ondas=1
+musica=tensao
+mapa:
+##############################
+##############################
+#............................#
+#..s......................s..#
+#............................#
+#..##....................##..#
+#..##....................##..#
+#............................#
+O.E..........................L
+#..............@.............#
+#............................#
+#..##....................##..#
+#..##....................##..#
+#............................#
+#..s......................s..#
+#............................#
+#............................#
+##############S###############
