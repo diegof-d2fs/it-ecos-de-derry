@@ -60,6 +60,7 @@ struct EstadoSala {
     float cartaoBioma = 0.0f;        // > 0: o cartão do bioma (ilustração + nome) ao chegar nele (Etapa 10.5)
     int biomaDoCartao = -1;          // o último bioma anunciado nesta tentativa (−1 = nenhum)
     // Computador jogando: Start/Esc abrem Continuar assistindo / Assumir o controle / Voltar ao menu (24/11).
+    int chefesNoRecorde = 0;         // chefões já gravados no recorde desta tentativa (24/11)
     bool menuAssistir = false;
     int cursorAssistir = 0;
 };

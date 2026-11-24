@@ -29,6 +29,7 @@ Trabalho T3 de **Algoritmos e Programação II (UNIVALI)**, por **Diego Silva**.
 - [Opções de linha de comando](#opções-de-linha-de-comando)
 - [Testes e o computador jogando sozinho](#testes-e-o-computador-jogando-sozinho)
 - [Estrutura do projeto](#estrutura-do-projeto)
+- [Versão web e arquitetura na AWS](#versão-web-e-arquitetura-na-aws)
 - [Arte, som e pipeline de assets](#arte-som-e-pipeline-de-assets)
 - [Documentação](#documentação)
 - [Créditos e aviso legal](#créditos-e-aviso-legal)
@@ -53,7 +54,8 @@ Trabalho T3 de **Algoritmos e Programação II (UNIVALI)**, por **Diego Silva**.
 - **Progresso que fica**: XP, níveis e quatro atributos (Força, Foco, Agilidade, Coragem), itens e inventário, Ecos
   (bênçãos de cada amigo), loja, baús, salas secretas, armadilhas, Pacto de Sangue (vida extra) e as Lembranças, que
   compram talentos para sempre no Mural do Clube dos Perdedores.
-- **Três dificuldades** (Fácil, Normal, Difícil), pontuação com recordes e um cartão de memória com 15 blocos.
+- **Três dificuldades** (Fácil, Normal, Difícil), pontuação com recordes e um memory card com 15 blocos. O recorde
+  é gravado a cada chefão derrotado e no fim da tentativa (morte ou vitória): sair antes mantém o do último chefão.
 - **História contada em cenas ilustradas** (abertura, um capítulo por bioma e o epílogo).
 - **Teclado e controle** (Xbox, 8BitDo, Switch Pro): todo texto de botão se adapta ao dispositivo em uso.
 
@@ -179,6 +181,53 @@ wiki/            a wiki ilustrada da história, publicada no GitHub Pages
 docs/            PRD, SDD, HANDOFF (diário do projeto) e as imagens deste README
 instructions/    prompts de todos os assets
 ```
+
+## Versão web e arquitetura na AWS
+
+**Jogue em [ecosdederry.click](https://ecosdederry.click/).** É o mesmo código C++ do `.exe`, compilado para
+WebAssembly com o Emscripten (`src/main_web.cpp` troca só a plataforma: canvas, teclado, Gamepad API e Web Audio).
+O jogo roda inteiro no navegador; a nuvem só entrega os arquivos e guarda os dados de quem cria conta.
+
+![Arquitetura da versão web na AWS](docs/imagens/arquitetura_aws.svg)
+
+### Como funciona
+
+| Parte | Serviço | O que faz |
+|---|---|---|
+| Site | **S3 privado + CloudFront** | Entrega HTML, WASM, dados (55 MB) e músicas por HTTPS, com cache e compressão. O bucket só aceita a distribuição (Origin Access Control). |
+| Domínio | **Route 53 + ACM** | `ecosdederry.click` e `www`, com certificado TLS gratuito. |
+| Contas | **Amazon Cognito** | Login gerenciado em português com a arte do jogo. Entra com apelido ou e-mail, confirma o e-mail por código e recupera a senha. O jogo usa OAuth 2.0 com PKCE (cliente público, sem segredo no navegador). |
+| Cadastro | **Lambda PreSignUp** | Apelido de 3 a 20 caracteres (letras sem acento, números, ponto, traço e sublinhado) e um e-mail confirmado por conta. |
+| API | **API Gateway (HTTP API) + Lambda em Python** | Toda rota exige o token do Cognito, validado no próprio gateway. A função guarda o memory card, o perfil, o ranking e os feedbacks. |
+| Dados | **S3 privado e criptografado** | Um memory card (os 15 blocos, o perfil e os recordes) por conta, num arquivo por `sub` do Cognito. O ETag do S3 faz a gravação condicional: se outro dispositivo salvou antes, o jogo pausa e pergunta qual versão manter. |
+| Ranking | **mesmo bucket** | Três rankings (Fácil, Normal, Difícil), uma posição por conta em cada. A resposta pública tem só apelido, bandeira e pontos; e-mail e id nunca saem da API. Só é regravado quando alguém bate o próprio recorde. |
+| Feedback | **S3 + Amazon SES** | Bug, elogio, melhoria, crítica ou outro: a mensagem fica no bucket privado e chega por e-mail ao responsável. Limite de 3 por conta por hora. |
+| Operação | **CloudWatch + SNS** | Logs por 30 dias e alarmes por e-mail quando a capacidade passa do planejado (15 a 20 jogadores ao mesmo tempo) ou quando os cadastros se aproximam do limite diário de e-mails do Cognito. |
+| Custos | **AWS Budgets** | Orçamento mensal de US$ 12,50 que soma só os recursos com a etiqueta `projeto=ecos-de-derry`. |
+| Wiki | **GitHub Pages** | A [wiki ilustrada](https://diegof-d2fs.github.io/it-ecos-de-derry/) é publicada pelo GitHub Actions a cada mudança em `wiki/`. |
+
+### Por que esta arquitetura
+
+- **Sem servidor ligado.** O jogo não precisa de servidor de partida: a lógica roda no navegador. Por isso o site é
+  estático (S3 + CloudFront) e a API é serverless (Lambda), cobrada por uso. Sem jogadores, o custo fica perto de
+  zero; com eles, a CDN e a Lambda crescem sozinhas.
+- **Segurança por padrão.** Os dois buckets são privados; a API recusa quem não tem token; o CORS aceita só as
+  origens do jogo; a API limita pedidos por segundo; o e-mail do administrador fica fora do repositório (`.env`).
+  Convidado joga sem conta, e o progresso dele fica só na memória da aba.
+- **Infraestrutura como código.** Tudo o que é backend está em `web/infra.yaml` (CloudFormation). Os scripts
+  `tools/configurar_nuvem.sh` (backend) e `tools/publicar_web.sh` (site, com invalidação do cache) refazem o
+  ambiente do zero.
+- **S3 em vez de banco de dados.** Com um memory card por conta e um ranking pequeno, gravações condicionais no S3
+  bastam e não têm custo fixo. Se o ranking crescer muito, o próximo passo natural é o DynamoDB.
+
+### Limites conhecidos
+
+- A capacidade foi dimensionada para 15 a 20 pessoas jogando ao mesmo tempo; os alarmes avisam quando for hora de
+  pedir mais cota de Lambda e subir o limite da API.
+- O Cognito envia até 50 e-mails por dia com o remetente padrão; acima disso, é preciso tirar o SES do sandbox.
+- O ranking confia nos recordes enviados pelo jogo; ele pede conta e limita a pontuação, mas não é à prova de quem
+  altera o cliente.
+- No celular e no tablet o jogo precisa de um controle (não há controles de toque) e da tela deitada.
 
 ## Arte, som e pipeline de assets
 

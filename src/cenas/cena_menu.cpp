@@ -707,6 +707,10 @@ void desenharRecordesMenu(const Jogo& jogo, Canvas& canvas) {
     tituloTela(canvas, r, L"Recordes");
     painel(canvas, 90, 60, 460, 262);
     desenharRecordes(canvas, r, 90, 66, 460, jogo.menu.recordes, jogo.menu.filtro, nullptr);
+    // A regra de quando o recorde conta (Diego, 24/11: "pra quem entra na tela de recordes entender").
+    desenharTextoCentralizado(canvas, r.fontePequena, LARGURA_LOGICA / 2.0f, 326,
+                              L"Gravado a cada chefão derrotado e no fim (morte ou vitória). Sair antes mantém o do último chefão.",
+                              rgb(214, 172, 92));
     rodape(canvas, r, ajuda("← → filtro (todas, jogador, computador) · {VOLTAR} voltar"));
 }
 

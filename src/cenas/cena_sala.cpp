@@ -1228,7 +1228,8 @@ void desenharResultado(Canvas& canvas, const Recursos& r, const EstadoSala& s, b
         std::swprintf(t, 160, L"+%d Lembranças (total %d)", s.lembrancasGanhas, s.lembrancasTotal);
         desenharTextoCentralizado(canvas, r.fontePequena, 476, 276, t, rgb(200, 225, 255));
     }
-    std::wstring col = p.abandonou ? L"Abandono: pontuação não gravada."
+    std::wstring col = p.abandonou ? (s.chefesNoRecorde > 0 ? L"Abandono: vale o recorde do último chefão."
+                                                            : L"Abandono: pontuação não gravada.")
                                    : (s.colocacao > 0 ? std::to_wstring(s.colocacao) + L"º lugar (" + (s.pilotoJogou ? L"computador" : L"jogador") + L")"
                                                       : L"Fora do top 10 desta vez.");
     desenharTextoCentralizado(canvas, r.fonteMedia, 476, 296, col, rgb(255, 228, 150));
@@ -2053,6 +2054,30 @@ void gravarTelemetria(Jogo& jogo) {
                                                                         p.dificuldade, fim)));
 }
 
+// O recorde desta tentativa como está agora (no fim ou ao derrotar um chefão).
+Recorde recordeAtual(const Jogo& jogo) {
+    const EstadoSala& s = jogo.salaAtual;
+    const EstadoPartida& p = s.partida;
+    Recorde r;
+    r.pontos = pontuacaoAtual(p);
+    r.data = dataDeHoje();
+    r.dificuldade = p.dificuldade;
+    r.tempo = segundosDeJogo(p.stats);
+    r.bioma = p.emTentativa ? p.plano.bioma : p.sala.modelo->bioma;
+    r.vitoria = p.vitoria;
+    r.seed = p.seed;
+    r.piloto = s.pilotoJogou;
+    return r;
+}
+
+// Chefão derrotado (Diego, 24/11): grava o recorde da tentativa já, sem esperar o fim.
+void gravarRecordeDoChefe(Jogo& jogo) {
+    const std::filesystem::path arquivo = std::filesystem::path(jogo.pastaSaves) / L"recordes.txt";
+    std::vector<Recorde> lista = carregarRecordes(arquivo);
+    registrarRecordeDaTentativa(lista, recordeAtual(jogo));
+    gravarRecordes(arquivo, lista);
+}
+
 void prepararResultado(Jogo& jogo) {
     EstadoSala& s = jogo.salaAtual;
     const EstadoPartida& p = s.partida;
@@ -2070,16 +2095,8 @@ void prepararResultado(Jogo& jogo) {
         }
         return;
     }
-    Recorde r;
-    r.pontos = pontuacaoAtual(p);
-    r.data = dataDeHoje();
-    r.dificuldade = p.dificuldade;
-    r.tempo = segundosDeJogo(p.stats);
-    r.bioma = p.emTentativa ? p.plano.bioma : p.sala.modelo->bioma;
-    r.vitoria = p.vitoria;
-    r.seed = p.seed;
-    r.piloto = s.pilotoJogou;
-    s.colocacao = inserirRecorde(s.recordes, r);
+    const Recorde r = recordeAtual(jogo);
+    s.colocacao = registrarRecordeDaTentativa(s.recordes, r);   // substitui a linha gravada nos chefões
     gravarRecordes(arquivo, s.recordes);
     if (p.emTentativa) {   // Lembranças e contadores no perfil (o piloto não ganha para você)
         s.lembrancasGanhas = registrarFimDeTentativa(jogo.perfil, p, s.pilotoJogou);
@@ -2138,6 +2155,7 @@ void comecar(Jogo& jogo, std::uint64_t seed, Dificuldade dificuldade) {
     jogo.salaAtual.piloto = MemoriaPiloto{};
     jogo.salaAtual.pilotoJogou = jogo.pilotoAtivo;
     jogo.salaAtual.resultadoPronto = false;
+    jogo.salaAtual.chefesNoRecorde = 0;
     jogo.salaAtual.colocacao = 0;
     aoEntrarNaSala(jogo);
 }
@@ -2157,6 +2175,7 @@ void entrarClube(Jogo& jogo) {
     s.piloto.dificuldadeDesejada = sugerida;
     s.pilotoJogou = jogo.pilotoAtivo;
     s.resultadoPronto = false;
+    s.chefesNoRecorde = 0;
     s.colocacao = 0;
     s.recordes = carregarRecordes(std::filesystem::path(jogo.pastaSaves) / L"recordes.txt");
     if (!jogo.pilotoAtivo) gravarPerfil(std::filesystem::path(jogo.pastaSaves) / L"perfil.txt", jogo.perfil);
@@ -2176,6 +2195,7 @@ void entrarPrologo(Jogo& jogo) {
     s.piloto.dificuldadeDesejada = jogo.perfil.ultimaDificuldade;
     s.pilotoJogou = jogo.pilotoAtivo;
     s.resultadoPronto = false;
+    s.chefesNoRecorde = 0;
     s.colocacao = 0;
     aoEntrarNaSala(jogo);
 }
@@ -2199,6 +2219,7 @@ void carregarJogoSalvo(Jogo& jogo) {
     s.piloto = MemoriaPiloto{};
     s.pilotoJogou = false;
     s.resultadoPronto = false;
+    s.chefesNoRecorde = 0;
     s.colocacao = 0;
     s.biomaDoCartao = -1;   // o cartão do bioma aparece de novo: "você está aqui"
     aoEntrarNaSala(jogo);
@@ -2237,6 +2258,7 @@ bool atenderPedidosDoClube(Jogo& jogo) {
         s.piloto.dificuldadeDesejada = desejada;
         s.pilotoJogou = jogo.pilotoAtivo;
         s.resultadoPronto = false;
+        s.chefesNoRecorde = 0;
         s.colocacao = 0;
     }
     return true;
@@ -2350,6 +2372,10 @@ void atualizarSala(Jogo& jogo, const EstadoEntrada& entrada, float dt) {
         if (p.trocouDeSala && k + 1 < passos) aoEntrarNaSala(jogo);
     }
     if (jogo.pilotoAtivo) s.pilotoJogou = true;
+    if (p.emTentativa && !p.terminou && p.stats.B > s.chefesNoRecorde) {   // um chefão caiu: o recorde já fica gravado
+        s.chefesNoRecorde = p.stats.B;
+        gravarRecordeDoChefe(jogo);
+    }
     if (p.pedidoSalvar) {   // "Salvar jogo" na pausa: o cartão de memória por cima (a pausa continua por baixo)
         p.pedidoSalvar = false;
         abrirCartao(jogo, true);

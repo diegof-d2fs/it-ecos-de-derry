@@ -116,6 +116,18 @@ int inserirRecorde(std::vector<Recorde>& lista, const Recorde& novo) {
     return colocacao;
 }
 
+int registrarRecordeDaTentativa(std::vector<Recorde>& lista, const Recorde& novo) {
+    const auto mesmaTentativa = [&](const Recorde& r) {
+        return r.seed == novo.seed && r.dificuldade == novo.dificuldade && r.piloto == novo.piloto && !r.vitoria;
+    };
+    const Recorde* melhorAnterior = nullptr;
+    for (const Recorde& r : lista)
+        if (mesmaTentativa(r) && (!melhorAnterior || r.pontos > melhorAnterior->pontos)) melhorAnterior = &r;
+    const Recorde fica = (melhorAnterior && !novo.vitoria && melhorAnterior->pontos > novo.pontos) ? *melhorAnterior : novo;
+    lista.erase(std::remove_if(lista.begin(), lista.end(), mesmaTentativa), lista.end());
+    return inserirRecorde(lista, fica);
+}
+
 std::vector<Recorde> recordesFiltrados(const std::vector<Recorde>& lista, FiltroRecordes filtro) {
     std::vector<Recorde> saida;
     for (const Recorde& r : lista) {

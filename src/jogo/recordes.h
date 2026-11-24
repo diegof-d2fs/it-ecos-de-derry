@@ -39,6 +39,12 @@ std::string escreverRecordes(const std::vector<Recorde>& lista);
 // da categoria dela (jogador ou computador), ou 0 se não entrou.
 int inserirRecorde(std::vector<Recorde>& lista, const Recorde& novo);
 
+// Recorde da TENTATIVA (Diego, 24/11: "gravar ao derrotar cada chefão"). A mesma tentativa ocupa UMA linha,
+// regravada a cada chefão derrotado e no fim (morte ou vitória): fechar o jogo depois de um chefe não perde os
+// pontos. A tentativa é reconhecida por seed + dificuldade + quem jogou (a data tem hora e muda no caminho).
+// Fica a MAIOR pontuação que a tentativa alcançou; a vitória sempre substitui. Devolve a colocação, como inserirRecorde.
+int registrarRecordeDaTentativa(std::vector<Recorde>& lista, const Recorde& novo);
+
 // Até 10 recordes do filtro, já em ordem.
 std::vector<Recorde> recordesFiltrados(const std::vector<Recorde>& lista, FiltroRecordes filtro);
 

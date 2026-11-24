@@ -88,3 +88,28 @@ TESTE(recordes_arquivo_ausente_e_gravacao) {
     VERIFICAR(!std::filesystem::exists(pasta / "recordes.txt.tmp"));
     std::filesystem::remove_all(pasta);
 }
+
+// Diego, 24/11: o recorde é gravado a cada chefão derrotado. A MESMA tentativa ocupa uma linha só, que sobe a cada
+// chefe; uma queda depois (morte com menos pontos) não apaga o que ela já tinha alcançado; a vitória substitui.
+TESTE(recordes_uma_linha_por_tentativa_atualizada_a_cada_chefe) {
+    std::vector<Recorde> l;
+    registrarRecordeDaTentativa(l, rec(800, 100, false, 42));   // chefe 1
+    registrarRecordeDaTentativa(l, rec(1500, 200, false, 42));  // chefe 2: a mesma linha sobe
+    VERIFICAR(l.size() == 1);
+    VERIFICAR(l[0].pontos == 1500);
+    registrarRecordeDaTentativa(l, rec(1400, 260, false, 42));  // morreu depois, com menos: fica o melhor
+    VERIFICAR(l.size() == 1);
+    VERIFICAR(l[0].pontos == 1500);
+    Recorde vitoria = rec(1300, 300, false, 42);
+    vitoria.vitoria = true;
+    registrarRecordeDaTentativa(l, vitoria);                    // vitória sempre substitui
+    VERIFICAR(l.size() == 1);
+    VERIFICAR(l[0].vitoria);
+    // Outra tentativa (outra seed) e a mesma seed jogada pelo computador são linhas diferentes.
+    registrarRecordeDaTentativa(l, rec(900, 100, false, 43));
+    registrarRecordeDaTentativa(l, rec(900, 100, true, 43));
+    VERIFICAR(l.size() == 3);
+    // Uma vitória já gravada não é tocada por outra tentativa com a mesma seed.
+    registrarRecordeDaTentativa(l, rec(2000, 100, false, 42));
+    VERIFICAR(l.size() == 4);
+}
