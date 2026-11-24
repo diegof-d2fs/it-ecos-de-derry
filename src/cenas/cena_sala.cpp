@@ -1118,6 +1118,19 @@ void desenharPortasDaTentativa(Canvas& canvas, const Recursos& r, const EstadoPa
 // ---------- pendência: subir de nível (com prévia dos valores derivados) ----------
 // ---------- menus: pausa e inventário (painel e linhaMenu vêm de cenas/ui) ----------
 
+const wchar_t* const OPCOES_ASSISTIR[TOTAL_OPCOES_ASSISTIR] = {L"Continuar assistindo", L"Assumir o controle", L"Voltar ao menu"};
+
+void desenharMenuAssistir(Canvas& canvas, const Recursos& r, int cursor) {
+    retanguloAlpha(canvas, 0, 0, LARGURA_LOGICA, ALTURA_LOGICA, rgb(0, 0, 0), 140);
+    const float x = LARGURA_LOGICA / 2.0f - 130, y = 96;
+    painel(canvas, x, y, 260, 150);
+    desenharTextoCentralizado(canvas, r.fonteGrande, LARGURA_LOGICA / 2.0f, y + 6, L"Assistindo", rgb(255, 228, 150));
+    for (int i = 0; i < TOTAL_OPCOES_ASSISTIR; ++i)
+        linhaMenu(canvas, r, x + 14, y + 52 + 26.0f * static_cast<float>(i), 232, OPCOES_ASSISTIR[i], cursor == i);
+    desenharTextoCentralizado(canvas, r.fontePequena, LARGURA_LOGICA / 2.0f, y + 132,
+                              ajuda("{CONFIRMAR} escolher · {VOLTAR} continuar"), rgb(150, 146, 136));
+}
+
 void desenharPausa(Canvas& canvas, const Recursos& r, const EstadoPartida& p) {
     retanguloAlpha(canvas, 0, 0, LARGURA_LOGICA, ALTURA_LOGICA, rgb(0, 0, 0), 140);
     const float x = LARGURA_LOGICA / 2.0f - 130, y = 60;   // 6 opções (Salvar jogo, 23/11)
@@ -1979,7 +1992,7 @@ void desenharPiloto(Canvas& canvas, const Recursos& r, const MemoriaPiloto& m, b
                     float y = 38) {   // desce quando há a barra do chefe
     retanguloAlpha(canvas, LARGURA_LOGICA / 2.0f - 120, y, 240, 20, rgb(10, 30, 60), 200);
     contornoRetangulo(canvas, LARGURA_LOGICA / 2.0f - 120, y, 240, 20, rgb(110, 170, 255));
-    desenharTextoCentralizado(canvas, r.fontePequena, LARGURA_LOGICA / 2.0f, y + 4, L"COMPUTADOR JOGANDO · F10 devolve o controle",
+    desenharTextoCentralizado(canvas, r.fontePequena, LARGURA_LOGICA / 2.0f, y + 4, ajuda("COMPUTADOR JOGANDO · {PAUSA}: opções"),
                               rgb(200, 225, 255));
     if (!detalhes) return;
     for (const Celula& c : m.caminho) {
@@ -2289,6 +2302,36 @@ void atualizarSala(Jogo& jogo, const EstadoEntrada& entrada, float dt) {
         atualizarPartida(p, *jogo.conteudo, entrada, dt);   // só anima os textos
         return;
     }
+    // Computador jogando (Diego, 24/11: "não consigo voltar pro menu, nem Start nem Esc"): os comandos do piloto
+    // substituem os da pessoa, então a pausa nunca abria. Start/Esc da PESSOA abrem um menu próprio, com o jogo parado.
+    if (jogo.pilotoAtivo && !s.menuAssistir &&
+        (pressionou(entrada, Comando::Pausa) || pressionou(entrada, Comando::Voltar))) {
+        s.menuAssistir = true;
+        s.cursorAssistir = 0;
+        return;
+    }
+    if (s.menuAssistir) {
+        if (!jogo.pilotoAtivo) {   // F10 desligou o piloto com o menu aberto
+            s.menuAssistir = false;
+        } else {
+            if (pressionou(entrada, Comando::Cima)) s.cursorAssistir = (s.cursorAssistir + TOTAL_OPCOES_ASSISTIR - 1) % TOTAL_OPCOES_ASSISTIR;
+            if (pressionou(entrada, Comando::Baixo)) s.cursorAssistir = (s.cursorAssistir + 1) % TOTAL_OPCOES_ASSISTIR;
+            if (pressionou(entrada, Comando::Pausa) || pressionou(entrada, Comando::Voltar)) {
+                s.menuAssistir = false;   // continuar assistindo
+            } else if (pressionou(entrada, Comando::Confirmar) || pressionou(entrada, Comando::Atacar)) {
+                s.menuAssistir = false;
+                if (s.cursorAssistir == 1) {   // assumir o controle: a pessoa joga daqui; a tentativa segue sendo "computador"
+                    jogo.pilotoAtivo = false;
+                    jogo.velocidade = 1;
+                    jogo.menu.assistir = false;
+                    mostrarAviso(jogo, L"Você assumiu o controle", 2.5f);
+                } else if (s.cursorAssistir == 2) {
+                    trocarCenaBase(jogo, IdCena::Menu);
+                }
+            }
+            return;
+        }
+    }
     // (Removido em 17/11: um atalho de teste trocava de sala com AbaDireita/AbaEsquerda fora da
     // tentativa. No controle, RB é TAMBÉM Interagir: no Clube, no prólogo e nas salas avulsas da
     // demonstração, apertar RB para interagir pulava para o próximo arquivo de sala — o Diego caiu em
@@ -2403,6 +2446,7 @@ void desenharSala(const Jogo& jogo, Canvas& canvas) {
     if (p.pendencia == Pendencia::SubirNivel) desenharTelaNivel(canvas, r, p, jogo.tempoTotal);   // menus repaginados (24/11)
     if (jogo.pilotoAtivo) desenharPiloto(canvas, r, s.piloto, jogo.mostrarMedidor, camX, camY, (chefeNaSala(p) || p.festaAtiva) ? 66.0f : 38.0f);
     if (p.pendencia == Pendencia::Pausa) desenharPausa(canvas, r, p);
+    if (s.menuAssistir) desenharMenuAssistir(canvas, r, s.cursorAssistir);
     if (p.pendencia == Pendencia::Inventario) desenharTelaInventario(canvas, r, p, jogo.tempoTotal);
     desenharDialogo(canvas, r, p, jogo.entrada.ultimoUsado == Dispositivo::Gamepad, jogo.tempoTotal);
     desenharEscolhaEco(canvas, r, p, jogo.tempoTotal);

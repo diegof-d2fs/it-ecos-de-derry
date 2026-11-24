@@ -732,14 +732,15 @@ void desenharCreditos(const Jogo& jogo, Canvas& canvas) {
         {L"O TRABALHO", L"T3 de Algoritmos e Programação II · UNIVALI"},
         {L"O MOTOR", L"C++17 puro, sem engine: render, áudio, IA e piloto automático próprios"},
         {L"ARTE E SOM", L"pixel art gerada e revisada para o projeto · músicas e sons de bancos livres"},
+        {L"GERAÇÃO DE IMAGENS", L"Gemini Pro (Google) e Codex (OpenAI)"},
         {L"INSPIRAÇÃO", L"IT, de Stephen King"},
         {L"ASSISTÊNCIA DE PROGRAMAÇÃO", L"Claude (Anthropic) e Codex (OpenAI)"},
     };
-    float y = 170;
+    float y = 160;   // 6 blocos de 28: o último termina em ~326, antes do rodapé (342)
     for (const Bloco& b : blocos) {
         desenharTextoCentralizado(canvas, r.fontePequena, cx, y, b.titulo, rgb(214, 172, 92));
         desenharTextoCentralizado(canvas, r.fonteMedia, cx, y + 12, b.texto, COR_UI_TEXTO);
-        y += 32;
+        y += 28;
     }
     rodape(canvas, r, jogo.menu.creditosDaVitoria ? ajuda("{CONFIRMAR} ou {VOLTAR} voltar ao Clube") : ajuda("{VOLTAR} voltar"));
 }

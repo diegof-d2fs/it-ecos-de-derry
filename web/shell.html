@@ -7,9 +7,10 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cellipse cx=%2232%22 cy=%2226%22 rx=%2218%22 ry=%2221%22 fill=%22%23c41c28%22/%3E%3Cpath d=%22M32 47 L32 62%22 stroke=%22%23ddd%22 stroke-width=%222%22/%3E%3C/svg%3E">
 <meta name="description" content="IT: Ecos de Derry: roguelike de ação em pixel art, escrito do zero em C++17. Jogue no navegador.">
 <style>
-  html, body { margin: 0; height: 100%; background: #04050a; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #04050a; overflow: hidden; overscroll-behavior: none; }
+  #capa, #girar { touch-action: manipulation; }
   #tela { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: contain; background: #000;
-          outline: none; }   /* image-rendering: escolhido por js_apresentar (suave ao reduzir, em blocos só em razão inteira) */
+          outline: none; touch-action: none; }   /* image-rendering: escolhido por js_apresentar (suave ao reduzir, em blocos só em razão inteira) */
   #capa { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
           background: radial-gradient(ellipse at 70% 40%, #1a2233 0%, #04050a 70%); color: #efe6d6;
           font-family: Georgia, 'Times New Roman', serif; text-align: center; cursor: pointer; user-select: none; }
@@ -58,6 +59,17 @@
   #lore-fallback .painel-web { width: min(1100px, 100%); height: min(720px, 90vh); display: flex; flex-direction: column; }
   #lore-fallback iframe { flex: 1; width: 100%; border: 1px solid #826849; background: #080a10; }
   .ranking-lista { max-height: 32vh; overflow-y: auto; }
+  /* Celular e tablet (toque): o jogo não tem controles de toque; precisa de um controle e da tela deitada. */
+  #girar { display: none; }
+  .so-toque { display: none; }
+  @media (pointer: coarse) { .so-toque { display: block; } }
+  @media (pointer: coarse) and (orientation: portrait) {
+    #girar { display: flex; position: fixed; inset: 0; z-index: 20; flex-direction: column; align-items: center;
+             justify-content: center; padding: 32px; box-sizing: border-box; text-align: center; background: #04050af2;
+             color: #efe6d6; font-family: Georgia, 'Times New Roman', serif; }
+    #girar strong { font-size: 26px; color: #d4ad70; letter-spacing: 1px; }
+    #girar p { color: #d6c8af; line-height: 1.5; max-width: 420px; }
+  }
 </style>
 </head>
 <body>
@@ -155,12 +167,18 @@
     <button id="conta-voltar">Voltar ao jogo</button>
   </section>
 </div>
+<div id="girar" role="alert">
+  <strong>Gire o aparelho</strong>
+  <p>IT: Ecos de Derry é jogado com a tela deitada.</p>
+  <p>No celular e no tablet, conecte um controle (Bluetooth ou cabo): o jogo não tem controles de toque.</p>
+</div>
 <div id="capa">
   <h1><span>IT</span> ECOS DE DERRY</h1>
   <p>um roguelike nos esgotos de Derry · por Diego Silva</p>
   <div id="barra"><div></div></div>
   <div id="estado">Carregando o jogo…</div>
   <div id="jogar">Clique ou aperte uma tecla para jogar</div>
+  <p class="so-toque">No celular e no tablet, o jogo precisa de um controle conectado.</p>
   <div id="rodape">Teclado (WASD, J, K, L, Espaço) ou controle · F11 tela cheia ·
     <a href="https://github.com/diegof-d2fs/it-ecos-de-derry" target="_blank" rel="noopener">código no GitHub</a></div>
 </div>
@@ -177,8 +195,21 @@
     window.ecosJogando = true;
     document.getElementById('tela').focus();
     if (window.ecosAudio && window.ecosAudio.ctx.state !== 'running') window.ecosAudio.ctx.resume();
+    // Toque: tela cheia e trava deitada (Android). O iPhone não permite travar; lá vale o aviso "Gire o aparelho".
+    if (matchMedia('(pointer: coarse)').matches && document.documentElement.requestFullscreen && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+        .then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'))
+        .catch(() => {});
+    }
   }
   capa.addEventListener('pointerdown', comecar);
+  // iPhone/iPad: o Safari só libera o som depois de um toque; o botão do controle não conta. Se o jogo começou
+  // pelo controle, o primeiro toque na tela (em qualquer momento) liga o som.
+  const religarSom = () => {
+    if (window.ecosAudio && window.ecosAudio.ctx.state !== 'running') window.ecosAudio.ctx.resume();
+  };
+  window.addEventListener('pointerdown', religarSom, {passive: true});
+  window.addEventListener('touchend', religarSom, {passive: true});
   window.addEventListener('keydown', (e) => { if (!e.repeat) comecar(); });
   window.addEventListener('gamepadconnected', () => setTimeout(comecar, 200));
   setInterval(() => {   // um botão do controle também fecha a capa

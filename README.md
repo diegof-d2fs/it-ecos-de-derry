@@ -182,7 +182,7 @@ instructions/    prompts de todos os assets
 
 ## Arte, som e pipeline de assets
 
-A arte é pixel art gerada com IA a partir de prompts versionados em `instructions/Prompts-Assets-*.md` (gerados por
+A arte é pixel art gerada com IA (Gemini Pro, do Google, e Codex, da OpenAI) a partir de prompts versionados em `instructions/Prompts-Assets-*.md` (gerados por
 `tools/prompts_*.py`) e revisada imagem a imagem. O `tools/export_final.py` recorta as folhas pelos quadros, limpa o
 fundo e exporta duas versões (1× e 4×) com o `manifesto.txt` que o jogo lê. Os originais em alta resolução não
 ficam no repositório; o jogo usa só as versões exportadas em `assets/jogo` e `assets/jogo_hd`.
@@ -203,6 +203,7 @@ Músicas e efeitos sonoros vêm de bancos de áudio livres.
 
 **Criação, programação, design e direção:** Diego Silva.
 **Assistência de programação:** Claude (Anthropic) e Codex (OpenAI).
+**Geração de imagens:** Gemini Pro (Google) e Codex (OpenAI).
 **Joystick:** [SDL2](https://www.libsdl.org/) 2.30.9 (licença zlib), em `third_party/SDL2`.
 
 Projeto acadêmico e sem fins lucrativos, feito como homenagem. *IT* e seus personagens pertencem a Stephen King e aos

@@ -57,6 +57,8 @@ EM_JS(void, js_apresentar, (const unsigned char* rgba, int w, int h), {
 });
 EM_JS(int, js_largura, (), { return Math.floor(window.innerWidth * (window.devicePixelRatio || 1)); });
 EM_JS(int, js_altura, (), { return Math.floor(window.innerHeight * (window.devicePixelRatio || 1)); });
+// Tela de toque (celular/tablet, Android e iOS).
+EM_JS(int, js_toque, (), { return matchMedia('(pointer: coarse)').matches ? 1 : 0; });
 EM_JS(int, js_focada, (), { return (document.hasFocus() && document.visibilityState === 'visible') ? 1 : 0; });
 EM_JS(void, js_tela_cheia, (), {
     if (document.fullscreenElement) document.exitFullscreen();
@@ -317,6 +319,9 @@ int main() {
     // UTF-8: sem isso o swprintf do navegador (musl, locale "C") para no primeiro acento ("Nível" saía "N").
     std::setlocale(LC_ALL, "C.UTF-8");
     web = new Web;
+    // Celular e tablet: escala 2 basta numa tela pequena e gasta ~240 MB em vez de ~390 MB (o Safari do iPhone
+    // fecha abas que pesam demais).
+    if (js_toque()) web->limiteEscala = 2;
     std::string erro;
     if (!carregarRecursos(web->recursos, L"/assets/jogo_hd/", L"/assets/jogo/", erro)) {
         std::printf("Falha ao carregar os recursos: %s\n", erro.c_str());

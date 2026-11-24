@@ -38,6 +38,9 @@ struct EstadoMenu {
 
 // Cena de sala: só DESENHA a partida e repassa os comandos. Todo o jogo está em EstadoPartida
 // (regras), que também roda sem janela no piloto automático e nos testes (SDD §24.7.1).
+// Menu do "computador jogando": Continuar assistindo, Assumir o controle, Voltar ao menu.
+constexpr int TOTAL_OPCOES_ASSISTIR = 3;
+
 struct EstadoSala {
     EstadoPartida partida;
     MemoriaPiloto piloto;            // estado do piloto automático (F10)
@@ -56,6 +59,9 @@ struct EstadoSala {
     float telaCiclo = 0.0f;          // > 0: "Bill acorda no Clube" (1ª morte) na frente de tudo
     float cartaoBioma = 0.0f;        // > 0: o cartão do bioma (ilustração + nome) ao chegar nele (Etapa 10.5)
     int biomaDoCartao = -1;          // o último bioma anunciado nesta tentativa (−1 = nenhum)
+    // Computador jogando: Start/Esc abrem Continuar assistindo / Assumir o controle / Voltar ao menu (24/11).
+    bool menuAssistir = false;
+    int cursorAssistir = 0;
 };
 
 // Cena da história (cut scene, cenas/cena_historia.cpp) aberta por cima da cena atual.
