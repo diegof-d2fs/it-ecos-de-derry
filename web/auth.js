@@ -1,4 +1,4 @@
-/* Entrada e cartão de memória exclusivos da versão web na AWS. */
+/* Entrada e memory card exclusivos da versão web na AWS. */
 (() => {
   const nomes = ['perfil.txt', 'recordes.txt', 'telemetria.csv',
     ...Array.from({length: 15}, (_, i) => `bloco_${String(i + 1).padStart(2, '0')}.txt`)];
@@ -63,7 +63,7 @@
   }
   function aplicarArquivos(files) {
     for (const [nome, texto] of Object.entries(files || {})) {
-      if (!nomes.includes(nome) || typeof texto !== 'string') throw Error('Cartão recebido inválido.');
+      if (!nomes.includes(nome) || typeof texto !== 'string') throw Error('Memory card recebido inválido.');
       fs.writeFile(`/saves/${nome}`, texto);
     }
   }
@@ -158,7 +158,7 @@
     concluido();
   }
   async function carregarConta() {
-    mostrar('Abrindo seu cartão de memória na AWS...');
+    mostrar('Carregando seu memory card do servidor...');
     const [cartao, perfil] = await Promise.all([api('/saves'), api('/profile')]);
     administrador = await api('/admin').then(d => d.allowed === true).catch(() => false);
     document.getElementById('admin-demos').hidden = !administrador;
@@ -172,7 +172,7 @@
       return;
     }
     status.dataset.conta = `${bandeira(perfil.country)} ${perfil.nick || 'Conta'}`;
-    status.textContent = `${status.dataset.conta} · cartão na AWS`;
+    status.textContent = `${status.dataset.conta} · memory card no servidor`;
     pronto('conta');
   }
   async function preparar(arquivos) {
@@ -200,12 +200,12 @@
     const atual = JSON.stringify(arquivoAtual());
     if (atual === ultimo) return;
     ocupada = true;
-    status.textContent = 'Salvando cartão na AWS...';
+    status.textContent = 'Salvando memory card no servidor...';
     try {
       const dados = await api('/saves', 'PUT', {files: JSON.parse(atual), version});
       version = dados.version;
       ultimo = atual;
-      status.textContent = dados.rankingPending ? 'Cartão salvo. Ranking aguardando atualização.' : 'Cartão salvo na AWS';
+      status.textContent = dados.rankingPending ? 'Memory card salvo. Ranking aguardando atualização.' : 'Memory card salvo no servidor';
     } catch (erro) {
       status.textContent = erro.message;
       if (erro.status === 409) { conflito = true; sobrepor(conflitoPainel); }
@@ -277,7 +277,7 @@
   function abrirConta() {
     if (modo !== 'conta') return;
     document.getElementById('conta-quem').textContent = status.dataset.conta || '';
-    document.getElementById('conta-estado').textContent = 'Seu cartão fica guardado na AWS. Ao sair, esta aba volta à tela de entrada.';
+    document.getElementById('conta-estado').textContent = 'Seu memory card fica guardado no servidor. Ao sair, esta aba volta à tela de entrada.';
     document.getElementById('conta-forcar').hidden = true;
     sobrepor(contaPainel);
     document.getElementById('conta-voltar').focus();
@@ -286,12 +286,12 @@
   // (sem isso, o próximo "Entrar" num computador compartilhado entraria direto na mesma conta).
   async function sairDaConta(mesmoSemSalvar) {
     const estado = document.getElementById('conta-estado');
-    estado.textContent = 'Salvando o cartão antes de sair...';
+    estado.textContent = 'Salvando o memory card antes de sair...';
     while (ocupada) await new Promise(r => setTimeout(r, 100));
     if (!mesmoSemSalvar) {
       await sincronizar();
       if (conflito || JSON.stringify(arquivoAtual()) !== ultimo) {
-        estado.textContent = 'O cartão não foi salvo. Se sair agora, o progresso desde o último salvamento será perdido.';
+        estado.textContent = 'O memory card não foi salvo. Se sair agora, o progresso desde o último salvamento será perdido.';
         document.getElementById('conta-forcar').hidden = false;
         return;
       }
@@ -333,7 +333,7 @@
     try {
       const dados = await api('/profile', 'PUT', {country: paisSelect.value});
       status.dataset.conta = `${bandeira(dados.country)} ${dados.nick}`;
-      status.textContent = `${status.dataset.conta} · cartão na AWS`;
+      status.textContent = `${status.dataset.conta} · memory card no servidor`;
       pronto('conta');
     } catch (erro) { mostrar(erro.message); }
   });
@@ -362,7 +362,7 @@
       const remoto = await api('/saves');
       const salvo = await api('/saves', 'PUT', {files: JSON.parse(atual), version: remoto.version});
       version = salvo.version; ultimo = atual; conflito = false;
-      status.textContent = 'Cartão salvo na AWS'; fechar(conflitoPainel);
+      status.textContent = 'Memory card salvo no servidor'; fechar(conflitoPainel);
     } catch (erro) { estado.textContent = erro.message; }
   });
   contaBotao.addEventListener('click', abrirConta);

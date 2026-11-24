@@ -140,7 +140,7 @@ void desenharCartao(const Jogo& jogo, Canvas& canvas) {
     for (const ResumoBloco& b : c.blocos) ocupados += b.ocupado ? 1 : 0;
     desenharTextoCentralizado(canvas, r.fonteGrande, LARGURA_LOGICA / 2.0f, 8, c.salvar ? L"Salvar jogo" : L"Carregar jogo", COR_TITULO);
     wchar_t sub[96];
-    std::swprintf(sub, 96, L"Cartão de memória · %d blocos · %d livres", TOTAL_BLOCOS, TOTAL_BLOCOS - ocupados);
+    std::swprintf(sub, 96, L"Memory card · %d blocos · %d livres", TOTAL_BLOCOS, TOTAL_BLOCOS - ocupados);
     desenharTextoCentralizado(canvas, r.fontePequena, LARGURA_LOGICA / 2.0f, 40, sub, rgb(150, 170, 210));
 
     // Grade 5 × 3 de blocos: ocupado = retrato de Bill e o bioma; livre = "Livre".

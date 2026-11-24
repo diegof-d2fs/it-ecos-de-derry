@@ -166,6 +166,10 @@ Resources:
               - Effect: Allow
                 Action: [s3:GetObject, s3:PutObject]
                 Resource: !Sub '${SaveBucket.Arn}/*'
+              # Sem ListBucket o S3 responde AccessDenied (nao NoSuchKey) para arquivo inexistente: conta nova dava 500.
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt SaveBucket.Arn
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${AdminEmail}'

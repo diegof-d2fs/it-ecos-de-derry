@@ -138,9 +138,9 @@
   </section>
 </div>
 <div id="conflito" hidden>
-  <section class="painel-web"><h2>CARTÃO ALTERADO</h2>
-    <p>Seu cartão foi salvo em outro dispositivo enquanto esta aba estava aberta. Esta sessão foi pausada para evitar perder dados.</p>
-    <button id="conflito-recarregar">Usar cartão mais recente da AWS</button>
+  <section class="painel-web"><h2>MEMORY CARD ALTERADO</h2>
+    <p>Seu memory card foi salvo em outro dispositivo enquanto esta aba estava aberta. Esta sessão foi pausada para evitar perder dados.</p>
+    <button id="conflito-recarregar">Usar o memory card mais recente do servidor</button>
     <button id="conflito-sobrescrever">Salvar esta sessão por cima</button>
     <small id="conflito-estado">Escolha qual versão deseja manter.</small>
   </section>
@@ -202,7 +202,7 @@
   var Module = {
     canvas: document.getElementById('tela'),
     preRun: [() => {
-      // MEMFS: convidado perde o progresso; conta baixa e envia o cartão via API.
+      // MEMFS: convidado perde o progresso; conta baixa e envia o memory card via API.
       FS.mkdir('/saves');
       addRunDependency('acesso');
       window.ecosAcesso.preparar(FS).then(() => removeRunDependency('acesso'));

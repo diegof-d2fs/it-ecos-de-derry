@@ -252,7 +252,7 @@ def handler(event, context):
             objeto = _s3().get_object(Bucket=BUCKET, Key=chave)
             dados = json.loads(objeto["Body"].read())
             if not _arquivos_validos(dados.get("files")):
-                return _resposta(503, {"erro": "Cartão salvo inválido. Nenhum dado foi alterado."})
+                return _resposta(503, {"erro": "Memory card salvo inválido. Nenhum dado foi alterado."})
             return _resposta(200, {"files": dados["files"], "version": objeto["ETag"]})
         except ClientError as exc:
             if exc.response.get("Error", {}).get("Code") in ("NoSuchKey", "404"):
@@ -266,7 +266,7 @@ def handler(event, context):
         arquivos = dados.get("files")
         versao = dados.get("version")
         if not _arquivos_validos(arquivos) or (versao is not None and not isinstance(versao, str)):
-            return _resposta(400, {"erro": "Cartão inválido."})
+            return _resposta(400, {"erro": "Memory card inválido."})
         if isinstance(versao, str) and not _ETAG.fullmatch(versao):
             return _resposta(400, {"erro": "Versão inválida."})
         corpo = json.dumps({"files": arquivos}, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
@@ -284,8 +284,8 @@ def handler(event, context):
                 pendente = True
         return _resposta(200, {"version": salvo["ETag"], "rankingPending": pendente})
     except (ValueError, UnicodeError, TypeError):
-        return _resposta(400, {"erro": "Cartão inválido."})
+        return _resposta(400, {"erro": "Memory card inválido."})
     except ClientError as exc:
         if exc.response.get("Error", {}).get("Code") in ("PreconditionFailed", "ConditionalRequestConflict", "412", "409"):
-            return _resposta(409, {"erro": "O cartão foi alterado em outro dispositivo. Recarregue antes de salvar."})
+            return _resposta(409, {"erro": "O memory card foi alterado em outro dispositivo. Recarregue antes de salvar."})
         raise
