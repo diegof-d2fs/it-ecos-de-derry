@@ -1793,7 +1793,7 @@ void desenharDialogo(Canvas& canvas, const Recursos& r, const EstadoPartida& p, 
         desenharTexto(canvas, r.fontePequena, bill ? x + w - 88 : x + w - 18, y + h - 16, L"▼", COR_UI_DESTAQUE);
     }
     desenharTexto(canvas, r.fontePequena, tx, y + h - 15,
-                  ajuda(controle ? "A: avançar · B: pular" : "Enter ou J: avançar · Esc: pular"), COR_UI_APAGADO);
+                  controle ? paraWide(trocarBotoes("{CONFIRMAR}: avançar · {VOLTAR}: pular", true)) : ajuda("Enter ou J: avançar · Esc: pular"), COR_UI_APAGADO);
     if (d.escolhendo) {   // escolhas (só no Clube): painel acima da caixa
         const float n = static_cast<float>(dl.escolhas.size());
         const float ex = LARGURA_LOGICA / 2.0f - 170, eh = 12 + 26 * n, ey = y - eh - 6;

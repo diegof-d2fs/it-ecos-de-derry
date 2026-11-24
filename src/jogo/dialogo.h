@@ -72,7 +72,14 @@ int contarCaracteres(const std::string& utf8);   // em letras (code points), nã
 // Troca {ATACAR}, {DASH}, {CONFIRMAR}, {VOLTAR}… pelo nome do botão no dispositivo em uso
 // (teclado ou controle). Vale para as falas E para os textos de ajuda da interface.
 std::string trocarBotoes(const std::string& texto, bool controle);
-// Controle Nintendo (nome com "Nintendo"/"Switch"/"Pro Controller"): as letras das mesmas POSIÇÕES.
+// Os botões são lidos por POSIÇÃO; muda só o nome impresso em cada posição (Diego, 24/11: Xbox, PlayStation e
+// Nintendo têm letras diferentes entre si).
+enum class EstiloControle : std::uint8_t { Xbox, Nintendo, PlayStation };
+// Pelo nome que o sistema dá ao controle (SDL no .exe, Gamepad.id no navegador, que traz o fabricante:
+// 054c = Sony, 057e = Nintendo). Desconhecido = Xbox (a maioria dos controles genéricos imita o Xbox).
+EstiloControle estiloDoControle(const std::string& nome);
+void definirEstiloControle(EstiloControle estilo);
+// Compatibilidade: true = Nintendo, false = Xbox.
 void definirRotulosNintendo(bool nintendo);
 
 // ---------- tutorial (D01–D20) ----------

@@ -58,6 +58,9 @@ Vec2 aplicarZonaMorta(Vec2 v, float zona);
 // Devolve o analógico esquerdo já com zona morta. Se houve qualquer atividade, define
 // `ultimoUsado = Gamepad` (os ícones do tutorial seguem o último dispositivo).
 Vec2 aplicarControle(const LeituraControle& leitura, EstadoEntrada& entrada);
+// Controle Nintendo (Diego, 24/11: "a posição do A e do B entre Nintendo e Xbox é inversa"): nos MENUS, A (direita)
+// confirma e B (baixo) volta, como no Switch. As ações da partida (dash, clarão) continuam por posição.
+void definirConfirmarNintendo(bool nintendo);
 
 // Fecha o eixo de movimento do quadro: o direcional digital (teclado ou cruz do controle)
 // tem prioridade; sem ele, vale o analógico. Depois, o analógico além de LIMIAR_NAVEGACAO

@@ -110,3 +110,21 @@ TESTE(controle_direcional_digital_tem_prioridade) {
     VERIFICAR(segurando(e3, Comando::Baixo) && !segurando(e3, Comando::Cima));
     VERIFICAR_PERTO(e3.eixo.y, 0.9f, 1e-6f);
 }
+
+// Diego, 24/11: no controle Nintendo o A fica à direita e o B embaixo (o contrário do Xbox). Nos menus, A confirma
+// e B volta, como no Switch; as ações da partida continuam por posição (baixo = dash, direita = clarão).
+TESTE(controle_nintendo_confirma_com_a_e_volta_com_b) {
+    definirConfirmarNintendo(true);
+    EstadoEntrada direita;
+    aplicarControle(comBotao(BotaoControle::Leste), direita);   // o "A" do Nintendo
+    VERIFICAR(segurando(direita, Comando::Confirmar) && segurando(direita, Comando::Clarao));
+    VERIFICAR(!segurando(direita, Comando::Voltar));
+    EstadoEntrada baixo;
+    aplicarControle(comBotao(BotaoControle::Sul), baixo);       // o "B" do Nintendo
+    VERIFICAR(segurando(baixo, Comando::Voltar) && segurando(baixo, Comando::Dash));
+    VERIFICAR(!segurando(baixo, Comando::Confirmar));
+    definirConfirmarNintendo(false);   // Xbox e PlayStation: baixo confirma, direita volta
+    EstadoEntrada xbox;
+    aplicarControle(comBotao(BotaoControle::Sul), xbox);
+    VERIFICAR(segurando(xbox, Comando::Confirmar) && !segurando(xbox, Comando::Voltar));
+}

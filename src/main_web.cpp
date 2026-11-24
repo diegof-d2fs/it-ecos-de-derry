@@ -221,8 +221,8 @@ void lerEntrada(Jogo& jogo, bool focada) {
     const bool temControle = jogo.controle.origem != OrigemControle::Nenhuma;
     jogo.entrada.gamepadConectado = temControle;
     const std::string n = jogo.controle.nome;
-    definirRotulosNintendo(temControle && (n.find("Nintendo") != std::string::npos || n.find("Switch") != std::string::npos ||
-                                           n.find("Pro Controller") != std::string::npos));
+    definirEstiloControle(temControle ? estiloDoControle(n) : EstiloControle::Xbox);
+    definirConfirmarNintendo(temControle && estiloDoControle(n) == EstiloControle::Nintendo);
     if (temControle && !tinhaControle) mostrarAviso(jogo, L"Controle conectado: " + paraWide(n), 3.0f);
     else if (!temControle && tinhaControle) mostrarAviso(jogo, L"Controle desconectado", 4.0f);
     if (!js_liberado()) travado = true;

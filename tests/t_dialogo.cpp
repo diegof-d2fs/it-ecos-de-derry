@@ -277,3 +277,25 @@ TESTE(ajuda_da_interface_nao_fixa_tecla_de_teclado) {
         }
     }
 }
+
+// Diego, 24/11: as dicas mostram as letras do controle em uso. Os nomes são os que o SDL (no .exe) e o
+// navegador (Gamepad.id, com o fabricante: 054c Sony, 057e Nintendo) informam.
+TESTE(dialogo_letras_de_xbox_playstation_e_nintendo) {
+    VERIFICAR(estiloDoControle("Xbox Series X Controller") == EstiloControle::Xbox);
+    VERIFICAR(estiloDoControle("Xbox 360 Controller (XInput STANDARD GAMEPAD)") == EstiloControle::Xbox);
+    VERIFICAR(estiloDoControle("PS5 Controller") == EstiloControle::PlayStation);
+    VERIFICAR(estiloDoControle("DualSense Wireless Controller (STANDARD GAMEPAD Vendor: 054c Product: 0ce6)") == EstiloControle::PlayStation);
+    VERIFICAR(estiloDoControle("Wireless Controller (STANDARD GAMEPAD Vendor: 054c Product: 09cc)") == EstiloControle::PlayStation);
+    VERIFICAR(estiloDoControle("054c-05c4-Wireless Controller") == EstiloControle::PlayStation);
+    VERIFICAR(estiloDoControle("Nintendo Switch Pro Controller") == EstiloControle::Nintendo);
+    VERIFICAR(estiloDoControle("Pro Controller (STANDARD GAMEPAD Vendor: 057e Product: 2009)") == EstiloControle::Nintendo);
+    VERIFICAR(estiloDoControle("8BitDo Pro 2") == EstiloControle::Xbox);   // modo X-input: imita o Xbox
+
+    definirEstiloControle(EstiloControle::PlayStation);
+    VERIFICAR(trocarBotoes("{CONFIRMAR} ok · {VOLTAR} sair · {ATACAR} · {PAUSA}", true) == "X ok · Bola sair · Quadrado · Options");
+    definirEstiloControle(EstiloControle::Nintendo);
+    VERIFICAR(trocarBotoes("{CONFIRMAR} ok · {VOLTAR} sair · {ATACAR} · {PAUSA}", true) == "A ok · B sair · Y · +");
+    definirEstiloControle(EstiloControle::Xbox);
+    VERIFICAR(trocarBotoes("{CONFIRMAR} ok · {VOLTAR} sair · {ATACAR} · {PAUSA}", true) == "A ok · B sair · X · Start");
+    VERIFICAR(trocarBotoes("{CONFIRMAR}", false) == "Enter");   // teclado não depende do controle
+}

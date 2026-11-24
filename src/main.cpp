@@ -287,10 +287,10 @@ void lerEntrada(const EstadoJanela& janela, Jogo& jogo, bool aceitarSemFoco, boo
     atualizarGamepad(jogo.controle, agoraSegundos());
     const bool temControle = jogo.controle.origem != OrigemControle::Nenhuma;
     jogo.entrada.gamepadConectado = temControle;
-    {   // Letras do controle conectado: Nintendo (Switch Pro, 8BitDo no modo Switch) ou Xbox
+    {   // Letras do controle conectado: Xbox, PlayStation ou Nintendo (Switch Pro, 8BitDo no modo Switch)
         const std::string& n = jogo.controle.nome;
-        definirRotulosNintendo(temControle && (n.find("Nintendo") != std::string::npos || n.find("Switch") != std::string::npos ||
-                                               n.find("Pro Controller") != std::string::npos));
+        definirEstiloControle(temControle ? estiloDoControle(n) : EstiloControle::Xbox);
+        definirConfirmarNintendo(temControle && estiloDoControle(n) == EstiloControle::Nintendo);
     }
     if (temControle && !tinhaControle && !jogo.semAvisos) {
         mostrarAviso(jogo, L"Controle conectado: " + paraWide(jogo.controle.nome), 3.0f);

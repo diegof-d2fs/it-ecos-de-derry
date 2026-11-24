@@ -5,6 +5,7 @@
 #include <string>
 
 #include "cenas/cena.h"
+#include "jogo/dialogo.h"
 #include "render/texto.h"
 
 namespace {
@@ -179,10 +180,15 @@ void desenharTesteControle(const Jogo& jogo, Canvas& canvas) {
     const float progresso = limitar(jogo.testeControle.segurandoSaida / TEMPO_PARA_SAIR, 0.0f, 1.0f);
     retanguloCheio(canvas, 50, 300, 540, 6, COR_APAGADO);
     retanguloCheio(canvas, 50, 300, 540 * progresso, 6, COR_ACESO);
-    desenharTextoCentralizado(canvas, fp, LARGURA_LOGICA / 2.0f, 312,
-                              L"Segure Esc ou Start por 1 s para sair · F2 também fecha", COR_SECUNDARIA);
-    desenharTextoCentralizado(canvas, fp, LARGURA_LOGICA / 2.0f, 326,
-                              L"A: dash/confirmar · B: clarão/voltar · X: atacar · Y: especial · RB: interagir · LB: kit · "
-                              L"Back: inventário · LT: mapa (LT+↑: ficha)",
+    // As letras do controle conectado (Xbox, PlayStation ou Nintendo; 24/11), não as do Xbox fixas.
+    desenharTextoCentralizado(canvas, fp, LARGURA_LOGICA / 2.0f, 310,
+                              paraWide(trocarBotoes("Segure Esc ou {PAUSA} por 1 s para sair · F2 também fecha", true)), COR_SECUNDARIA);
+    desenharTextoCentralizado(canvas, fp, LARGURA_LOGICA / 2.0f, 323,
+                              paraWide(trocarBotoes("{DASH}: dash · {CLARAO}: clarão · {ATACAR}: atacar · {ESPECIAL}: especial · "
+                                                    "{CONFIRMAR}: confirmar · {VOLTAR}: voltar", true)),
+                              COR_SECUNDARIA);
+    desenharTextoCentralizado(canvas, fp, LARGURA_LOGICA / 2.0f, 336,
+                              paraWide(trocarBotoes("{INTERAGIR}: interagir · {KIT}: kit · {INVENTARIO}: inventário · "
+                                                    "{MAPA}: mapa ({FICHA}: ficha)", true)),
                               COR_SECUNDARIA);
 }

@@ -24,6 +24,16 @@ const MapeamentoBotao TABELA_BOTOES[] = {
 
 void marcar(EstadoEntrada& e, Comando c) { e.segurando[static_cast<int>(c)] = true; }
 
+bool confirmarNintendo = false;
+
+// Confirmar e Voltar trocam de posição no controle Nintendo; o resto da tabela fica igual.
+BotaoControle botaoDoComando(const MapeamentoBotao& m) {
+    if (!confirmarNintendo) return m.botao;
+    if (m.comando == Comando::Confirmar) return BotaoControle::Leste;
+    if (m.comando == Comando::Voltar) return BotaoControle::Sul;
+    return m.botao;
+}
+
 }  // namespace
 
 float normalizarEixo(int bruto) {
@@ -43,14 +53,17 @@ Vec2 aplicarZonaMorta(Vec2 v, float zona) {
     return escalar(v, reescalado / tamanho);
 }
 
+void definirConfirmarNintendo(bool nintendo) { confirmarNintendo = nintendo; }
+
 Vec2 aplicarControle(const LeituraControle& leitura, EstadoEntrada& entrada) {
     bool atividade = false;
     // LT segurado = Diário/minimapa; LT + cima = Ficha (o "cima" não move o Bill nesse caso).
     const bool ltSegurado = leitura.gatilhoEsq >= LIMIAR_GATILHO;
     for (const MapeamentoBotao& m : TABELA_BOTOES) {
-        if (!botao(leitura, m.botao)) continue;
+        const BotaoControle b = botaoDoComando(m);
+        if (!botao(leitura, b)) continue;
         atividade = true;
-        if (ltSegurado && m.botao == BotaoControle::Cima) continue;
+        if (ltSegurado && b == BotaoControle::Cima) continue;
         marcar(entrada, m.comando);
     }
     if (ltSegurado) {

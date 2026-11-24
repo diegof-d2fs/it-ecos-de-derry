@@ -1,3 +1,4 @@
+#include <cctype>
 #include "jogo/dialogo.h"
 
 #include <algorithm>
@@ -207,28 +208,49 @@ int contarCaracteres(const std::string& utf8) {
 }
 
 namespace {
-bool rotulosNintendo = false;
+EstiloControle estiloAtual = EstiloControle::Xbox;
+
+bool contem(const std::string& texto, const char* trecho) {
+    std::string a = texto, b = trecho;
+    for (char& c : a) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    for (char& c : b) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return a.find(b) != std::string::npos;
+}
+}  // namespace
+
+EstiloControle estiloDoControle(const std::string& nome) {
+    for (const char* t : {"054c", "playstation", "dualshock", "dualsense", "ps3", "ps4", "ps5", "sony"})
+        if (contem(nome, t)) return EstiloControle::PlayStation;
+    for (const char* t : {"057e", "nintendo", "switch", "pro controller", "joy-con"})
+        if (contem(nome, t)) return EstiloControle::Nintendo;
+    return EstiloControle::Xbox;
 }
 
-void definirRotulosNintendo(bool nintendo) { rotulosNintendo = nintendo; }
+void definirEstiloControle(EstiloControle estilo) { estiloAtual = estilo; }
+void definirRotulosNintendo(bool nintendo) { estiloAtual = nintendo ? EstiloControle::Nintendo : EstiloControle::Xbox; }
 
 std::string trocarBotoes(const std::string& texto, bool controle) {
     // Os botões são lidos por POSIÇÃO (o de baixo é sempre dash/confirmar). Num controle Nintendo (o
     // 8BitDo do Diego no modo Switch), as letras impressas nas posições são outras: baixo = B, direita
     // = A, esquerda = Y, cima = X; ombros L/R, gatilhos ZL/ZR (Diego, 17/11: "X atacar" no botão Y).
-    struct Botao { const char* marcador; const char* teclado; const char* gamepad; const char* nintendo; };
+    // Nintendo nos MENUS (24/11): A confirma e B volta, como no Switch (core/controle troca as posições).
+    // PlayStation (24/11): baixo = X, direita = Bola, esquerda = Quadrado, cima = Triângulo; L1/R1, L2/R2.
+    struct Botao { const char* marcador; const char* teclado; const char* gamepad; const char* nintendo; const char* playstation; };
     static const Botao BOTOES[] = {
-        {"{MOVER}", "WASD ou as setas", "o analógico", "o analógico"}, {"{ATACAR}", "J", "X", "Y"},
-        {"{ESPECIAL}", "K", "Y", "X"},                       {"{CLARAO}", "L", "B", "A"},
-        {"{DASH}", "Espaço", "A", "B"},                      {"{INTERAGIR}", "E", "RB", "R"},
-        {"{KIT}", "Q", "LB", "L"},                           {"{INVENTARIO}", "I", "Back", "−"},
-        {"{FICHA}", "C", "LT + ↑", "ZL + ↑"},                {"{PAUSA}", "Esc", "Start", "+"},
-        {"{VOLTAR}", "Esc", "B", "A"},
-        {"{CONFIRMAR}", "Enter", "A", "B"},                  {"{MAPA}", "M", "LT", "ZL"},
+        {"{MOVER}", "WASD ou as setas", "o analógico", "o analógico", "o analógico"},
+        {"{ATACAR}", "J", "X", "Y", "Quadrado"},           {"{ESPECIAL}", "K", "Y", "X", "Triângulo"},
+        {"{CLARAO}", "L", "B", "A", "Bola"},               {"{DASH}", "Espaço", "A", "B", "X"},
+        {"{INTERAGIR}", "E", "RB", "R", "R1"},             {"{KIT}", "Q", "LB", "L", "L1"},
+        {"{INVENTARIO}", "I", "Back", "−", "Share"},       {"{FICHA}", "C", "LT + ↑", "ZL + ↑", "L2 + ↑"},
+        {"{PAUSA}", "Esc", "Start", "+", "Options"},       {"{VOLTAR}", "Esc", "B", "B", "Bola"},
+        {"{CONFIRMAR}", "Enter", "A", "A", "X"},           {"{MAPA}", "M", "LT", "ZL", "L2"},
     };
     std::string s = texto;
     for (const Botao& b : BOTOES) {
-        const std::string m = b.marcador, nome = controle ? (rotulosNintendo ? b.nintendo : b.gamepad) : b.teclado;
+        const char* doControle = estiloAtual == EstiloControle::Nintendo      ? b.nintendo
+                                 : estiloAtual == EstiloControle::PlayStation ? b.playstation
+                                                                              : b.gamepad;
+        const std::string m = b.marcador, nome = controle ? doControle : b.teclado;
         for (std::size_t pos = s.find(m); pos != std::string::npos; pos = s.find(m, pos + nome.size())) {
             s.replace(pos, m.size(), nome);
         }
