@@ -9,8 +9,10 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+#include <algorithm>
 #include <array>
 #include <clocale>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
@@ -36,12 +38,20 @@
 
 namespace {
 
+// Escala 3 = 1920×1080, a mesma do .exe numa tela 1080p. A 4 pediria ~600 MB de imagens prontas na memória.
 constexpr int ESCALA_MAXIMA_WEB = 3;
+// Se o desenho passar disto em média, o computador não acompanha: desce uma escala (só nesta sessão).
+constexpr double QUADRO_LENTO_MS = 24.0;
 
 // ---------- ponte com o JavaScript ----------
 EM_JS(void, js_apresentar, (const unsigned char* rgba, int w, int h), {
     const c = document.getElementById('tela');
     if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+    const dpr = window.devicePixelRatio || 1;
+    const caixa = c.getBoundingClientRect();   // object-fit: contain → a imagem ocupa o menor dos dois lados
+    const razao = Math.min(caixa.width * dpr / w, caixa.height * dpr / h);
+    const modo = (razao > 1.02 && Math.abs(razao - Math.round(razao)) < 0.02) ? 'pixelated' : 'auto';
+    if (c.style.imageRendering !== modo) c.style.imageRendering = modo;
     const ctx = c.getContext('2d', {alpha : false});
     ctx.putImageData(new ImageData(new Uint8ClampedArray(HEAPU8.buffer, rgba, w * h * 4), w, h), 0, 0);
 });
@@ -167,12 +177,24 @@ struct Web {
     Canvas canvas;
     std::vector<unsigned char> rgba;
     double anterior = 0.0, acumulador = 0.0, ultimaSincronia = 0.0;
+    int limiteEscala = ESCALA_MAXIMA_WEB;   // baixa se o computador não der conta (ver QUADRO_LENTO_MS)
+    double somaQuadrosMs = 0.0;
+    int quadrosMedidos = 0;
 };
 Web* web = nullptr;
 
+// Escala para CIMA (Diego, 24/11: "resolução muito baixa no navegador"). Com o navegador em janela numa tela 1080p
+// (~1920×960) a maior escala inteira que CABE é 2, e o navegador esticava 1280×720 até a tela. Agora desenha na
+// escala acima (3) e o navegador reduz com suavização. Só arredonda para cima se faltar mais de 25% (evita desenhar
+// 1920×1080 para uma janela de 1300×730). Só a web: o .exe continua com calcularApresentacao.
+int escalaWeb(int larguraPx, int alturaPx, int limite) {
+    const double razao = std::min(larguraPx / static_cast<double>(LARGURA_LOGICA), alturaPx / static_cast<double>(ALTURA_LOGICA));
+    const int escala = static_cast<int>(std::ceil(razao - 0.25));
+    return std::max(1, std::min(escala, limite));
+}
+
 bool ajustarEscala() {
-    int escala = calcularApresentacao(js_largura(), js_altura(), LARGURA_LOGICA, ALTURA_LOGICA, ESCALA_MAXIMA_WEB).escala;
-    if (escala <= 0) escala = 1;
+    const int escala = escalaWeb(js_largura(), js_altura(), web->limiteEscala);
     if (escala == web->canvas.escala && web->canvas.px) return true;
     liberarCanvas(web->canvas);
     return criarCanvas(web->canvas, LARGURA_LOGICA, ALTURA_LOGICA, escala) && prepararEscala(web->recursos, escala);
@@ -269,6 +291,19 @@ void quadro() {
         web->rgba[i * 4 + 3] = 255;
     }
     js_apresentar(web->rgba.data(), web->canvas.w, web->canvas.h);
+    // Rede de segurança: mede desenho + conversão + envio; 90 quadros lentos em média → uma escala abaixo.
+    if (focada && web->canvas.escala > 2) {
+        web->somaQuadrosMs += emscripten_get_now() - agora * 1000.0;
+        if (++web->quadrosMedidos >= 90) {
+            if (web->somaQuadrosMs / web->quadrosMedidos > QUADRO_LENTO_MS) {
+                web->limiteEscala = web->canvas.escala - 1;
+                std::printf("Escala %d lenta (%.1f ms por quadro): usando %d.\n", web->canvas.escala,
+                            web->somaQuadrosMs / web->quadrosMedidos, web->limiteEscala);
+            }
+            web->somaQuadrosMs = 0.0;
+            web->quadrosMedidos = 0;
+        }
+    }
     atualizarAudio(static_cast<float>(decorrido), focada);
     if (agora - web->ultimaSincronia > 3.0) {   // perfil, recordes, cartão: para a conta AWS
         web->ultimaSincronia = agora;

@@ -2,11 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Conta, cartao privado, ranking e feedback de IT Ecos de Derry
 Parameters:
   SiteOrigin:
-    Type: String
-    Description: Origem HTTPS do jogo, sem barra final
+    Type: CommaDelimitedList
+    Description: Origens HTTPS do jogo, sem barra final (dominio proprio e cloudfront.net)
   CallbackUrl:
-    Type: String
-    Description: URL completa de retorno do Cognito
+    Type: CommaDelimitedList
+    Description: URLs completas de retorno do Cognito, uma por origem
   CodeBucket:
     Type: String
   CodeKey:
@@ -128,8 +128,8 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows: [code]
       AllowedOAuthScopes: [openid, email]
-      CallbackURLs: [!Ref CallbackUrl]
-      LogoutURLs: [!Ref CallbackUrl]
+      CallbackURLs: !Ref CallbackUrl
+      LogoutURLs: !Ref CallbackUrl
       SupportedIdentityProviders: [COGNITO]
       PreventUserExistenceErrors: ENABLED
       EnableTokenRevocation: true
@@ -195,7 +195,7 @@ Resources:
       Name: ecos-de-derry-api
       ProtocolType: HTTP
       CorsConfiguration:
-        AllowOrigins: [!Ref SiteOrigin]
+        AllowOrigins: !Ref SiteOrigin
         AllowMethods: [GET, PUT, POST, OPTIONS]
         AllowHeaders: [Authorization, Content-Type]
         MaxAge: 600

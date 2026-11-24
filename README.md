@@ -7,7 +7,7 @@ e derrote a forma verdadeira da Coisa no Covil.
 
 Trabalho T3 de **Algoritmos e Programação II (UNIVALI)**, por **Diego Silva**.
 
-**[Leia a história completa na wiki ilustrada](https://diegof-d2fs.github.io/it-ecos-de-derry/)**
+**[Jogue no navegador em ecosdederry.click](https://ecosdederry.click/)** · **[Leia a história completa na wiki ilustrada](https://diegof-d2fs.github.io/it-ecos-de-derry/)**
 
 ![Menu inicial](docs/imagens/menu.png)
 

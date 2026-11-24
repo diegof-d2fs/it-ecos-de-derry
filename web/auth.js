@@ -98,6 +98,8 @@
     }
     return dados;
   }
+  // Volta do login para o mesmo endereço (ecosdederry.click ou cloudfront.net); o Cognito só aceita os cadastrados.
+  const retorno = () => location.origin + '/';
   async function desafio() {
     const bytes = crypto.getRandomValues(new Uint8Array(32));
     const verifier = [...bytes].map(x => x.toString(16).padStart(2, '0')).join('');
@@ -111,7 +113,7 @@
     const {challenge, state} = await desafio();
     const path = tela === 'entrar' ? '/oauth2/authorize' : tela === 'criar' ? '/signup' : '/forgotPassword';
     const query = new URLSearchParams({lang: 'pt-BR', client_id: config.clientId, response_type: 'code',
-      scope: 'openid email', redirect_uri: config.redirectUri, code_challenge_method: 'S256',
+      scope: 'openid email', redirect_uri: retorno(), code_challenge_method: 'S256',
       code_challenge: challenge, state});
     location.assign(`${config.cognitoDomain}${path}?${query}`);
   }
@@ -125,7 +127,7 @@
     history.replaceState(null, '', location.pathname);
     if (!pendente.state || pendente.state !== params.get('state')) throw Error('Resposta de login inválida.');
     const body = new URLSearchParams({grant_type: 'authorization_code', client_id: config.clientId,
-      code, redirect_uri: config.redirectUri, code_verifier: pendente.verifier});
+      code, redirect_uri: retorno(), code_verifier: pendente.verifier});
     const res = await fetch(`${config.cognitoDomain}/oauth2/token`, {method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body});
     if (!res.ok) throw Error('Não foi possível concluir o login.');
@@ -180,7 +182,7 @@
     try {
       const res = await fetch('config.json', {cache: 'no-store'});
       if (res.ok) config = await res.json();
-      if (config && config.apiUrl && config.cognitoDomain && config.clientId && config.redirectUri) {
+      if (config && config.apiUrl && config.cognitoDomain && config.clientId) {
         botoes.hidden = false;
         tokens = tokenAtual();
         const retornou = await retornoOAuth();
@@ -299,7 +301,7 @@
     sessionStorage.removeItem('ecosOauth');
     window.ecosJogando = false;
     location.assign(`${config.cognitoDomain}/logout?` +
-      new URLSearchParams({client_id: config.clientId, logout_uri: config.redirectUri}));
+      new URLSearchParams({client_id: config.clientId, logout_uri: retorno()}));
   }
   document.getElementById('feedback-form').addEventListener('submit', async e => {
     e.preventDefault();

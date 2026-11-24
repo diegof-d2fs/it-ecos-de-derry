@@ -14,7 +14,11 @@ ADMIN_EMAIL="${ECOS_ADMIN_EMAIL:?Defina ECOS_ADMIN_EMAIL no .env}"
 CONTA=$(aws sts get-caller-identity --query Account --output text)
 BUCKET=$(python -c 'import json; print(json.load(open("web/deploy.local.json"))["bucket"])')
 DOMINIO=$(python -c 'import json; print(json.load(open("web/deploy.local.json"))["dominio"])')
+# Domínio próprio (opcional, "dominioProprio" no deploy.local.json): o jogo aceita os dois endereços.
+PROPRIO=$(python -c 'import json; print(json.load(open("web/deploy.local.json")).get("dominioProprio", ""))')
 SITE="https://$DOMINIO"
+RETORNO="https://$DOMINIO/"
+if [ -n "$PROPRIO" ]; then SITE="https://$PROPRIO,$SITE"; RETORNO="https://$PROPRIO/,$RETORNO"; fi
 SAVE_BUCKET="it-ecos-de-derry-saves-${CONTA: -6}"
 PREFIXO="ecos-de-derry-${CONTA: -6}"
 CHAVE="interno/save-api-$(sha256sum web/save_api.py | cut -c1-16).zip"
@@ -22,11 +26,12 @@ python -c 'import zipfile; z=zipfile.ZipFile("web/lambda.local.zip","w",zipfile.
 aws s3 cp web/lambda.local.zip "s3://$BUCKET/$CHAVE" --content-type application/zip --region "$REGIAO" > /dev/null
 aws cloudformation deploy --region "$REGIAO" --stack-name ecos-de-derry-backend \
     --template-file web/infra.yaml --capabilities CAPABILITY_IAM --tags projeto=ecos-de-derry \
-    --parameter-overrides "SiteOrigin=$SITE" "CallbackUrl=$SITE/" "CodeBucket=$BUCKET" \
+    --no-fail-on-empty-changeset \
+    --parameter-overrides "SiteOrigin=$SITE" "CallbackUrl=$RETORNO" "CodeBucket=$BUCKET" \
     "CodeKey=$CHAVE" "SaveBucketName=$SAVE_BUCKET" "CognitoPrefix=$PREFIXO" "AdminEmail=$ADMIN_EMAIL"
 aws cloudformation describe-stacks --region "$REGIAO" --stack-name ecos-de-derry-backend \
     --query 'Stacks[0].Outputs' --output json > web/outputs.local.json
-python -c 'import json; o={x["OutputKey"]:x["OutputValue"] for x in json.load(open("web/outputs.local.json"))}; s=json.load(open("web/deploy.local.json")); c={"apiUrl":o["ApiUrl"],"cognitoDomain":o["CognitoDomain"],"clientId":o["ClientId"],"redirectUri":"https://"+s["dominio"]+"/","wikiUrl":"https://diegof-d2fs.github.io/it-ecos-de-derry/"}; json.dump(c,open("web/config.local.json","w"),indent=2)'
+python -c 'import json; o={x["OutputKey"]:x["OutputValue"] for x in json.load(open("web/outputs.local.json"))}; s=json.load(open("web/deploy.local.json")); c={"apiUrl":o["ApiUrl"],"cognitoDomain":o["CognitoDomain"],"clientId":o["ClientId"],"wikiUrl":"https://diegof-d2fs.github.io/it-ecos-de-derry/"}; json.dump(c,open("web/config.local.json","w"),indent=2)'
 python tools/preparar_branding.py
 aws cognito-idp update-managed-login-branding --region "$REGIAO" \
     --cli-input-json file://web/branding.local.json --query ManagedLoginBranding.ManagedLoginBrandingId --output text
