@@ -1891,7 +1891,7 @@ const char* nomeAba(AbaInventario a) {
 }
 
 std::string objetivoAtual(const EstadoPartida& p) {
-    if (!p.emTentativa) return "Sala avulsa (teste): limpe a sala e saia pela porta.";
+    if (!p.emTentativa) return "Sala avulsa: limpe a sala e saia pela porta.";
     const bool temChave = p.inventario.quantidades[static_cast<std::size_t>(TipoItem::ChaveDoMedo)] > 0;
     const int etapaResgate = 5, etapaChefe = 6;
     if (p.inventario.quantidades[static_cast<std::size_t>(TipoItem::Manivela)] > 0 && !p.manivelaEntregue &&

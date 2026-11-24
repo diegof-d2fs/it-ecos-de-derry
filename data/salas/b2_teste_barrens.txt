@@ -1,6 +1,6 @@
 # Sala de teste da Etapa 3: maior que a tela (a câmera rola), lama e riacho.
 id=b2_teste_barrens
-nome=O Barrens (teste)
+nome=O Barrens: A várzea
 bioma=2
 tipo=combate
 ondas=2

@@ -1,6 +1,6 @@
 # Sala de teste da Etapa 3: galeria com água rasa, água funda (bloqueia) e pilares.
 id=b1_teste_galeria
-nome=Galeria pluvial (teste)
+nome=Galeria: O reservatório
 bioma=1
 tipo=combate
 ondas=3

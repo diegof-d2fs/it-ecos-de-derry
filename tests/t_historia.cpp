@@ -219,3 +219,29 @@ TESTE(textos_do_jogo_nao_usam_travessao) {
         }
     }
 }
+
+// Diego, 24/11: "apareceu uma sala com a palavra teste" (O Barrens (teste), na AWS). Salas de desenvolvimento
+// entram no sorteio, então NENHUM nome de sala nem mensagem entre aspas pode ter "(teste)" ou "teste" no nome
+// da sala. A ferramenta "teste do controle" é uma tela de verdade e fica de fora.
+TESTE(nomes_de_sala_e_mensagens_sem_a_palavra_teste) {
+    const std::filesystem::path raiz(ECOS_PASTA_DADOS);
+    for (const auto& e : std::filesystem::directory_iterator(raiz / "data/salas")) {
+        std::string texto;
+        lerArquivoTexto(e.path(), texto);
+        const std::size_t p = texto.find("\nnome=");
+        if (p == std::string::npos) continue;
+        std::string nome = texto.substr(p + 6, texto.find('\n', p + 6) - (p + 6));
+        for (char& c : nome) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+        const bool limpo = nome.find("teste") == std::string::npos && nome.find("test") == std::string::npos;
+        if (!limpo) std::printf("    sala com 'teste' no nome: %s\n", e.path().filename().string().c_str());
+        VERIFICAR(limpo);
+    }
+    for (const auto& e : std::filesystem::recursive_directory_iterator(raiz / "src")) {
+        if (e.path().extension() != ".cpp" && e.path().extension() != ".h") continue;
+        std::string texto;
+        lerArquivoTexto(e.path(), texto);
+        const bool limpo = texto.find("(teste)\"") == std::string::npos && texto.find("(teste):") == std::string::npos;
+        if (!limpo) std::printf("    '(teste)' numa mensagem: %s\n", e.path().filename().string().c_str());
+        VERIFICAR(limpo);
+    }
+}

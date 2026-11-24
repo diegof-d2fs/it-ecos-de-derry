@@ -1,6 +1,6 @@
 # Sala de teste da Etapa 3 (menor que a tela: a câmera centraliza).
 id=b0_teste_rua
-nome=Rua Witcham (teste)
+nome=Rua Witcham: o bueiro
 bioma=0
 tipo=prologo
 # A rua do bueiro onde o Georgie sumiu: a trilha de tensão toca aqui (teste do crossfade).
