@@ -104,10 +104,38 @@ void seguirBill(EstadoPartida& p, float dt) {
     }
     Vec2 alvo = somar(p.bill.pes, escalar(vetorDaDirecao(p.bill.direcao), -DISTANCIA_SEGUIR * TILE));
     if (!livre(p, alvo)) alvo = p.bill.pes;
+    // Em luta: o flanco do Bill (do lado em que o amigo já está), um pouco atrás, com um balanço lento de passinhos,
+    // e o rosto para o inimigo. Antes ele só seguia o ponto ATRÁS do Bill: com o Bill parado golpeando, ficava
+    // imóvel e de costas para a briga, e parecia travado.
+    Vec2 frente{};
+    c.emLuta = false;
+    for (const Inimigo& i : p.inimigos) {
+        if (!i.vivo || i.surgindo > 0.0f || i.aliado > 0.0f || !estaVisivel(p.visao, i.pes)) continue;
+        const Vec2 d = subtrair(i.pes, p.bill.pes);
+        if (comprimento(d) > 6.0f * TILE) continue;
+        if (!c.emLuta || comprimento(d) < comprimento(frente)) frente = d;
+        c.emLuta = true;
+    }
+    if (c.emLuta) {
+        const Vec2 f = normalizar(frente);
+        Vec2 lado{-f.y, f.x};
+        const Vec2 deBill = subtrair(c.pes, p.bill.pes);
+        if (lado.x * deBill.x + lado.y * deBill.y < 0.0f) lado = escalar(lado, -1.0f);
+        const float balanco = 0.35f * std::sin(c.relogio * 1.7f);   // ±11 px: passinhos de um lado para o outro
+        for (int tentativa = 0; tentativa < 2; ++tentativa) {
+            const Vec2 flanco = somar(p.bill.pes, somar(escalar(lado, 1.3f * TILE), escalar(f, (balanco - 0.25f) * TILE)));
+            if (livre(p, flanco)) {
+                alvo = flanco;
+                break;
+            }
+            lado = escalar(lado, -1.0f);   // o flanco dá na parede: o outro lado
+        }
+    }
     const float dAlvo = comprimento(subtrair(alvo, c.pes));
-    if (dAlvo < 10.0f || distBill < 0.9f * TILE) {   // perto o bastante: espera (não empurra Bill)
+    if (dAlvo < 6.0f || (!c.emLuta && distBill < 0.9f * TILE)) {   // perto o bastante: espera (não empurra Bill)
         c.andando = false;
         c.tempoTravado = 0.0f;
+        if (c.emLuta) c.direcao = direcaoDominante(frente, c.direcao);   // de frente para a briga
         return;
     }
     c.replanejar -= dt;
@@ -434,6 +462,7 @@ void atualizarCompanheiro(EstadoPartida& p, float dt) {
     if (c.efeito > 0.0f) c.efeito -= dt;
     if (c.tiro > 0.0f) c.tiro -= dt;
     if (c.efeito <= 0.0f) c.alvo = ID_NULO;
+    c.relogio += dt;
     seguirBill(p, dt);
     verMedo(p);
     if (!c.comMedo) habilidadeDe(c.quem).agir(p, dt);   // com medo, ele não ajuda (Diego, 24/11)

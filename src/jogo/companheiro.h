@@ -87,6 +87,10 @@ struct Companheiro {
     bool proximoPoder = false;        // alterna: arma, poder, arma…
     AtaqueDoAmigo ataque;
     int ataquesArma = 0, ataquesPoder = 0;   // testes e telemetria
+    // Em luta (24/11, Diego: "quando o Bill está batendo em alguém o ajudante fica travado"): ele toma posição no
+    // flanco do Bill, de frente para o inimigo, e dá passinhos; parado, respira (o desenho usa o relógio).
+    bool emLuta = false;
+    float relogio = 0.0f;
     bool comMedo = false;             // o chefe virou Pennywise (fora do Covil): não ajuda mais nesta sala
     bool falouNoCovil = false;
     bool avisouArmadilha = false;     // Stan: "Bill, cuidado ali!" na 1ª armadilha vista em cada sala

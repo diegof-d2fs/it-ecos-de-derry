@@ -170,7 +170,7 @@ const PadraoChefe PADROES_PENNYWISE_IV[] = {
     {"Salto de aranha",       FormaPadrao::Salto,     2, 90.0f, 260.0f,   0.6f,  0.4f,   0.0f, 50.0f, 0.0f, 0,  3,  0.7f, TipoInimigo::Rato, 9},   // → patada
     {"Patada",                FormaPadrao::Leque,     2,  0.0f, 9999.0f,  0.4f,  0.8f,  80.0f, 18.0f, 0.0f, 0,  0,  0.5f},
     {"Balões",                FormaPadrao::Invocar,   2, 80.0f, 9999.0f,  0.8f,  0.6f,   0.0f,  0.0f, 0.0f, 2,  1,  8.0f, TipoInimigo::Balao},
-    {"Bote no escuro",        FormaPadrao::Investida, 3, 50.0f, 230.0f,   0.7f,  1.3f, 224.0f, 34.0f, 0.0f, 0,  3,  0.5f},
+    {"Bote no escuro",        FormaPadrao::Investida, 3, 50.0f, 230.0f,   0.85f, 1.3f, 224.0f, 34.0f, 0.0f, 0,  3,  0.5f},
     {"Patas sombrias",        FormaPadrao::Circulo,   3,  0.0f, 72.0f,    0.6f,  1.3f,  72.0f,  0.0f, 0.0f, 0,  3,  0.5f},
     {"Salto de aranha",       FormaPadrao::Salto,     3, 90.0f, 260.0f,   0.7f,  1.3f,   0.0f, 50.0f, 0.0f, 0,  2,  0.6f},
     {"Luzes Mortas",          FormaPadrao::CruzAlvo,  3,  0.0f, 9999.0f,  0.8f,  1.0f,  64.0f, 26.0f, 0.0f, 0,  1,  1.0f},

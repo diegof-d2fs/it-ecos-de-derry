@@ -8,7 +8,9 @@
 //
 // É uma DIB section do Windows: `px` aponta direto para a memória da imagem, e o mesmo `dc`
 // permite escrever texto com o GDI. Um único buffer apresentado inteiro = sem piscar (F02).
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
+#endif
 
 #include <cstdint>
 
@@ -18,10 +20,14 @@ struct Canvas {
     int w = 0;             // em pixels de tela
     int h = 0;
     int escala = 1;        // pixels de tela por unidade lógica
-    std::uint32_t* px = nullptr;   // pertence à DIB; liberado em liberarCanvas
+    std::uint32_t* px = nullptr;   // pertence à DIB (web: ao próprio canvas); liberado em liberarCanvas
+#ifdef __EMSCRIPTEN__
+    void* dc = nullptr;            // na web não há DC: o texto é desenhado direto em `px` (render/texto_web)
+#else
     HDC dc = nullptr;
     HBITMAP dib = nullptr;
     HGDIOBJ bitmapAnterior = nullptr;
+#endif
 };
 
 // Cor ARGB opaca a partir de RGB.

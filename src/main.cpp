@@ -44,6 +44,7 @@ std::wstring pastaDoExecutavel() {
 //   --amigo codigo          em --sala, o amigo (mike, ben, stan, eddie, beverly, richie) começa ao lado do Bill
 //   --bioma-inicial N       a tentativa começa no bioma N (1..7), com Bill chegando como chegaria ali (apresentação)
 //   --captura-limpa         com --captura: sem medidor, caixas de colisão e avisos (imagens para o README)
+//   --fase-covil N          Modo Defesa: em --sala b7_covil, o Pennywise IV começa na fase 2 (Georgie) ou 3 (Luzes Mortas)
 //   --forte                 Modo Defesa: na sala avulsa, Bill chega como na tentativa daquele bioma
 //                           (nível, atributos, kit e vida). Ex.: --sala b5_chefe --forte --piloto
 //   --pennywise             Modo Defesa: na arena (--sala bN_chefe), o medo surge e já se rasga no
@@ -88,6 +89,7 @@ struct OpcoesExecucao {
     bool forte = false;
     bool capturaLimpa = false;   // --captura-limpa: sem medidor, caixas e avisos (imagens do README)
     bool pennywise = false;
+    int faseCovil = 1;
     std::string inimigoDefesa;
     std::string amigoDefesa;
     int biomaInicial = 1;
@@ -203,6 +205,7 @@ OpcoesExecucao lerOpcoes() {
             for (wchar_t c : std::wstring(args[++i])) if (c < 128) opcoes.cena += static_cast<char>(c);
         }
         else if (a == L"--pennywise") opcoes.pennywise = true;
+        else if (a == L"--fase-covil" && i + 1 < total) opcoes.faseCovil = _wtoi(args[++i]);
         else if (a == L"--bioma-inicial" && i + 1 < total) { opcoes.biomaInicial = _wtoi(args[++i]); opcoes.jogar = true; }
         else if (a == L"--amigo" && i + 1 < total) {
             for (wchar_t c : std::wstring(args[++i])) if (c < 128) opcoes.amigoDefesa += static_cast<char>(c);
@@ -442,6 +445,7 @@ int WINAPI wWinMain(HINSTANCE instancia, HINSTANCE, PWSTR, int) {
     }
     jogo.forte = opcoes.forte;
     jogo.pennywise = opcoes.pennywise;
+    jogo.faseCovil = opcoes.faseCovil;
     jogo.inimigoDefesa = opcoes.inimigoDefesa;
     jogo.amigoDefesa = opcoes.amigoDefesa;
     jogo.biomaInicial = opcoes.biomaInicial;

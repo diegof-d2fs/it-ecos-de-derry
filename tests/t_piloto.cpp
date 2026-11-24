@@ -170,3 +170,4 @@ TESTE(piloto_nao_oscila_entre_dois_alvos_atras_do_pilar) {
     const Resultado r = jogarSala(c, galeria, 1047290, 180.0f, Dificuldade::Facil);
     VERIFICAR(r.saiu && r.segundos < 120.0f);
 }
+

@@ -764,10 +764,16 @@ void desenharCompanheiro(Canvas& canvas, const Recursos& r, const EstadoPartida&
     }
     elipseAlpha(canvas, x, y - 2, 8, 3.5f, rgb(0, 0, 0), 110);
     const Sprite andar = spriteDe(r, std::string(codigoAmigo(c.quem)) + "_walk");
-    if (spriteValido(andar) && (c.andando || c.direcao != Direcao::Baixo || !spriteValido(s))) {
+    if (spriteValido(andar) && (c.andando || c.direcao != Direcao::Baixo || c.emLuta || !spriteValido(s))) {
         const int linha = static_cast<int>(c.direcao);
         const Animacao anim{linha, 0, 4, 8.0f, true};
-        desenharFramePes(canvas, andar, c.andando ? colunaAnimacao(anim, c.tempoAnimacao) : 0, linha, x, y);
+        if (c.andando) {
+            desenharFramePes(canvas, andar, colunaAnimacao(anim, c.tempoAnimacao), linha, x, y);
+        } else {   // parado: respira (e, em luta, fica em guarda, com o peso mudando de um pé para o outro)
+            const float resp = std::sin(c.relogio * (c.emLuta ? 5.0f : 2.4f));
+            desenharFramePesEstica(canvas, andar, c.emLuta && resp > 0.6f ? 1 : 0, linha, x, y - (c.emLuta ? 0.8f * std::fabs(resp) : 0.0f),
+                                   1.0f - 0.012f * resp, 1.0f + 0.022f * resp, false, 255, 0xFFFFFF, 0);
+        }
         return;
     }
     const float passo = c.andando ? -std::fabs(std::sin(c.tempoAnimacao * 10.0f)) * 2.5f : 0.0f;
@@ -2102,6 +2108,7 @@ void comecar(Jogo& jogo, std::uint64_t seed, Dificuldade dificuldade) {
         entrarCompanheiro(p, amigoDoCodigo(jogo.amigoDefesa));
     }
     p.chefeNaFase2 = jogo.pennywise && jogo.salaInicial >= 0;           // Modo Defesa (--pennywise)
+    p.faseCovilInicial = jogo.salaInicial >= 0 ? jogo.faseCovil : 1;   // Modo Defesa (--fase-covil N)
     p.bill.progresso.pontosPendentes += jogo.pontosIniciais;   // Modo Defesa (--pontos)
     if (jogo.itensDefesa) {   // Modo Defesa (--itens): um de cada, para demonstrar M08/M09
         for (TipoItem t : {TipoItem::Escudo, TipoItem::Kit, TipoItem::FichaCoragem, TipoItem::Tonico, TipoItem::Oculos}) {

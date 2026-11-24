@@ -1,7 +1,9 @@
 #pragma once
 // Texto com GDI escrito direto no canvas, na resolução de TELA (nítido em qualquer escala).
 // As fontes são recriadas quando a escala muda (recursos.cpp); as coordenadas são lógicas.
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
+#endif
 
 #include <cstdint>
 #include <string>
@@ -9,7 +11,11 @@
 #include "render/canvas.h"
 
 struct Fonte {
+#ifdef __EMSCRIPTEN__
+    void* handle = nullptr;   // web: a face rasterizada (render/texto_web.cpp)
+#else
     HFONT handle = nullptr;
+#endif
     int alturaLogica = 0;
 };
 

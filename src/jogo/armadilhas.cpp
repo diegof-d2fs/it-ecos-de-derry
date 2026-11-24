@@ -172,7 +172,7 @@ void atualizarArmadilhas(EstadoPartida& p, float dt) {
     if (estaVivo(p.bill) && p.bill.dashRestante <= 0.0f) {
         const Tile& t = tileEm(p.sala, celulaDe(p.bill.pes).col, celulaDe(p.bill.pes).lin);
         if (t.tipo == TipoTile::Esteira)
-            posicionarJogador(p.bill, moverComColisao(p.sala, p.bill.pes, CAIXA_BILL, escalar(direcaoDaEsteira(t), VELOCIDADE_ESTEIRA * dt), false));
+            empurrarJogador(p.bill, moverComColisao(p.sala, p.bill.pes, CAIXA_BILL, escalar(direcaoDaEsteira(t), VELOCIDADE_ESTEIRA * dt), false));
     }
     for (Inimigo& i : p.inimigos) {
         const ParametrosInimigo& par = parametrosDe(i.tipo);

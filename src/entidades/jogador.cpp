@@ -103,6 +103,11 @@ void posicionarJogador(Jogador& j, Vec2 pes) {
     j.acao = AcaoJogador::Livre;
 }
 
+void empurrarJogador(Jogador& j, Vec2 pes) {
+    j.pes = pes;
+    j.celula = celulaDe(pes);
+}
+
 void acoesDoJogador(Jogador& j, const EstadoEntrada& entrada, float dt, std::vector<Golpe>& golpes,
                     std::uint32_t& proximoGolpe, std::vector<IdSom>& sons) {
     if (j.recargaEspecial > 0.0f) j.recargaEspecial -= dt;

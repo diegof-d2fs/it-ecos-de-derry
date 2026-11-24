@@ -128,6 +128,7 @@ struct Jogo {
     int pontosIniciais = 0;    // --pontos N (Modo Defesa)
     bool forte = false;        // --forte (Modo Defesa): na sala avulsa, Bill chega como na tentativa
     bool pennywise = false;    // --pennywise (Modo Defesa): o chefe da arena já começa na fase 2
+    int faseCovil = 1;         // --fase-covil N: o Covil começa na fase do Georgie (2) ou das Luzes Mortas (3)
     std::string inimigoDefesa;  // --inimigo atlas: encontro isolado para capturar o ataque real
     bool semAvisos = false;      // --captura-limpa: sem o aviso de controle conectado
     std::string amigoDefesa;    // --amigo stan: a sala avulsa começa com esse amigo ao lado do Bill

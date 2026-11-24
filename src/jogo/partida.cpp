@@ -147,6 +147,8 @@ Celula aguaPerto(const SalaViva& sala, Celula c, int raio) {
     return c;
 }
 
+void entrarFaseDoCovil(EstadoPartida& p, Inimigo& ini, int fase);
+
 void iniciarOnda(EstadoPartida& p) {
     const SalaModelo& m = *p.sala.modelo;
     ++p.ondaAtual;
@@ -166,6 +168,11 @@ void iniciarOnda(EstadoPartida& p) {
         // Modo Defesa (--pennywise): a luta começa na fase 2 — o medo surge e já se rasga (a mesma
         // transição de quando cai a 50%), com metade da vida. O Pennywise IV JÁ é o Pennywise: a opção não vale no
         // Covil (24/11: ela o fazia começar com meia vida e já na fase do Georgie).
+        if (chefe == TipoInimigo::PennywiseIV && p.faseCovilInicial >= 2) {   // Modo Defesa (--fase-covil N)
+            const int fase = std::min(3, p.faseCovilInicial);
+            ini.hp = ini.hpMax * (fase == 2 ? 60 : 25) / 100;
+            entrarFaseDoCovil(p, ini, fase);
+        }
         if (p.chefeNaFase2 && chefe != TipoInimigo::PennywiseIV) {
             ini.fase = 2;
             ini.hp = ini.hpMax / 2;
@@ -2319,7 +2326,7 @@ void atualizarCovil(EstadoPartida& p, float dt) {
             g.direcao = direcaoDominante(d, g.direcao);
             // A voz puxa Bill de leve (PRD §4.5); o dash escapa.
             if (b.dashRestante <= 0.0f)
-                posicionarJogador(b, moverComColisao(p.sala, b.pes, CAIXA_BILL, escalar(normalizar(d), -PUXAO_GEORGIE * dt), false));
+                empurrarJogador(b, moverComColisao(p.sala, b.pes, CAIXA_BILL, escalar(normalizar(d), -PUXAO_GEORGIE * dt), false));
         }
         if ((g.chamado -= dt) <= 0.0f) {
             g.chamado = 6.0f;

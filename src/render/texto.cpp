@@ -1,3 +1,4 @@
+#ifndef __EMSCRIPTEN__   // a versão web está em *_web.cpp (Etapa 18)
 #include "render/texto.h"
 
 namespace {
@@ -76,3 +77,4 @@ void desenharTextoCentralizado(Canvas& canvas, const Fonte& fonte, float centroX
                                std::uint32_t cor) {
     desenharTexto(canvas, fonte, centroX - larguraTexto(canvas, fonte, texto) / 2.0f, y, texto, cor);
 }
+#endif

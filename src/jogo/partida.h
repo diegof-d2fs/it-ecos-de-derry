@@ -62,17 +62,17 @@ struct GeorgieIlusao {
     float recarga = 0.0f;   // depois de ferir Bill, some e reaparece longe; não fere de novo por este tempo
     float chamado = 0.0f;   // até o próximo "Billy…"
 };
-constexpr float VELOCIDADE_GEORGIE = 34.0f;    // anda devagar até Bill
-constexpr float PUXAO_GEORGIE = 26.0f;         // a voz puxa Bill de leve (px/s; o dash escapa)
+constexpr float VELOCIDADE_GEORGIE = 30.0f;    // anda devagar até Bill
+constexpr float PUXAO_GEORGIE = 12.0f;         // a voz puxa Bill de leve (px/s; o dash escapa). 26 → 16 em 24/11: o puxão cancelava o golpe (bug corrigido) e o Covil ficou duro demais
 constexpr float RAIO_TOQUE_GEORGIE = 20.0f;
-constexpr int DANO_GEORGIE = 12;
+constexpr int DANO_GEORGIE = 8;   // 12 → 8 em 24/11 (com o golpe inteiro de volta na fase do Georgie)
 // Fase 3: as Luzes Mortas. Um círculo por amigo resgatado gira em volta do centro da arena; fora de todos,
 // Bill sofre dano contínuo (de DANO_ESCURIDAO a cada INTERVALO_ESCURIDAO).
 constexpr float RAIO_LUZ_MORTA = 54.0f;
 constexpr float ORBITA_LUZES = 140.0f;
 constexpr float VELOCIDADE_LUZES = 0.45f;      // rad/s
 constexpr int DANO_ESCURIDAO = 3;
-constexpr float INTERVALO_ESCURIDAO = 0.5f;
+constexpr float INTERVALO_ESCURIDAO = 1.5f;
 constexpr float DURACAO_VITORIA = 3.5f;        // a Coisa se quebrando antes do resultado (e da cena final)
 
 struct Dispersao {
@@ -272,6 +272,7 @@ struct EstadoPartida {
     bool gessoUsado = false;          // Eco "Gesso" (Eddie): 1× por sala
     bool salaIluminada = false;       // o Mike ligou o gerador (13.4): a sala inteira à vista
     bool chefeNaFase2 = false;        // Modo Defesa (--pennywise): o chefe já surge se rasgando no Pennywise
+    int faseCovilInicial = 1;         // Modo Defesa (--fase-covil N): o Pennywise IV começa na fase 2 (Georgie) ou 3 (Luzes Mortas)
     std::vector<Vec2> nevoasDash;     // onde o Inalador soltou névoa (só desenho; some sozinho)
     std::vector<float> vidaNevoas;
     std::vector<float> recargaArmadilha;   // por célula (pregos: 1× por segundo)

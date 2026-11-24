@@ -1,6 +1,7 @@
 #include "render/canvas.h"
 
 #include <algorithm>
+#include <new>
 #include <cmath>
 #include <vector>
 
@@ -39,6 +40,23 @@ RetTela converter(const Canvas& c, float x, float y, float w, float h) {
 
 }  // namespace
 
+#ifdef __EMSCRIPTEN__
+// Web (Etapa 18): o canvas é só memória; o main_web copia para o <canvas> do HTML.
+bool criarCanvas(Canvas& canvas, int larguraLogica, int alturaLogica, int escala) {
+    const int largura = larguraLogica * escala, altura = alturaLogica * escala;
+    canvas.px = new (std::nothrow) std::uint32_t[static_cast<std::size_t>(largura) * static_cast<std::size_t>(altura)]();
+    if (!canvas.px) return false;
+    canvas.w = largura;
+    canvas.h = altura;
+    canvas.escala = escala;
+    return true;
+}
+
+void liberarCanvas(Canvas& canvas) {
+    delete[] canvas.px;
+    canvas = Canvas{};
+}
+#else
 bool criarCanvas(Canvas& canvas, int larguraLogica, int alturaLogica, int escala) {
     const int largura = larguraLogica * escala, altura = alturaLogica * escala;
     BITMAPINFO info{};
@@ -76,6 +94,8 @@ void liberarCanvas(Canvas& canvas) {
     }
     canvas = Canvas{};
 }
+
+#endif
 
 int paraTela(const Canvas& canvas, float logico) {
     return static_cast<int>(std::lround(logico * static_cast<float>(canvas.escala)));
@@ -301,6 +321,9 @@ void desenharImagem(Canvas& canvas, const Imagem& imagem, float x, float y) {
     desenharRecorteTela(canvas, imagem, 0, 0, imagem.w, imagem.h, paraTela(canvas, x), paraTela(canvas, y));
 }
 
+#ifdef __EMSCRIPTEN__
+bool salvarBmp(const Canvas&, const wchar_t*) { return false; }   // capturas só no Windows
+#else
 bool salvarBmp(const Canvas& canvas, const wchar_t* caminho) {
     const int linhaBytes = ((canvas.w * 3 + 3) / 4) * 4;   // linhas BMP alinhadas em 4 bytes
     BITMAPFILEHEADER arquivo{};
@@ -333,3 +356,4 @@ bool salvarBmp(const Canvas& canvas, const wchar_t* caminho) {
     CloseHandle(h);
     return ok;
 }
+#endif

@@ -7,8 +7,8 @@ project(ecos_de_derry LANGUAGES CXX)
 #   ecos_de_derry   executável Win32: plataforma, render, cenas + regras
 #   testes_regras   executável de console que testa as regras sem abrir janela
 
-if(NOT WIN32)
-    message(FATAL_ERROR "Este projeto usa Win32/GDI e compila apenas no Windows (MinGW ou MSVC).")
+if(NOT WIN32 AND NOT EMSCRIPTEN)
+    message(FATAL_ERROR "Este projeto compila no Windows (MinGW ou MSVC) ou para o navegador (Emscripten).")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -43,6 +43,34 @@ endforeach()
 
 add_library(regras STATIC ${REGRAS_SRC})
 target_include_directories(regras PUBLIC "${CMAKE_SOURCE_DIR}/src")
+
+# ---------- alvo WEB (Etapa 18): emcmake cmake -S . -B build-web ----------
+# Mesmas regras, render e cenas; a plataforma vira a do navegador (main_web, audio_web, texto_web, imagem_web).
+# Assets: assets/jogo_web (tools/export_web.py, 2×), dados, fontes livres e os efeitos; as músicas (MP3) tocam
+# em streaming da pasta assets/musics publicada ao lado.
+if(EMSCRIPTEN)
+    set(WEB_SRC "${CMAKE_SOURCE_DIR}/src/main_web.cpp" "${CMAKE_SOURCE_DIR}/src/plataforma/audio_web.cpp")
+    foreach(pasta render cenas)
+        file(GLOB_RECURSE arquivos CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/${pasta}/*.cpp")
+        list(APPEND WEB_SRC ${arquivos})
+    endforeach()
+    add_executable(ecos_web ${WEB_SRC})
+    set_target_properties(ecos_web PROPERTIES OUTPUT_NAME "index" SUFFIX ".html")
+    target_include_directories(ecos_web PRIVATE "${CMAKE_SOURCE_DIR}/third_party/stb")
+    target_link_libraries(ecos_web PRIVATE regras)
+    target_compile_options(regras PRIVATE -O3)
+    target_compile_options(ecos_web PRIVATE -O3)
+    target_link_options(ecos_web PRIVATE
+        -O3 -sALLOW_MEMORY_GROWTH=1 -sINITIAL_MEMORY=268435456 -sMAXIMUM_MEMORY=2147483648 -sSTACK_SIZE=4194304
+        -sENVIRONMENT=web -sFORCE_FILESYSTEM=1 -lidbfs.js "-sEXPORTED_RUNTIME_METHODS=['FS','addRunDependency','removeRunDependency']"
+        "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/web/shell.html"
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets/jogo_web@/assets/jogo_hd"
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/data@/data"
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/third_party/fontes@/fontes"
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets/musics@/assets/musics"
+        "SHELL:--exclude-file *.mp3")
+    return()
+endif()
 
 set(APP_SRC "${CMAKE_SOURCE_DIR}/src/main.cpp")
 foreach(pasta ${PASTAS_APP})

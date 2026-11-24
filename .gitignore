@@ -26,6 +26,10 @@ out/
 compile_commands.json
 CMakeUserPresets.json
 
+# --- Versão web gerada (tools/export_web.py e emcmake) --------
+assets/jogo_web/
+web/dist/
+
 # --- Saves, perfis e telemetria locais -------------------------
 saves/
 saves_*/
@@ -67,3 +71,6 @@ instructions/T3 - Roguelike*.pdf
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# --- Publicação na AWS (ids locais) ---
+web/deploy.local.json

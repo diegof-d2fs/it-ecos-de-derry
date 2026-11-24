@@ -99,6 +99,10 @@ bool estaVivo(const Jogador& j);
 // Recalcula os derivados depois de mudar atributo, equipamento ou power-up (HP acompanha o novo máximo).
 void recalcularJogador(Jogador& j);
 void posicionarJogador(Jogador& j, Vec2 pes);
+// Empurrão contínuo (a esteira, a voz do Georgie): só desloca. NÃO cancela o golpe nem o dash, ao contrário de
+// posicionarJogador (que é para teletransporte: entrar na sala, sair do buraco). Diego, 24/11: com o Georgie puxando,
+// o golpe acertava mas o rastro do taco sumia (a ação voltava a Livre a cada quadro).
+void empurrarJogador(Jogador& j, Vec2 pes);
 
 // Ações de combate de um passo: combo, especial e clarão viram Golpes; sons viram eventos.
 void acoesDoJogador(Jogador& j, const EstadoEntrada& entrada, float dt, std::vector<Golpe>& golpes,

@@ -1,3 +1,4 @@
+#ifndef __EMSCRIPTEN__   // a versão web está em *_web.cpp (Etapa 18)
 #include "plataforma/audio.h"
 
 #include <windows.h>
@@ -360,3 +361,4 @@ void atualizarAudio(float dt, bool janelaFocada) {
         if (jogo) aplicarVolumeCanal(l, 1, mestre * tens * ganho * std::sin(t));
     }
 }
+#endif

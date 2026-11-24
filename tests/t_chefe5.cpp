@@ -251,3 +251,65 @@ TESTE(chefes_modo_defesa_comeca_no_pennywise) {
         if (ch) VERIFICAR(ch->hp <= parametrosDe(ch->tipo).hp / 2);
     }
 }
+
+// Diego, 24/11: "na última fase, quando o Bill pega um Georgie, para de aparecer o efeito do golpe, mas mesmo assim
+// golpeia". Na fase do Georgie (e depois de o Georgie encostar), atacar tem de pôr o Bill no estado de ataque.
+TESTE(covil_georgie_bill_continua_atacando) {
+    const Conteudo c = conteudoReal();
+    EstadoPartida p;
+    iniciarPartida(p, c, 4, indicePorId(c, "b7_covil"), Dificuldade::Normal);
+    p.faseCovilInicial = 2;
+    for (int q = 0; q < 60 * 4; ++q) passo(p, c);
+    Inimigo* ch = chefe(p);
+    VERIFICAR(ch && ch->fase == 2 && p.georgie.ativo);
+    int atacando = 0, toques = 0;
+    float recargaAntes = 0.0f;
+    for (int q = 0; q < 60 * 20; ++q) {
+        p.bill.hp = p.bill.stats.hpMax;
+        EstadoEntrada e;
+        if (q % 14 == 0) { e.pressionou[static_cast<int>(Comando::Atacar)] = true; e.segurando[static_cast<int>(Comando::Atacar)] = true; }
+        recargaAntes = p.georgie.recarga;
+        atualizarPartida(p, c, e, DT);
+        if (p.georgie.recarga > recargaAntes + 1.0f) ++toques;   // o Georgie encostou e sumiu
+        if (p.bill.acao == AcaoJogador::Atacando) ++atacando;
+    }
+    std::printf("    quadros atacando: %d de %d · toques do Georgie: %d · acao final %d\n", atacando, 60 * 20, toques,
+                static_cast<int>(p.bill.acao));
+    VERIFICAR(atacando > 60 * 20 / 4);
+}
+
+// O mesmo defeito na esteira da Siderúrgica: o empurrão de cada quadro cancelava o golpe e o dash (24/11).
+TESTE(esteira_nao_cancela_golpe_nem_dash) {
+    const Conteudo c = conteudoReal();
+    EstadoPartida p;
+    iniciarPartida(p, c, 4, indicePorId(c, "b5_c04"), Dificuldade::Normal);
+    Celula esteira{-1, -1};
+    for (int l = 0; l < p.sala.lins && esteira.col < 0; ++l)
+        for (int col = 0; col < p.sala.cols; ++col)
+            if (tileEm(p.sala, col, l).tipo == TipoTile::Esteira) { esteira = {col, l}; break; }
+    VERIFICAR(esteira.col >= 0);
+    p.inimigos.clear();
+    p.bill.invulneravel = 99.0f;
+    posicionarJogador(p.bill, centroCelula(esteira));
+    EstadoEntrada e;
+    e.pressionou[static_cast<int>(Comando::Atacar)] = true;
+    e.segurando[static_cast<int>(Comando::Atacar)] = true;
+    atualizarPartida(p, c, e, DT);
+    int atacando = 0;
+    for (int q = 0; q < 10; ++q) {
+        atualizarPartida(p, c, EstadoEntrada{}, DT);
+        atacando += p.bill.acao == AcaoJogador::Atacando ? 1 : 0;
+    }
+    VERIFICAR(atacando >= 8);   // o golpe (0,24 s) segue até o fim em cima da esteira
+    // E o dash também não é cortado no meio.
+    posicionarJogador(p.bill, centroCelula(esteira));
+    for (int q = 0; q < 30; ++q) atualizarPartida(p, c, EstadoEntrada{}, DT);
+    EstadoEntrada d;
+    d.pressionou[static_cast<int>(Comando::Dash)] = true;
+    d.segurando[static_cast<int>(Comando::Dash)] = true;
+    d.eixo = {1.0f, 0.0f};
+    atualizarPartida(p, c, d, DT);
+    const bool comecou = p.bill.dashRestante > 0.0f;
+    atualizarPartida(p, c, EstadoEntrada{}, DT);
+    VERIFICAR(!comecou || p.bill.dashRestante > 0.0f);
+}

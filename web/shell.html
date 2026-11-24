@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT: Ecos de Derry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cellipse cx=%2232%22 cy=%2226%22 rx=%2218%22 ry=%2221%22 fill=%22%23c41c28%22/%3E%3Cpath d=%22M32 47 L32 62%22 stroke=%22%23ddd%22 stroke-width=%222%22/%3E%3C/svg%3E">
+<meta name="description" content="IT: Ecos de Derry: roguelike de ação em pixel art, escrito do zero em C++17. Jogue no navegador.">
+<style>
+  html, body { margin: 0; height: 100%; background: #04050a; overflow: hidden; }
+  #tela { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: contain; background: #000;
+          image-rendering: auto; outline: none; }
+  #capa { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          background: radial-gradient(ellipse at 70% 40%, #1a2233 0%, #04050a 70%); color: #efe6d6;
+          font-family: Georgia, 'Times New Roman', serif; text-align: center; cursor: pointer; user-select: none; }
+  #capa h1 { margin: 0; font-size: clamp(36px, 7vw, 88px); letter-spacing: 2px; }
+  #capa h1 span { color: #c41c28; }
+  #capa p { margin: 10px 0 0; color: #b4ab9c; font-size: clamp(14px, 1.6vw, 18px); }
+  #barra { width: min(420px, 70vw); height: 6px; margin-top: 34px; background: #222838; border-radius: 3px; overflow: hidden; }
+  #barra div { height: 100%; width: 0; background: linear-gradient(90deg, #c41c28, #ffcf73); transition: width .2s; }
+  #estado { margin-top: 12px; font-family: system-ui, sans-serif; font-size: 14px; color: #8f8a80; }
+  #jogar { margin-top: 30px; font-size: clamp(18px, 2.2vw, 24px); color: #ffe496; display: none;
+           animation: pulso 1.6s ease-in-out infinite; }
+  @keyframes pulso { 50% { opacity: .45; } }
+  #rodape { position: fixed; bottom: 14px; width: 100%; text-align: center; font: 12px system-ui, sans-serif; color: #6d685f; }
+  #rodape a { color: #9b9384; }
+</style>
+</head>
+<body>
+<canvas id="tela" tabindex="-1"></canvas>
+<div id="capa">
+  <h1><span>IT</span> ECOS DE DERRY</h1>
+  <p>um roguelike nos esgotos de Derry · por Diego Silva</p>
+  <div id="barra"><div></div></div>
+  <div id="estado">Carregando o jogo…</div>
+  <div id="jogar">Clique ou aperte uma tecla para jogar</div>
+  <div id="rodape">Teclado (WASD, J, K, L, Espaço) ou controle · F11 tela cheia ·
+    <a href="https://github.com/diegof-d2fs/it-ecos-de-derry" target="_blank" rel="noopener">código no GitHub</a></div>
+</div>
+<script>
+  const capa = document.getElementById('capa');
+  const barra = document.querySelector('#barra div');
+  const estado = document.getElementById('estado');
+  let pronto = false, comecou = false;
+  function comecar() {
+    if (!pronto || comecou) return;
+    comecou = true;
+    capa.style.display = 'none';
+    window.ecosJogando = true;
+    document.getElementById('tela').focus();
+    if (window.ecosAudio && window.ecosAudio.ctx.state !== 'running') window.ecosAudio.ctx.resume();
+  }
+  capa.addEventListener('pointerdown', comecar);
+  window.addEventListener('keydown', (e) => { if (!e.repeat) comecar(); });
+  window.addEventListener('gamepadconnected', () => setTimeout(comecar, 200));
+  setInterval(() => {   // um botão do controle também fecha a capa
+    if (!pronto || comecou) return;
+    for (const g of (navigator.getGamepads ? navigator.getGamepads() : [])) if (g && g.buttons.some((b) => b.pressed)) { comecar(); break; }
+  }, 100);
+  window.ecosVoltarCapa = () => {   // "Sair" no menu do jogo
+    window.ecosJogando = false;
+    comecou = false;
+    document.getElementById('barra').style.display = 'none';
+    estado.textContent = 'Até a próxima!';
+    document.getElementById('jogar').textContent = 'Clique ou aperte uma tecla para voltar ao jogo';
+    capa.style.display = 'flex';
+    if (document.fullscreenElement) document.exitFullscreen();
+  };
+  window.ecosCarregou = () => {
+    pronto = true;
+    barra.style.width = '100%';
+    estado.textContent = 'Pronto.';
+    document.getElementById('jogar').style.display = 'block';
+  };
+  var Module = {
+    canvas: document.getElementById('tela'),
+    preRun: [() => {
+      // Saves no IndexedDB do navegador (perfil, recordes, cartão de memória).
+      FS.mkdir('/saves');
+      FS.mount(IDBFS, {}, '/saves');
+      addRunDependency('saves');
+      FS.syncfs(true, () => removeRunDependency('saves'));
+    }],
+    setStatus: (t) => {
+      const m = t && t.match(/\((\d+(\.\d+)?)\/(\d+)\)/);
+      if (m) { barra.style.width = (100 * parseFloat(m[1]) / parseFloat(m[3])).toFixed(1) + '%';
+               estado.textContent = 'Baixando: ' + (parseFloat(m[1]) / 1e6).toFixed(0) + ' de ' + (parseFloat(m[3]) / 1e6).toFixed(0) + ' MB'; }
+      else if (t) estado.textContent = t;
+    },
+    printErr: (t) => console.warn(t),
+  };
+  window.addEventListener('beforeunload', () => { try { FS.syncfs(false, () => {}); } catch (e) {} });
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>

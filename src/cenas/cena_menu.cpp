@@ -44,7 +44,9 @@ std::vector<ItemPrincipal> itensPrincipais(const Jogo& jogo) {
     v.push_back({L"Opções", AcaoMenu::Opcoes});
     v.push_back({L"Recordes", AcaoMenu::Recordes});
     v.push_back({L"Créditos", AcaoMenu::Creditos});
+#ifndef __EMSCRIPTEN__   // no navegador não se fecha a aba: sair é voltar a este menu (Diego, 24/11)
     v.push_back({L"Sair", AcaoMenu::Sair});
+#endif
     return v;
 }
 
@@ -417,7 +419,7 @@ void desenharPrincipal(const Jogo& jogo, Canvas& canvas) {
     const std::vector<ItemPrincipal> itens = itensPrincipais(jogo);
     float y = 98;
     for (int i = 0; i < static_cast<int>(itens.size()); ++i) {
-        const bool principal = i < 3, sair = i + 1 == static_cast<int>(itens.size());
+        const bool principal = i < 3, sair = itens[static_cast<std::size_t>(i)].acao == AcaoMenu::Sair;
         if (i == 3) y += 8;
         if (sair) y += 6;
         const float alto = principal ? 22.0f : 17.0f;

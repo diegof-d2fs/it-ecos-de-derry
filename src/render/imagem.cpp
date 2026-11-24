@@ -1,3 +1,4 @@
+#ifndef __EMSCRIPTEN__   // a versão web está em *_web.cpp (Etapa 18)
 #include "render/imagem.h"
 
 #include <windows.h>
@@ -50,3 +51,4 @@ bool carregarPng(const std::wstring& caminho, Imagem& saida) {
     bitmap.UnlockBits(&dados);
     return true;
 }
+#endif

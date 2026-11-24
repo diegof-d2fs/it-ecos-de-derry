@@ -293,7 +293,9 @@ void prepararCacheTerreno(CacheTerreno& cache, const SalaViva& sala, const Recur
         return;
     }
     pintarSalaInteira(cache.canvas, sala, recursos);
+#ifndef __EMSCRIPTEN__
     GdiFlush();
+#endif
     cache.valido = true;
 }
 
