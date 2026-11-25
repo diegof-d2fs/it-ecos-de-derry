@@ -283,10 +283,13 @@ void executar(Jogo& jogo, AcaoMenu a) {
         case AcaoMenu::Opcoes: irPara(jogo, TelaMenu::Opcoes); break;
         case AcaoMenu::Recordes:
             m.recordes = carregarRecordes(std::filesystem::path(jogo.pastaSaves) / L"recordes.txt");
-            irPara(jogo, TelaMenu::Recordes);
 #ifdef __EMSCRIPTEN__
-            EM_ASM({ if (window.ecosAcesso) window.ecosAcesso.abrirRanking(); });
+            // Na web, com conta, os recordes são o painel mundial (que já traz o "Meu top 5") e o jogo fica no
+            // menu. Antes abriam as duas telas: ao fechar o painel, sobrava a tela local por baixo (Diego, 25/11).
+            // Sem conta, os recordes só existem nesta aba: vale a tela local, como no .exe.
+            if (EM_ASM_INT({ return window.ecosAcesso && window.ecosAcesso.abrirRecordes() ? 1 : 0; })) break;
 #endif
+            irPara(jogo, TelaMenu::Recordes);
             break;
 #ifdef __EMSCRIPTEN__
         case AcaoMenu::LerLore:

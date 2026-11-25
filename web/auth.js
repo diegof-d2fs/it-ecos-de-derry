@@ -175,6 +175,12 @@
     status.textContent = `${status.dataset.conta} · memory card no servidor`;
     pronto('conta');
   }
+  // Trava os botões da tela de entrada durante um pedido ao servidor (ou a ida ao login), para não
+  // disparar pedidos repetidos nem trocar de caminho no meio.
+  function travarEntrada(travar) {
+    botoes.querySelectorAll('button').forEach(b => { b.disabled = travar; });
+    botoes.setAttribute('aria-busy', String(travar));
+  }
   async function preparar(arquivos) {
     fs = arquivos;
     acesso.hidden = false;
@@ -186,8 +192,11 @@
         botoes.hidden = false;
         tokens = tokenAtual();
         const retornou = await retornoOAuth();
-        if (retornou || tokens) await carregarConta();
-        else mostrar('Entre na sua conta ou jogue sem conta.');
+        if (retornou || tokens) {
+          // Enquanto o memory card chega, nada de "Jogar sem conta" ou um segundo login (Diego, 25/11).
+          travarEntrada(true);
+          try { await carregarConta(); } finally { travarEntrada(false); }
+        } else mostrar('Entre na sua conta ou jogue sem conta.');
       } else {
         document.querySelectorAll('[data-entrar]').forEach(b => { b.hidden = true; });
         mostrar('Versão local de demonstração. O progresso termina ao fechar ou recarregar a página.');
@@ -239,6 +248,13 @@
       } else pessoal.textContent = 'Entre na sua conta para ter um histórico pessoal.';
     } catch (erro) { ranking.querySelector('[data-lista]').textContent = erro.message; }
   }
+  // Chamado pelo menu do jogo. Com conta, abre o painel mundial e responde true (o jogo fica no menu);
+  // sem conta, responde false e o jogo mostra a tela local de recordes.
+  function abrirRecordes() {
+    if (modo !== 'conta') return false;
+    abrirRanking();
+    return true;
+  }
   function mostrarRanking() {
       const entradas = rankingDados?.[rankingDificuldade] || [];
       const lista = ranking.querySelector('[data-lista]');
@@ -284,7 +300,13 @@
   }
   // Sair da conta: salva o que falta, apaga os tokens desta aba e encerra a sessão do Cognito
   // (sem isso, o próximo "Entrar" num computador compartilhado entraria direto na mesma conta).
+  let saindo = false;
   async function sairDaConta(mesmoSemSalvar) {
+    if (saindo) return;   // cliques seguidos em "Sair" não disparam saídas em paralelo
+    saindo = true;
+    try { await sairDaContaUmaVez(mesmoSemSalvar); } finally { saindo = false; }
+  }
+  async function sairDaContaUmaVez(mesmoSemSalvar) {
     const estado = document.getElementById('conta-estado');
     estado.textContent = 'Salvando o memory card antes de sair...';
     while (ocupada) await new Promise(r => setTimeout(r, 100));
@@ -306,6 +328,9 @@
   document.getElementById('feedback-form').addEventListener('submit', async e => {
     e.preventDefault();
     const estado = document.getElementById('feedback-estado');
+    const enviar = e.target.querySelector('button[type="submit"]');
+    if (enviar.disabled) return;   // um envio por vez: sem e-mails repetidos por cliques seguidos
+    enviar.disabled = true;
     estado.textContent = 'Enviando...';
     const body = {
       type: document.getElementById('feedback-tipo').value,
@@ -321,21 +346,43 @@
         : 'Feedback guardado. O aviso por e-mail está pendente.';
       e.target.reset();
     } catch (erro) { estado.textContent = erro.message; }
+    finally { enviar.disabled = false; }
   });
   document.querySelectorAll('[data-entrar]').forEach(b => b.addEventListener('click', e => {
-    e.stopPropagation(); autenticar(b.dataset.entrar).catch(erro => mostrar(erro.message));
+    e.stopPropagation();
+    travarEntrada(true);
+    mostrar('Abrindo a tela de login...');
+    autenticar(b.dataset.entrar).catch(erro => { mostrar(erro.message); travarEntrada(false); });
   }));
+  // Voltar do login pelo botão "voltar" do navegador pode restaurar a página como estava (travada).
+  window.addEventListener('pageshow', e => {
+    if (e.persisted) { travarEntrada(false); mostrar('Entre na sua conta ou jogue sem conta.'); }
+  });
   document.getElementById('sem-conta').addEventListener('click', e => {
     e.stopPropagation(); status.textContent = 'Sem conta: progresso apenas nesta sessão.'; pronto('convidado');
   });
-  document.getElementById('pais-confirmar').addEventListener('click', async e => {
+  // Um pedido por vez, com retorno na tela: antes o botão ficava ativo e mudo durante a gravação, e dava
+  // para apertar várias vezes (feedback de jogadores, 25/11).
+  const paisBotao = document.getElementById('pais-confirmar');
+  paisBotao.addEventListener('click', async e => {
     e.stopPropagation();
+    if (paisBotao.disabled) return;
+    paisBotao.disabled = paisSelect.disabled = true;
+    paisBotao.textContent = 'Salvando...';
+    mostrar('Salvando o país no servidor...');
     try {
       const dados = await api('/profile', 'PUT', {country: paisSelect.value});
       status.dataset.conta = `${bandeira(dados.country)} ${dados.nick}`;
       status.textContent = `${status.dataset.conta} · memory card no servidor`;
+      paisBotao.textContent = 'País salvo';
+      mostrar('País salvo. Abrindo o jogo...');
+      await new Promise(r => setTimeout(r, 700));   // tempo de ler a confirmação antes do jogo abrir
       pronto('conta');
-    } catch (erro) { mostrar(erro.message); }
+    } catch (erro) {
+      mostrar(`${erro.message} Tente de novo.`);
+      paisBotao.textContent = 'Confirmar país';
+      paisBotao.disabled = paisSelect.disabled = false;
+    }
   });
   document.getElementById('ranking-fechar').addEventListener('click', () => fechar(ranking));
   ranking.querySelectorAll('[data-dificuldade]').forEach(b => b.addEventListener('click', () => {
@@ -380,13 +427,17 @@
       }
     }
   }, true);
-  let bApertado = false;
+  // O botão de voltar segue o jogo: B do Xbox / Bola do PlayStation (direita) e, num controle Nintendo, o B fica
+  // embaixo. Só fecha num aperto NOVO: o estado é acompanhado mesmo com tudo fechado, senão o A do Nintendo
+  // (direita), ainda apertado ao escolher "Recordes", fechava o painel na hora e a tela piscava.
+  const nintendo = (g) => /057e|nintendo|switch|pro controller|joy-con/i.test(g.id || '');
+  let voltarApertado = false;
   setInterval(() => {
+    const apertado = [...(navigator.getGamepads?.() || [])].some(g =>
+      g?.buttons?.[nintendo(g) ? 0 : 1]?.pressed);
     const aberto = fechaveis().find(p => !p.hidden);
-    if (!aberto) { bApertado = false; return; }
-    const apertado = [...(navigator.getGamepads?.() || [])].some(g => g?.buttons?.[1]?.pressed);
-    if (apertado && !bApertado) fechar(aberto);
-    bApertado = apertado;
+    if (aberto && apertado && !voltarApertado) fechar(aberto);
+    voltarApertado = apertado;
   }, 100);
-  window.ecosAcesso = {preparar, sincronizar, abrirRanking, abrirLore, abrirFeedback, parametrosDemo};
+  window.ecosAcesso = {preparar, sincronizar, abrirRanking, abrirRecordes, abrirLore, abrirFeedback, parametrosDemo};
 })();
