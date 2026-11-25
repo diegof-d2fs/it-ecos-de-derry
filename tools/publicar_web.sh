@@ -18,7 +18,8 @@ if [ "$MODO" != "publicar" ] && [ "$MODO" != "preparar" ]; then
     exit 2
 fi
 
-if [ -f .env ]; then set -a; source <(grep -E '^AWS_[A-Z0-9_]+=' .env | tr -d '\r'); set +a; fi
+# .env: AWS_ACCESS_KEY_ID=... ou aws_access_key_id=... (como no "credentials" da AWS); o nome vira maiúsculo.
+if [ -f .env ]; then set -a; source <(grep -iE '^AWS_[A-Z0-9_]+=' .env | tr -d '\r' | sed -E 's/^([^=]+)=/\U\1=/'); set +a; fi
 REGIAO="${AWS_REGION:-us-east-1}"
 ESTADO="web/deploy.local.json"   # ids do bucket e da distribuição (fora do git)
 mkdir -p web

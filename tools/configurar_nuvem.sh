@@ -3,7 +3,8 @@
 # Requer autorização explícita para os recursos de uso variável.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if [ -f .env ]; then set -a; source <(grep -E '^(AWS|ECOS)_[A-Z0-9_]+=' .env | tr -d '\r'); set +a; fi
+# .env: AWS_ACCESS_KEY_ID=... ou aws_access_key_id=... (como no "credentials" da AWS); o nome vira maiúsculo.
+if [ -f .env ]; then set -a; source <(grep -iE '^(AWS|ECOS)_[A-Z0-9_]+=' .env | tr -d '\r' | sed -E 's/^([^=]+)=/\U\1=/'); set +a; fi
 if [ ! -f web/deploy.local.json ]; then
     echo "Primeiro execute bash tools/publicar_web.sh preparar" >&2
     exit 1
